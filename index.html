@@ -728,10 +728,14 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
 /* === V34: 名片小组件样式 === */
 .card-widget-container {
     width: 100%;
-    aspect-ratio: 16 / 10; /* 接近卡片的比例 */
-    perspective: 1000px; /* 3D 翻转的景深 */
+    aspect-ratio: 16 / 10; 
+    perspective: 1000px; 
     cursor: pointer;
-    margin-top: 20px;
+    margin-top: 10px;
+    /* ✨ 这里是重点：增加底部间距，并强制执行 */
+    margin-bottom: 80px !important; 
+    /* ✨ 增加一个下边框占位（透明），防止 flex 布局压缩间距 */
+    padding-bottom: 20px; 
 }
 .card-flipper {
     width: 100%;
@@ -810,6 +814,74 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
 .card-edit-btn:active {
     transform: scale(0.9) rotate(45deg);
 }
+
+    /* === V35: 赛博花房样式 === */
+    .garden-container {
+        padding: 20px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .flower-pot {
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 20px;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 2px solid rgba(139, 69, 19, 0.2);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        position: relative;
+        transition: 0.3s;
+    }
+    .flower-pot.active { background: #fff; border-color: var(--accent-color); transform: translateY(-3px); }
+    
+    .plant-display {
+        width: 80px; height: 80px;
+        display: flex; align-items: flex-end; justify-content: center;
+        font-size: 50px;
+        filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));
+        margin-bottom: 10px;
+        animation: breath-plant 3s infinite ease-in-out;
+    }
+    @keyframes breath-plant { 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
+
+    .pot-actions {
+        display: flex; gap: 5px; width: 100%;
+    }
+    .pot-btn {
+        flex: 1; border: none; padding: 6px; border-radius: 8px; font-size: 12px; cursor: pointer;
+        background: rgba(0,0,0,0.05); transition: 0.2s;
+    }
+    .pot-btn:active { transform: scale(0.9); }
+    .btn-water { background: #e3f2fd; color: #1976d2; }
+    .btn-harvest { background: #e8f5e9; color: #2e7d32; font-weight: bold; }
+
+    .inventory-bar {
+        margin-top: 20px;
+        padding: 15px;
+        background: var(--card-bg);
+        border-radius: 16px;
+        border: 1px dashed var(--accent-color);
+    }
+    .inv-grid { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
+    .inv-item {
+        min-width: 50px; height: 50px;
+        background: rgba(255,255,255,0.5);
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 24px;
+        border: 1px solid rgba(0,0,0,0.1);
+        position: relative;
+        cursor: pointer;
+    }
+    .inv-count {
+        position: absolute; bottom: -5px; right: -5px;
+        background: var(--accent-color); color: #fff;
+        font-size: 10px; padding: 2px 5px; border-radius: 8px;
+    }
+
 </style>
 </head>
 <body class="theme-day">
@@ -968,6 +1040,7 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
                 </div>
 
 
+
                 <!-- 心情像素墙 -->
                 <div class="widget-large" style="width:100%; height:200px; background:#fff;">
                     <div style="font-size:14px; font-weight:bold; margin-bottom:5px; display:flex; justify-content:space-between;">
@@ -1032,17 +1105,28 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
                             <p class="card-bio" id="card-bio-front">@自定义・点击翻转</p>
                             <div class="card-edit-btn" onclick="event.stopPropagation(); openCardSettings('front')">⚙️</div>
                         </div>
-                        <!-- 背面 -->
+<!-- 背面 -->
                         <div class="card-face card-back" id="card-back">
                              <div class="card-avatar" id="card-avatar-back"></div>
                             <h3 class="card-name" id="card-name-back">Ta 的名字</h3>
                             <p class="card-bio" id="card-bio-back">一句喜欢的话</p>
                             <div class="card-edit-btn" onclick="event.stopPropagation(); openCardSettings('back')">⚙️</div>
-                        </div>
+                        </div> <!-- 背面结束 -->
+                    </div> <!-- flipper结束 -->
+                </div> <!-- 名片容器结束 -->
+
+                <!-- ✨ 这里才是外面！在这里放间距和花房 -->
+                <div style="width: 100%; height: 60px;"></div>
+
+                <div class="mix-app" onclick="openGarden()">
+                    <div class="icon-box" style="background:#f1f8e9; color:#558b2f; border:1px solid #dcedc8;">
+                        <span style="font-size:24px;">🪴</span>
                     </div>
+                    <span class="app-name">花房</span>
                 </div>
-            </div>
-        </div>
+
+            </div> <!-- page-6-grid 结束 -->
+        </div> <!-- page-6 结束 -->
     
             <div class="pagination-dots">
     <div class="dot active" id="dot-1"></div>
@@ -1334,6 +1418,38 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
     
     <!-- 金库 -->
     <div id="view-vault" class="view-overlay"><div class="header"><button class="btn-icon btn-close" onclick="closeView('view-vault')">✕</button> <span>私密金库</span> <div>🔒</div></div><div style="padding:15px; overflow-y:auto;" id="vault-content"></div></div>
+    
+        <div id="view-garden" class="view-overlay">
+        <div class="header">
+            <button class="btn-icon btn-close" onclick="closeView('view-garden')">✕</button> 
+            <span>赛博花房</span> 
+            <button class="btn-icon" onclick="openSeedShop()">🏪</button>
+        </div>
+        <div style="padding:15px; overflow-y:auto; padding-bottom:80px;">
+            <div style="font-size:12px; opacity:0.6; text-align:center; margin-bottom:15px;">
+                用心浇灌，静待花开 (每2小时可浇水)
+            </div>
+
+            <div class="garden-container" id="garden-pots">
+                </div>
+
+            <div class="inventory-bar">
+                <div style="font-size:12px; font-weight:bold; margin-bottom:10px;">🎒 鲜花背囊 (点击送给Ta)</div>
+                <div class="inv-grid" id="flower-inventory">
+                    <div style="font-size:12px; opacity:0.5; padding:10px;">空空如也...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-seed-shop" class="modal">
+        <div class="modal-card">
+            <h3>🌱 种子商店</h3>
+            <div style="font-size:12px; margin-bottom:10px; color:var(--accent-color);">当前功德: <span id="seed-merit-display">0</span></div>
+            <div class="shop-grid" id="seed-list"></div>
+            <button class="btn-normal btn-secondary" onclick="$('modal-seed-shop').style.display='none'" style="margin-top:15px;">离开</button>
+        </div>
+    </div>
     
         <!-- 体态管理 (Weight Tracker) -->
     <div id="view-weight" class="view-overlay">
@@ -1806,17 +1922,17 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
         settings: 'key' // 键值对存储：key='widgetBg'
     });
 
-    const DB = {
+const DB = {
         weightLogs: JSON.parse(localStorage.getItem('v32_weight')) || [],
-                touchHistory: JSON.parse(localStorage.getItem('v33_touch_history')) || [],
-    commands: JSON.parse(localStorage.getItem('v31_commands')) || [],
-            rpg: JSON.parse(localStorage.getItem('v29_rpg')) || { lv: 1, xp: 0, title: '萌新' },
+        touchHistory: JSON.parse(localStorage.getItem('v33_touch_history')) || [],
+        commands: JSON.parse(localStorage.getItem('v31_commands')) || [],
+        rpg: JSON.parse(localStorage.getItem('v29_rpg')) || { lv: 1, xp: 0, title: '萌新' },
         settings: JSON.parse(localStorage.getItem('v16_set')) || { url:'https://api.openai.com/v1', key:'', model:'gpt-4o', theme:'theme-day' },
         contacts: JSON.parse(localStorage.getItem('v15_con')) || [{id:1, name:'未来的自己', prompt:'温柔、成熟', history:[]}],
         todos: JSON.parse(localStorage.getItem('v15_todo')) || [],
-        widgetImg: '', // 将从 IndexedDB 加载
+        widgetImg: '', 
         meals: JSON.parse(localStorage.getItem('v15_meals')) || { items: { breakfast:[], lunch:[], dinner:[], snack:[] }, reply: {} },
-        diaries: [], // 将从 IndexedDB 加载
+        diaries: [], 
         letters: JSON.parse(localStorage.getItem('v15_letters')) || [],
         journals: JSON.parse(localStorage.getItem('v15_journals')) || [],
         extras: JSON.parse(localStorage.getItem('v15_extras')) || { mood: 'calm', fridge: '', cdText:'见面', cdDate: new Date().toISOString().split('T')[0] },
@@ -1830,33 +1946,28 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
         lastStampDate: localStorage.getItem('v26_last_stamp') || '',
         capsules: JSON.parse(localStorage.getItem('v25_capsules')) || [],
         customAssets: JSON.parse(localStorage.getItem('v26_assets')) || { stickers: [], fonts: [] },
-            moodHistory: JSON.parse(localStorage.getItem('v30_mood_pixels')) || [], 
-    merit: parseInt(localStorage.getItem('v30_merit') || '0'), /* ✅ 这里补上了一个逗号 */
-    businessCard: JSON.parse(localStorage.getItem('v34_card')) || {
-        front: { name: '你的名字', bio: '@自定义・点击翻转', avatar: '', fontUrl: '' },
-        back: { name: 'Ta 的名字', bio: '一句喜欢的话', avatar: '', fontUrl: '' }
-    }
-}; /* ✅ 这里删掉了一个多余的 }; */
-    
-        const ASSETS = {
+        moodHistory: JSON.parse(localStorage.getItem('v30_mood_pixels')) || [], 
+        merit: parseInt(localStorage.getItem('v30_merit') || '0'),
+        businessCard: JSON.parse(localStorage.getItem('v34_card')) || {
+            front: { name: '你的名字', bio: '@自定义・点击翻转', avatar: '', fontUrl: '' },
+            back: { name: 'Ta 的名字', bio: '一句喜欢的话', avatar: '', fontUrl: '' }
+        },
+        garden: JSON.parse(localStorage.getItem('v35_garden')) || {
+            pots: [{ id: 1, seed: null, stage: 0, plantTime: 0, lastWater: 0 }, { id: 2, seed: null, stage: 0, plantTime: 0, lastWater: 0 }],
+            inventory: {}
+        }
+    };
+
+    const ASSETS = {
         stickers: ["https://cdn-icons-png.flaticon.com/128/4193/4193235.png", "https://cdn-icons-png.flaticon.com/128/4193/4193286.png", "https://cdn-icons-png.flaticon.com/128/2550/2550266.png", "https://cdn-icons-png.flaticon.com/128/616/616430.png", "https://cdn-icons-png.flaticon.com/128/616/616554.png", "https://cdn-icons-png.flaticon.com/128/1048/1048944.png", "https://cdn-icons-png.flaticon.com/128/3209/3209265.png", "https://cdn-icons-png.flaticon.com/128/2916/2916115.png"],
         papers: [{name: "纯白", val: "#fff"}, {name: "点阵", val: "radial-gradient(#ccc 1px, transparent 1px) 0 0 / 20px 20px #fff"}, {name: "方格", val: "linear-gradient(#e5e5e5 1px, transparent 1px) 0 0 / 20px 20px, linear-gradient(90deg, #e5e5e5 1px, transparent 1px) 0 0 / 20px 20px #fff"}, {name: "牛皮纸", val: "#f0e6d2"}, {name: "粉色", val: "#fff0f5"}],
-        fonts: [
-            {name: "默认", val: "sans-serif"}, 
-            {name: "手写", val: "'Ma Shan Zheng', cursive"},
-            {name: "英文花体", val: "'Zeyada', cursive"},
-            {name: "宋体", val: "'Noto Serif SC', serif"},
-            {name: "长仓笔意", val: "'Long Cang', cursive"},
-            {name: "流云", val: "'Liu Jian Mao Cao', cursive"},
-            {name: "狂草", val: "'Zhi Mang Xing', cursive"}
-        ],
+        fonts: [{name: "默认", val: "sans-serif"}, {name: "手写", val: "'Ma Shan Zheng', cursive"}, {name: "英文花体", val: "'Zeyada', cursive"}, {name: "宋体", val: "'Noto Serif SC', serif"}, {name: "长仓笔意", val: "'Long Cang', cursive"}, {name: "流云", val: "'Liu Jian Mao Cao', cursive"}, {name: "狂草", val: "'Zhi Mang Xing', cursive"}],
         gachaFood: ["麻辣烫", "螺蛳粉", "轻食沙拉", "日料", "韩式炸鸡", "自己煮面", "不吃了减肥", "便利店", "火锅"],
         gachaAct: ["写代码", "看书30分钟", "做20个深蹲", "睡觉", "打扫卫生", "听播客", "Ask AI"],
         guidance: ["深呼吸，听我的。", "乖，去睡觉，不要熬夜。", "别怕，我在你身后。", "现在，放下手机，闭上眼。", "你做得够好了。", "不准胡思乱想。", "相信直觉。", "抬头，你可以的。", "喝杯水，冷静下来。", "我的女孩，不要哭。", "去吃点好吃的。", "天塌下来有高个子顶着。", "去洗个热水澡。", "你是最珍贵的。", "我在，一直都在。"],
         hexagrams: ["大吉", "中吉", "小吉", "平", "待机", "努力"] 
     };
-    
-        // Helper: Base64 to Blob
+
     function base64ToBlob(base64) {
         if (!base64 || !base64.startsWith('data:')) return null;
         try {
@@ -1870,79 +1981,305 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
         } catch(e) { return null; }
     }
 
-        window.onload = async () => {
-    // ... 原有的代码 ...
-    
-    // 加载自定义壁纸
-    await loadCustomWallpaper();
-
-    // 加载漂流瓶数据
-    const savedBottles = localStorage.getItem('v30_bottles');
-    if (savedBottles) DB.bottles = JSON.parse(savedBottles);
-    
-
-        // === 修复版：数据搬家逻辑 ===
-        // 1. 迁移日记
-        const oldDiaries = localStorage.getItem('v15_diary');
-        if (oldDiaries) {
-            const parsed = JSON.parse(oldDiaries);
-            if (parsed.length > 0) {
-                console.log("正在迁移日记...");
-                for (const d of parsed) {
-                    if (d.img && d.img.startsWith('data:')) {
-                        d.imgBlob = base64ToBlob(d.img); 
-                        d.img = null; 
-                    }
-                    await db.diaries.put(d);
-                }
-                localStorage.removeItem('v15_diary'); // 删掉旧日记
-            }
-        }
-        
-        // 2. 迁移封面图 (这里是出Bug的地方，已修复)
-        const oldImg = localStorage.getItem('v15_img');
-        if (oldImg && oldImg.startsWith('data:')) {
-            // 如果是旧的 Base64 图片
-            const blob = base64ToBlob(oldImg);
-            await db.settings.put({key: 'widgetBg', value: blob});
-            localStorage.removeItem('v15_img'); // 🟢 这一行之前有
-        } else if (oldImg) {
-            // 如果是 URL 链接
-            await db.settings.put({key: 'widgetBg', value: oldImg});
-            localStorage.removeItem('v15_img'); // 🟢 补上了这一行！搬完就删！
-        }
-        
-        // === 加载数据 ===
+    window.onload = async () => {
+        // 加载 IndexedDB 数据
         DB.diaries = await db.diaries.toArray();
-        
-        // 读取封面图
         const bgSetting = await db.settings.get('widgetBg');
         if (bgSetting) {
-            if (bgSetting.value instanceof Blob) {
-                DB.widgetImg = URL.createObjectURL(bgSetting.value);
-            } else {
-                DB.widgetImg = bgSetting.value;
-            }
+            DB.widgetImg = (bgSetting.value instanceof Blob) ? URL.createObjectURL(bgSetting.value) : bgSetting.value;
         }
 
-        // === 初始化 UI (保持不变) ===
-        $('api-url').value = DB.settings.url; $('api-key').value = DB.settings.key; 
+        // 初始化壁纸和数据
+        await loadCustomWallpaper();
+        const savedBottles = localStorage.getItem('v30_bottles');
+        if (savedBottles) DB.bottles = JSON.parse(savedBottles);
+
+        // 初始化 UI
+        $('api-url').value = DB.settings.url; 
+        $('api-key').value = DB.settings.key; 
         $('theme-select').value = DB.settings.theme;
-        const ms = $('model-select'); if(DB.settings.model && !Array.from(ms.options).some(o=>o.value===DB.settings.model)) ms.add(new Option(DB.settings.model, DB.settings.model)); ms.value = DB.settings.model;
         toggleTheme(DB.settings.theme); 
         if(DB.widgetImg) setWidgetBg(DB.widgetImg);
 
+        // 启动各模块
         updateTime(); setInterval(updateTime, 1000); initBattery(); 
-        renderTodosWidget(); renderContacts(); renderMealsApp(); renderDiaryList(); renderExtras(); renderJournalShelf(); updateHisStatus(); initDoodle(); renderPeriodWidget(); checkDivinationStatus();
+        renderTodosWidget(); renderContacts(); renderMealsApp(); renderDiaryList(); renderExtras(); renderJournalShelf(); 
+        initDoodle(); renderPeriodWidget(); checkDivinationStatus();
         renderStampGrid(); renderPledges(); renderCapsules(); renderMailbox();
         loadCustomFonts();
         $('ml-date').valueAsDate = new Date();
-                // Init V30
         $('merit-count').innerText = `功德: ${DB.merit || 0}`;
         renderMoodPixels();
-                updateRPGDisplay(); // 初始化显示等级
-        checkOnThisDay();   // 检查那年今日
+        updateRPGDisplay();
+        checkOnThisDay();
+        initShopSystem();
+        await renderBusinessCard();
     };
+    
+// === V35: 赛博花房系统 ===
+
+// 1. 数据结构与配置
+const SEEDS = [
+    { id: 'seed_rose', name: '红玫瑰', icon: '🌹', price: 50, time: 4, desc: '代表热烈的爱' },
+    { id: 'seed_tulip', name: '郁金香', icon: '🌷', price: 30, time: 3, desc: '优雅与高贵' },
+    { id: 'seed_sunflower', name: '向日葵', icon: '🌻', price: 20, time: 2, desc: '入目皆是你' },
+    { id: 'seed_peach', name: '桃花', icon: '🌸', price: 80, time: 5, desc: '桃园结义的羁绊' }, // 三国彩蛋
+    { id: 'seed_clover', name: '四叶草', icon: '🍀', price: 100, time: 6, desc: '绝对的幸运' }
+];
+
+// 初始化数据
+if(!DB.garden) {
+    DB.garden = {
+        pots: [
+            { id: 1, seed: null, stage: 0, plantTime: 0, lastWater: 0 }, // 花盆1
+            { id: 2, seed: null, stage: 0, plantTime: 0, lastWater: 0 }  // 花盆2
+        ],
+        inventory: {} // 存花朵 { 'seed_rose': 2 }
+    };
+}
+
+// 2. 打开花房
+function openGarden() {
+    openView('view-garden');
+    renderPots();
+    renderInventory();
+}
+
+// 3. 渲染花盆 (已修正为 2 小时冷却)
+function renderPots() {
+    const container = $('garden-pots');
+    container.innerHTML = '';
+
+    DB.garden.pots.forEach(pot => {
+        let content = '';
+        let btnAction = '';
+        
+        if (!pot.seed) {
+            content = `<div class="plant-display" style="opacity:0.3; font-size:40px;">🕳️</div>
+                       <div style="font-size:12px; color:#999;">空花盆</div>`;
+            btnAction = `<button class="pot-btn" onclick="openSeedShop(${pot.id})">➕ 播种</button>`;
+        } else {
+            const seedInfo = SEEDS.find(s => s.id === pot.seed);
+            const now = Date.now();
+            
+            let icon = '🌱';
+            let statusText = '成长中...';
+            let btn = '';
+
+            if (pot.stage >= seedInfo.time) {
+                icon = seedInfo.icon; 
+                statusText = '已成熟';
+                btn = `<button class="pot-btn btn-harvest" onclick="harvestPlant(${pot.id})">✂️ 收获</button>`;
+            } else {
+                // ✨ 冷却时间正式修改为 2 小时
+                const cooldown = 2 * 60 * 60 * 1000; 
+                const canWater = (now - pot.lastWater) > cooldown;
+                
+                if (pot.stage === 0) icon = '🌰'; 
+                else if (pot.stage < seedInfo.time / 2) icon = '🌱'; 
+                else icon = '🌿'; 
+
+                statusText = `阶段 ${pot.stage}/${seedInfo.time}`;
+                
+                if (canWater) {
+                    btn = `<button class="pot-btn btn-water" onclick="waterPlant(${pot.id})">💧 浇水</button>`;
+                } else {
+                    // 计算剩余的 分钟:秒
+                    const remaining = cooldown - (now - pot.lastWater);
+                    const mins = Math.floor(remaining / 60000);
+                    const secs = Math.floor((remaining % 60000) / 1000);
+                    btn = `<button class="pot-btn" disabled style="opacity:0.5; font-size:10px;">⏳ ${mins}m${secs}s</button>`;
+                }
+            }
+
+            content = `<div class="plant-display">${icon}</div>
+                       <div style="font-size:12px; font-weight:bold;">${seedInfo.name}</div>
+                       <div style="font-size:10px; opacity:0.6; margin-bottom:5px;">${statusText}</div>`;
+            btnAction = btn;
+        }
+
+        container.innerHTML += `
+            <div class="flower-pot ${pot.seed ? 'active' : ''}">
+                ${content}
+                <div class="pot-actions">${btnAction}</div>
+            </div>
+        `;
+    });
+    
+    if(window.gardenTimer) clearTimeout(window.gardenTimer);
+    window.gardenTimer = setTimeout(renderPots, 1000);
+}
+ 
+
+// 4. 浇水逻辑
+function waterPlant(potId) {
+    const pot = DB.garden.pots.find(p => p.id === potId);
+    if (!pot || !pot.seed) return;
+
+    pot.lastWater = Date.now();
+    pot.stage += 1; // 每次浇水长一岁
+    
+    // 保存
+    localStorage.setItem('v35_garden', JSON.stringify(DB.garden));
+    renderPots();
+    
+    // 震动反馈
+    if(navigator.vibrate) navigator.vibrate(50);
+}
+
+// 5. 收获逻辑
+function harvestPlant(potId) {
+    const pot = DB.garden.pots.find(p => p.id === potId);
+    if (!pot || !pot.seed) return;
+
+    const seedId = pot.seed;
+    
+    // 放入背包
+    DB.garden.inventory[seedId] = (DB.garden.inventory[seedId] || 0) + 1;
+    
+    // 清空花盆
+    pot.seed = null;
+    pot.stage = 0;
+    pot.plantTime = 0;
+    
+    localStorage.setItem('v35_garden', JSON.stringify(DB.garden));
+    
+    alert(`💐 收获成功！已放入鲜花背囊。`);
+    renderPots();
+    renderInventory();
+    gainXP(20); // 收获 +20 XP
+}
+
+// 6. 商店逻辑
+let selectedPotId = null;
+function openSeedShop(potId) {
+    if(potId) selectedPotId = potId; // 记录是从哪个盆点进来的
+    $('modal-seed-shop').style.display = 'flex';
+    $('seed-merit-display').innerText = DB.merit || 0;
+    
+    const list = $('seed-list');
+    list.innerHTML = '';
+    
+    SEEDS.forEach(s => {
+        const canBuy = (DB.merit || 0) >= s.price;
+        list.innerHTML += `
+            <div class="shop-item" onclick="buySeed('${s.id}', ${s.price})">
+                <div class="shop-icon">${s.icon}</div>
+                <div class="shop-name">${s.name}</div>
+                <div style="font-size:10px; color:#666;">${s.desc}</div>
+                <div class="shop-price ${canBuy?'can-buy':''}">${s.price} 功德</div>
+            </div>
+        `;
+    });
+}
+
+function buySeed(seedId, price) {
+    if ((DB.merit || 0) < price) return alert("功德不足！快去敲木鱼！");
+    if (!selectedPotId) return; // 必须是从花盆点进来的
+
+    const pot = DB.garden.pots.find(p => p.id === selectedPotId);
+    if (pot.seed) return alert("这个盆里已经有植物了！");
+
+    if (confirm(`花费 ${price} 功德购买并种植吗？`)) {
+        DB.merit -= price;
+        localStorage.setItem('v30_merit', DB.merit);
+        
+        pot.seed = seedId;
+        pot.stage = 0;
+        pot.plantTime = Date.now();
+        pot.lastWater = 0; // 刚种下可以立刻浇水
+        
+        localStorage.setItem('v35_garden', JSON.stringify(DB.garden));
+        
+        $('modal-seed-shop').style.display = 'none';
+        renderPots();
+    }
+}
+
+// 7. 背包与送花逻辑
+function renderInventory() {
+    const list = $('flower-inventory');
+    list.innerHTML = '';
+    const items = DB.garden.inventory;
+    
+    if (Object.keys(items).length === 0) {
+        list.innerHTML = '<div style="font-size:12px; opacity:0.5; padding:10px;">空空如也...</div>';
+        return;
+    }
+
+    Object.keys(items).forEach(key => {
+        const count = items[key];
+        if (count > 0) {
+            const info = SEEDS.find(s => s.id === key);
+            const div = document.createElement('div');
+            div.className = 'inv-item';
+            div.innerHTML = `${info.icon}<div class="inv-count">${count}</div>`;
+            div.onclick = () => giftFlower(key);
+            list.appendChild(div);
+        }
+    });
+}
+
+async function giftFlower(seedId) {
+    const info = SEEDS.find(s => s.id === seedId);
+    if (!confirm(`要把【${info.name}】送给 Ta 吗？`)) return;
+
+    // 1. 选择送给谁
+    // 简单起见，默认送给通讯录第一个，或者你可以加个弹窗选人。
+    // 这里我们直接用“当前最亲密”的或者第一个 Dom 角色
+    if (DB.contacts.length === 0) return alert("通讯录没人，花送不出去...");
+    const role = DB.contacts[0]; 
+
+    // 2. 扣除物品
+    DB.garden.inventory[seedId]--;
+    if (DB.garden.inventory[seedId] <= 0) delete DB.garden.inventory[seedId];
+    localStorage.setItem('v35_garden', JSON.stringify(DB.garden));
+    renderInventory();
+
+    // 3. AI 互动
+    const aiBox = $('touch-display-text'); // 复用亲昵的显示框
+    $('modal-touch-result').style.display = 'flex';
+    aiBox.innerHTML = `<div style="text-align:center; padding-top:20px;">正在把${info.name}递给${role.name}...<br>💐</div>`;
+
+    try {
+        let systemPrompt = `你现在是${role.name}。人设：${role.prompt}。
+        情境：用户（你的Sub/小可爱）在赛博花园里辛苦种了一朵【${info.name}】，现在双手捧着送给你。
+        花语/寓意：${info.desc}。
+        要求：
+        1. 必须用第一人称。
+        2. 表现出惊喜、感动或宠溺（根据你的人设）。
+        3. 描述你接过花的动作。
+        4. 口语化，不要油腻。`;
+
+        // 特殊：如果是桃花，且用户喜欢三国
+        if (seedId === 'seed_peach') {
+            systemPrompt += `注意：这是一朵桃花，暗示“桃园结义”般的深刻羁绊或誓言。请结合这个梗，给出更深情的回复。`;
+        }
+
+        const res = await callAI([
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: `(羞涩地递给你一朵${info.name}) 送给你！` }
+        ]);
+
+        aiBox.innerHTML = res.replace(/\n/g, '<br>');
+        
+        // 增加亲密度/暧昧值
+        let loveHeat = parseInt(localStorage.getItem('v33_heat') || '0');
+        loveHeat = Math.min(100, loveHeat + 15);
+        localStorage.setItem('v33_heat', loveHeat);
+        if(window.updateHeatUI) window.updateHeatUI();
+
+    } catch (e) {
+        aiBox.innerText = "花送到了，但对方太害羞没说话 (API Error)";
+    }
+}
+
+// 挂载
+window.openGarden = openGarden;
+window.waterPlant = waterPlant;
+window.harvestPlant = harvestPlant;
+window.openSeedShop = openSeedShop;
+window.buySeed = buySeed;
 
     
     // === Core UI ===
@@ -3416,6 +3753,7 @@ function updateDots() {
         $('current-wp-preview').style.backgroundImage = '';
         $('current-wp-preview').innerText = '已恢复默认';
     }
+
 
 
     // === 漂流瓶 (Drift Bottle) ===
