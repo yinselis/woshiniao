@@ -216,8 +216,41 @@
     
 .glass { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); box-shadow: var(--shadow); }
 .status-bar { height: 48px; display: flex; justify-content: space-between; align-items: flex-end; padding: 0 25px 8px; font-weight: 600; font-size: 15px; z-index: 100; pointer-events: none; }
-.scroll-wrapper { flex: 1; display: flex; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none; }
-.page { min-width: 100%; height: 100%; padding: 10px 20px 80px 20px; overflow-y: auto; scroll-snap-align: start; display: flex; flex-direction: column; gap: 12px; }
+/* === 找到原来的 .scroll-wrapper 替换为这个 === */
+.scroll-wrapper {
+    flex: 1;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    /* 核心修改：保留 mandatory，但配合下面的 always 使用 */
+    scroll-snap-type: x mandatory; 
+    scrollbar-width: none;
+    /* 核心修改：增加平滑滚动属性 */
+    scroll-behavior: smooth; 
+    /* iOS 惯性滚动优化 */
+    -webkit-overflow-scrolling: touch; 
+    /* 性能优化：防止滑动时重绘导致的闪烁 */
+    will-change: scroll-position; 
+}
+
+/* === 找到原来的 .page 替换为这个 === */
+.page {
+    min-width: 100%;
+    height: 100%;
+    padding: 10px 20px 80px 20px;
+    overflow-y: auto;
+    /* 核心修改：对齐方式不变 */
+    scroll-snap-align: start; 
+    /* 💥 重点修改：强制每次只滑一页，解决“太快”的问题 */
+    scroll-snap-stop: always; 
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    /* 性能优化：让页面内容层级独立，减少渲染闪烁 */
+    transform: translateZ(0); 
+    backface-visibility: hidden;
+}
+
 
 /* 艺术混排布局 */
 .mix-grid { display: flex; flex-wrap: wrap; gap: 12px; width: 100%; align-content: flex-start; padding-top: 10px; }
@@ -507,14 +540,22 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
         margin-right: -10px; /* 视觉修正 */
     }
     
-    .weight-chart-box {
-        width: 100%; height: 200px;
-        background: #fff; border-radius: 16px;
-        margin-bottom: 15px; padding: 10px;
-        box-shadow: var(--shadow);
-        position: relative;
-        z-index: 1; /* 让图表层级变低 */
-    }
+   /* 找到这个类，加入 overflow: hidden */
+.weight-chart-box {
+    width: 100%; 
+    height: 200px;
+    background: #fff; 
+    border-radius: 16px;
+    margin-bottom: 15px; 
+    padding: 10px;
+    box-shadow: var(--shadow);
+    position: relative;
+    z-index: 1;
+    
+    /* 👇 新增这一行：强制剪裁溢出内容 👇 */
+    overflow: hidden; 
+}
+
     .weight-canvas { 
         width: 100%; height: 100%; 
         pointer-events: none; /* 【关键】让鼠标点击能“穿透”图表，防止遮挡输入框 */
@@ -660,6 +701,91 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
 .heat-full { animation: pulse-red 1s infinite; }
 @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(245, 0, 87, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(245, 0, 87, 0); } 100% { box-shadow: 0 0 0 0 rgba(245, 0, 87, 0); } }
 
+/* === V34: 名片小组件样式 === */
+.card-widget-container {
+    width: 100%;
+    aspect-ratio: 16 / 10; /* 接近卡片的比例 */
+    perspective: 1000px; /* 3D 翻转的景深 */
+    cursor: pointer;
+    margin-top: 20px;
+}
+.card-flipper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+.card-widget-container.is-flipped .card-flipper {
+    transform: rotateY(180deg);
+}
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Safari 兼容 */
+    backface-visibility: hidden; /* 翻转后背面不可见 */
+    border-radius: 24px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+    background-size: cover;
+    background-position: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; /* 默认字体 */
+    color: var(--text-color);
+}
+.card-front {
+    background-color: var(--card-bg);
+    border: 1px solid var(--glass-border);
+}
+.card-back {
+    background-color: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    transform: rotateY(180deg);
+}
+.card-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #eee;
+    background-size: cover;
+    background-position: center;
+    border: 3px solid rgba(120,120,120,0.2);
+    margin-bottom: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.card-name {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0;
+}
+.card-bio {
+    font-size: 14px;
+    margin: 5px 0 0 0;
+    opacity: 0.8;
+}
+.card-edit-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 18px;
+    background: rgba(255,255,255,0.2);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+    transition: 0.2s;
+    z-index: 10;
+}
+.card-edit-btn:active {
+    transform: scale(0.9) rotate(45deg);
+}
 </style>
 </head>
 <body class="theme-day">
@@ -671,7 +797,8 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
     </div>
 
     <!-- Scroll Wrapper -->
-    <div class="scroll-wrapper" id="scroll-container" onscroll="updateDots()">
+    <div class="scroll-wrapper" id="scroll-container">
+
         
         <!-- === Page 1 (艺术乱序) === -->
         <div class="page" id="page-1">
@@ -867,9 +994,39 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
 </div>
             </div>
         </div>
-      </div>
+<!-- === Page 6 (名片小组件) === -->
+        <div class="page" id="page-6">
+            <div class="mix-grid" id="page-6-grid">
+                <!-- 名片小组件 -->
+                <div class="card-widget-container" onclick="flipCard()">
+                    <div class="card-flipper" id="card-flipper">
+                        <!-- 正面 -->
+                        <div class="card-face card-front" id="card-front">
+                            <div class="card-avatar" id="card-avatar-front"></div>
+                            <h3 class="card-name" id="card-name-front">你的名字</h3>
+                            <p class="card-bio" id="card-bio-front">@自定义・点击翻转</p>
+                            <div class="card-edit-btn" onclick="event.stopPropagation(); openCardSettings('front')">⚙️</div>
+                        </div>
+                        <!-- 背面 -->
+                        <div class="card-face card-back" id="card-back">
+                             <div class="card-avatar" id="card-avatar-back"></div>
+                            <h3 class="card-name" id="card-name-back">Ta 的名字</h3>
+                            <p class="card-bio" id="card-bio-back">一句喜欢的话</p>
+                            <div class="card-edit-btn" onclick="event.stopPropagation(); openCardSettings('back')">⚙️</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     
-            <div class="pagination-dots"><div class="dot active" id="dot-1"></div><div class="dot" id="dot-2"></div><div class="dot" id="dot-3"></div><div class="dot" id="dot-4"></div><div class="dot" id="dot-5"></div></div>
+            <div class="pagination-dots">
+    <div class="dot active" id="dot-1"></div>
+    <div class="dot" id="dot-2"></div>
+    <div class="dot" id="dot-3"></div>
+    <div class="dot" id="dot-4"></div>
+    <div class="dot" id="dot-5"></div>
+    <div class="dot" id="dot-6"></div> <!-- ✅ 新增这一行 -->
+</div>
         
                 <!-- === Modals === -->
                     <div id="modal-otd" class="modal">
@@ -980,6 +1137,33 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
                 <button class="btn-normal btn-secondary" style="margin-top: 15px; flex-shrink: 0; height: 50px; flex: none;" onclick="$('modal-touch-collection').style.display='none'">关闭</button>
     </div>
 </div>
+
+<!-- === 新增：名片设置弹窗 === -->
+    <div id="modal-card-settings" class="modal">
+        <div class="modal-card">
+            <h3 id="card-settings-title">编辑名片</h3>
+            <input type="hidden" id="card-edit-side"> <!-- 存储当前编辑的是 front 还是 back -->
+            
+            <label>名字</label>
+            <input id="card-set-name" class="setting-input" placeholder="显示的名字">
+            
+            <label>简介/签名</label>
+            <textarea id="card-set-bio" class="setting-input" rows="2" placeholder="显示在名字下方的一行话"></textarea>
+            
+            <label>头像</label>
+            <input id="card-set-avatar-url" class="setting-input" placeholder="图片链接 (URL)">
+            <div style="font-size:12px; opacity:0.6; margin:5px 0;">- 或 -</div>
+            <input type="file" id="card-set-avatar-file" class="setting-input" accept="image/*">
+
+            <label>自定义字体 (TTF/WOFF链接)</label>
+            <input id="card-set-font-url" class="setting-input" placeholder="输入 .ttf 或 .woff 字体链接">
+
+            <div class="btn-group">
+                <button class="btn-normal btn-secondary" onclick="$('modal-card-settings').style.display='none'">取消</button>
+                <button class="btn-normal" onclick="saveCardSettings()">保存</button>
+            </div>
+        </div>
+    </div>
         <!-- Apps Views -->
     
     <!-- 手账 -->
@@ -1399,20 +1583,21 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
 
     <!-- 视图：漂流瓶大海 -->
     <div id="view-bottle" class="view-overlay">
-        <div class="header">
-            <button class="btn-icon btn-close" onclick="closeView('view-bottle')">✕</button> 
-            <span>心愿漂流瓶</span> 
-            <div style="display:flex;">
-                <!-- 新增：设置按钮 -->
-                <button class="btn-icon" onclick="$('modal-bottle-settings').style.display='flex'">⚙️</button>
-                <button class="btn-icon" onclick="$('modal-throw-bottle').style.display='flex'">➕</button>
-            </div>
-        </div>
-        <!-- 注意：这里去掉了 hardcoded 的 class，改用 JS 控制 class -->
-        <div class="bottle-sea" id="bottle-sea-area">
-            <div class="bottle-wave"></div>
+    <div class="header">
+        <button class="btn-icon btn-close" onclick="closeView('view-bottle')">✕</button> 
+        <span>心愿漂流瓶</span> 
+        <div style="display:flex; gap: 5px;">
+            <!-- 👇 改成了网兜按钮 -->
+            <button class="btn-icon" onclick="openNetBag()">🕸️</button>
+            <button class="btn-icon" onclick="$('modal-bottle-settings').style.display='flex'">⚙️</button>
+            <button class="btn-icon" onclick="$('modal-throw-bottle').style.display='flex'">➕</button>
         </div>
     </div>
+    <div class="bottle-sea" id="bottle-sea-area">
+        <div class="bottle-wave"></div>
+    </div>
+</div>
+        
     <!-- 弹窗：扔瓶子 -->
     <div id="modal-throw-bottle" class="modal">
         <div class="modal-card" style="text-align:left;">
@@ -1439,6 +1624,25 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
     </div>
 
 <!-- 弹窗：捡瓶子 (修复版：文字滚动，按钮固定) -->
+<!-- 新增：网兜收藏夹弹窗 -->
+    <div id="modal-bottle-net" class="modal">
+        <div class="modal-card" style="height: 80vh; display:flex; flex-direction:column;">
+            <h3>🕸️ 漂流瓶网兜</h3>
+            <div style="font-size:12px; opacity:0.6; margin-bottom:10px;">
+                海面上的已读瓶子会被捞到这里
+            </div>
+            
+            <!-- 列表区域 -->
+            <div id="net-list" style="flex:1; overflow-y:auto; padding:5px; text-align:left;">
+                <!-- JS 会在这里生成列表 -->
+            </div>
+
+            <div class="btn-group" style="margin-top:10px; flex-shrink:0;">
+                <button class="btn-normal" onclick="salvageBottles()">🎣 一键打捞海面</button>
+                <button class="btn-normal btn-secondary" onclick="$('modal-bottle-net').style.display='none'">关闭</button>
+            </div>
+        </div>
+    </div>
     <!-- 弹窗：捡瓶子 (支持换肤版) -->
     <div id="modal-read-bottle" class="modal">
         <!-- 这里的 class 会被 JS 动态修改，例如加上 skin-pink -->
@@ -1498,7 +1702,7 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
             <button class="btn-normal" style="margin-top:25px;" onclick="$('modal-bottle-settings').style.display='none'">保存装扮</button>
         </div>
     </div>
-
+</div>
 <script>
     const $ = id => document.getElementById(id);
     
@@ -1602,8 +1806,12 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
         capsules: JSON.parse(localStorage.getItem('v25_capsules')) || [],
         customAssets: JSON.parse(localStorage.getItem('v26_assets')) || { stickers: [], fonts: [] },
             moodHistory: JSON.parse(localStorage.getItem('v30_mood_pixels')) || [], 
-    merit: parseInt(localStorage.getItem('v30_merit') || '0')
-};
+    merit: parseInt(localStorage.getItem('v30_merit') || '0'), /* ✅ 这里补上了一个逗号 */
+    businessCard: JSON.parse(localStorage.getItem('v34_card')) || {
+        front: { name: '你的名字', bio: '@自定义・点击翻转', avatar: '', fontUrl: '' },
+        back: { name: 'Ta 的名字', bio: '一句喜欢的话', avatar: '', fontUrl: '' }
+    }
+}; /* ✅ 这里删掉了一个多余的 }; */
     
         const ASSETS = {
         stickers: ["https://cdn-icons-png.flaticon.com/128/4193/4193235.png", "https://cdn-icons-png.flaticon.com/128/4193/4193286.png", "https://cdn-icons-png.flaticon.com/128/2550/2550266.png", "https://cdn-icons-png.flaticon.com/128/616/616430.png", "https://cdn-icons-png.flaticon.com/128/616/616554.png", "https://cdn-icons-png.flaticon.com/128/1048/1048944.png", "https://cdn-icons-png.flaticon.com/128/3209/3209265.png", "https://cdn-icons-png.flaticon.com/128/2916/2916115.png"],
@@ -1747,7 +1955,7 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
         const sl = $('scroll-container').scrollLeft; 
         const w = window.innerWidth; 
         const p = Math.round(sl / w) + 1;
-        for(let i=1; i<=5; i++) {
+        for(let i=1; i<=6; i++) {
             const d = $(`dot-${i}`);
             if(d) d.className = (i === p) ? 'dot active' : 'dot';
         }
@@ -2534,7 +2742,7 @@ function askMealAI(type) {
             }
         }, "输入你的回复...");
     };
-    // === V29 专用：精准备份功能 ===
+        // === V29 专用：精准备份功能 ===
     async function exportData() {
         const btn = event.target;
         const originalText = btn.innerText;
@@ -2550,7 +2758,13 @@ function askMealAI(type) {
                 'v19_', // 经期
                 'v20_', // 金库、占卜
                 'v25_', // 军令状、集章、胶囊
-                'v26_'  // 新素材库、最后盖章时间
+                'v26_', // 新素材库、最后盖章时间
+                'v29_', // RPG等级
+                'v30_', // 漂流瓶、心情像素墙、功德商店、木鱼
+                'v31_', // 指令集
+                'v32_', // 体重管理、运动记录
+                'v33_', // 亲昵、缠绵、暧昧值
+                'v34_' // 名片
             ];
             
             const filteredLS = {};
@@ -2562,7 +2776,7 @@ function askMealAI(type) {
             });
 
             const backup = {
-                type: 'MyOS_V29_Clean', // 标记版本
+                type: 'MyOS_V33_Full', // 更新一下版本标记，方便识别
                 date: new Date().toISOString(),
                 localStorage: filteredLS, 
                 indexedDB: {
@@ -2570,8 +2784,8 @@ function askMealAI(type) {
                     settings: []
                 }
             };
-
-            // 2. 获取 IndexedDB 里的日记 (图片)
+            
+                        // 2. 获取 IndexedDB 里的日记 (图片)
             const diaries = await db.diaries.toArray();
             for (const d of diaries) {
                 const diaryCopy = { ...d };
@@ -2590,14 +2804,35 @@ function askMealAI(type) {
             } else if (bg) {
                 backup.indexedDB.settings.push(bg);
             }
+            
+            // 获取自定义壁纸 (如果有)
+            const customWp = await db.settings.get('customWallpaper');
+            if (customWp && customWp.value instanceof Blob) {
+                const wpBase64 = await blobToBase64(customWp.value);
+                backup.indexedDB.settings.push({ key: 'customWallpaper', valueBase64: wpBase64 });
+            } else if (customWp) {
+                backup.indexedDB.settings.push(customWp);
+            }
+
+// ✅ 新增：获取名片头像
+for (const side of ['front', 'back']) {
+    const avatarKey = `cardAvatar_${side}`;
+    const avatar = await db.settings.get(avatarKey);
+    if (avatar && avatar.value instanceof Blob) {
+        const avatarBase64 = await blobToBase64(avatar.value);
+        backup.indexedDB.settings.push({ key: avatarKey, valueBase64: avatarBase64 });
+    } else if (avatar) {
+        backup.indexedDB.settings.push(avatar);
+    }
+}
 
             // 4. 生成下载
             const blob = new Blob([JSON.stringify(backup)], { type: "application/json" });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = `MyOS_V29_Clean_${new Date().toISOString().split('T')[0]}.json`;
+            a.download = `MyOS_Backup_${new Date().toISOString().split('T')[0]}.json`;
             a.click();
-            alert("✅ 瘦身成功！只备份了 V29 版本需要的数据。");
+            alert("✅ 备份成功！包含：漂流瓶、心情、运动、缠绵等所有数据。");
 
         } catch (e) {
             console.error(e);
@@ -3063,7 +3298,52 @@ const oldOnload = window.onload;
 window.onload = async () => {
     if(oldOnload) await oldOnload();
     initShopSystem();
+    await renderBusinessCard(); // ✅ 新增这一行
 };
+
+/* 请将这段代码放在 <script> 标签的最后面，
+   或者放在 window.onload = async () => { ... } 的大括号外面 
+*/
+
+// 1. 获取容器
+const scrollContainer = document.getElementById('scroll-container');
+
+// 2. 优化的滚动监听变量
+let isScrolling = false;
+
+// 3. 监听滚动事件 (替代原来的 onscroll="updateDots()")
+if (scrollContainer) {
+    scrollContainer.addEventListener('scroll', () => {
+        if (!isScrolling) {
+            window.requestAnimationFrame(() => {
+                updateDots();
+                isScrolling = false;
+            });
+            isScrolling = true;
+        }
+    }, { passive: true }); // passive: true 让滚动更流畅
+}
+
+// 4. 优化后的 updateDots 函数 (如果你原来的没删，可以直接覆盖)
+function updateDots() {
+    const sl = scrollContainer.scrollLeft;
+    const w = scrollContainer.clientWidth; // 使用 clientWidth 更准确
+    // 计算当前页 (四舍五入，超过一半就算下一页)
+    const p = Math.round(sl / w) + 1;
+
+    for (let i = 1; i <= 6; i++) {
+        const d = document.getElementById(`dot-${i}`);
+        if (d) {
+            // 只在状态改变时操作 DOM，减少闪烁
+            const isActive = (i === p);
+            if (isActive && !d.classList.contains('active')) {
+                d.classList.add('active');
+            } else if (!isActive && d.classList.contains('active')) {
+                d.classList.remove('active');
+            }
+        }
+    }
+}
 
 // === 自定义壁纸功能 ===
     async function saveCustomWallpaper() {
@@ -3118,22 +3398,49 @@ window.onload = async () => {
     // 初始化数据结构
     if (!DB.bottles) DB.bottles = [];
 
+    // === 新版：打开漂流瓶（自动刷怪） ===
     function openDriftBottle() {
-        openView('view-bottle');
-        renderBottleSea();
+    openView('view-bottle');
+    
+    if (!DB.bottles) DB.bottles = [];
+
+    // === 核心修改：增加冷却时间和数量限制 ===
+    const now = Date.now();
+    // 读取上次刷新时间 (如果没有，就默认为0)
+    const lastRefresh = parseInt(localStorage.getItem('v30_last_bottle_refresh') || '0');
+    // 设置冷却时间：4小时 (4 * 60 * 60 * 1000)
+    const cooldown = 4 * 60 * 60 * 1000; 
+
+    // 条件1：海面上的瓶子少于 3 个 (原来是5个，改少一点)
+    // 条件2：距离上次刷新已经过了 4 小时 (或者是第一次玩)
+    if (DB.bottles.length < 3 && (now - lastRefresh > cooldown)) {
         
-        // 生成角色选择列表
-        const list = $('bottle-char-list');
-        list.innerHTML = DB.contacts.map(c => 
-            `<div class="char-option" onclick="toggleCharSelect(this, ${c.id})">${c.name}</div>`
-        ).join('');
+        // 每次只生成 1 个新瓶子 (不要一次刷一堆)
+        DB.bottles.push({
+            id: Date.now() + Math.random(), 
+            type: 'system',     
+            status: 'floating',
+            content: '一张模糊的字条...',
+            unlockTime: 0 
+        });
+
+        // 记录这次刷新的时间
+        localStorage.setItem('v30_last_bottle_refresh', now);
+        // 保存瓶子数据
+        localStorage.setItem('v30_bottles', JSON.stringify(DB.bottles));
     }
 
-    function toggleCharSelect(el, id) {
-        el.classList.toggle('selected');
-        // 将选中的ID存到 DOM 属性里方便读取
-        el.dataset.cid = id; 
+    renderBottleSea();
+    
+    // 渲染角色列表
+    const list = $('bottle-char-list');
+    if(list) {
+        list.innerHTML = DB.contacts.map(c => 
+            `<div class="char-option" onclick="toggleCharSelect(this, ${c.id})" data-cid="${c.id}">${c.name}</div>`
+        ).join('');
     }
+}
+
 
     function throwBottle() {
         const content = $('bottle-content').value;
@@ -3167,45 +3474,52 @@ window.onload = async () => {
         alert("🍾 瓶子扔出去了！等待缘分吧...");
     }
 
+    // === 新版：渲染大海（区分系统瓶和用户瓶） ===
     function renderBottleSea() {
         const sea = $('bottle-sea-area');
         // 保留海浪，清空瓶子
         sea.innerHTML = '<div class="bottle-wave"></div>';
         
+        if (!DB.bottles) DB.bottles = [];
         const now = Date.now();
 
         DB.bottles.forEach((b, index) => {
-            // 检查时间状态
-            let displayStatus = b.status;
-            if (b.status === 'floating' && now >= b.unlockTime) {
-                displayStatus = 'arrived'; // 时间到了，虽然还没打开，但状态变为可读
-            }
-
-            // 随机位置
-            const left = (index * 20 + 10) % 80; 
-            const top = (index * 15 + 20) % 60;
+            // 随机位置算法优化，防止重叠
+            const left = (index * 23 + 10) % 85; 
+            const top = (index * 17 + 15) % 65;
             
             let icon = '🍾';
-            let label = '漂流中...';
-            let clickAction = `alert('还没有人捡到哦，再等等...')`;
-            
-            if (displayStatus === 'arrived') {
-                icon = '💌';
-                label = '有回信!';
-                clickAction = `openFoundBottle(${b.id})`; // 打开瓶子
-            } else if (displayStatus === 'replied') {
-                icon = '🌟'; // 已读过的
-                label = '已收藏';
-                clickAction = `openFoundBottle(${b.id})`; // 重读
+            let label = '漂流中';
+            let clickAction = ''; 
+
+            // === 核心逻辑修改开始 ===
+            if (b.type === 'system') {
+                // 系统瓶：问号图标
+                icon = '❓'; 
+                label = '未知瓶子';
+                clickAction = `checkSystemBottle(${b.id})`;
+            } else {
+                // 用户瓶：判断状态
+                let displayStatus = b.status;
+                if (b.status === 'floating' && now >= b.unlockTime) displayStatus = 'arrived';
+                
+                if (displayStatus === 'arrived' || displayStatus === 'replied') {
+                    icon = '💌';
+                    label = '有回信!';
+                    clickAction = `openFoundBottle(${b.id})`; 
+                } else {
+                    clickAction = `alert('这是你扔出的瓶子，还没人捡到呢...')`;
+                }
             }
+            // === 核心逻辑修改结束 ===
 
             const div = document.createElement('div');
             div.className = 'bottle-item';
             div.style.left = left + '%';
             div.style.top = top + '%';
-            div.style.animationDelay = (index * 0.5) + 's';
+            div.style.animationDelay = (index * 0.3) + 's'; // 错开动画时间
             div.innerHTML = `<div>${icon}</div><div class="bottle-name">${label}</div>`;
-            div.onclick = () => eval(clickAction);
+            div.setAttribute('onclick', clickAction); // 使用 setAttribute 兼容性更好
             
             sea.appendChild(div);
         });
@@ -3770,18 +4084,34 @@ function copyCommand(id) {
 
             // 4. 绘制 Canvas 曲线图 (核心可视化)
     function drawWeightChart(data) {
-        const canvas = $('weight-canvas');
-        const ctx = canvas.getContext('2d');
-        // 适配高清屏
-        const dpr = window.devicePixelRatio || 1;
-        const rect = canvas.parentElement.getBoundingClientRect();
-        canvas.width = rect.width * dpr;
-        canvas.height = rect.height * dpr;
-        ctx.scale(dpr, dpr);
-        const w = rect.width;
-        const h = rect.height;
+    const canvas = $('weight-canvas');
+    if(!canvas) return; // 容错保护
+    const ctx = canvas.getContext('2d');
+    
+    // 适配高清屏 (修复版)
+    const dpr = window.devicePixelRatio || 1;
+    // 获取容器的实际大小
+    const rect = canvas.parentElement.getBoundingClientRect();
+    
+    // 1. 设置“物理分辨率” (为了清晰，乘倍数)
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    
+    // 2. 👇【关键修复】强制设定“显示大小” (CSS像素) 👇
+    // 防止画布按物理分辨率渲染导致变大
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
 
-        ctx.clearRect(0, 0, w, h);
+    // 3. 缩放绘图上下文
+    ctx.scale(dpr, dpr);
+    
+    // 使用容器的逻辑宽高进行绘图计算
+    const w = rect.width;
+    const h = rect.height;
+
+    ctx.clearRect(0, 0, w, h);
+    // ... (后面的绘图代码不用动) ...
+
 
         if(data.length < 2) {
             ctx.font = "14px sans-serif";
@@ -3874,6 +4204,269 @@ function copyCommand(id) {
     if(typeof openFoundBottle !== 'undefined') window.openFoundBottle = openFoundBottle;
 window.renderTouchCollection = renderTouchCollection;
 window.deleteTouchItem = deleteTouchItem; // 删除按钮也顺便加个保险
+// // === 打开网兜（查看收藏） ===
+    function openNetBag() {
+        $('modal-bottle-net').style.display = 'flex';
+        renderNetList();
+    }
 
+    // === 渲染网兜列表 ===
+    function renderNetList() {
+        const list = $('net-list');
+        list.innerHTML = '';
+
+        // 筛选出状态为 'collected' (已收藏) 的瓶子
+        // 按时间倒序排列
+        const collection = DB.bottles.filter(b => b.status === 'collected').sort((a,b) => b.unlockTime - a.unlockTime);
+
+        if (collection.length === 0) {
+            list.innerHTML = '<div style="text-align:center; padding:30px; opacity:0.5;">网兜是空的<br>快点击下方按钮打捞吧</div>';
+            return;
+        }
+
+        collection.forEach(b => {
+            // 获取发送者名字
+            let senderName = '神秘人';
+            if (b.finderId) {
+                const c = DB.contacts.find(x => x.id === b.finderId);
+                if (c) senderName = c.name;
+            }
+
+            // 生成预览文字
+            const preview = b.reply ? b.reply.substring(0, 20) + '...' : '(无内容)';
+            const dateStr = new Date(b.unlockTime).toLocaleDateString();
+
+            list.innerHTML += `
+                <div style="background:var(--input-bg); padding:12px; border-radius:12px; margin-bottom:8px; border:1px solid rgba(0,0,0,0.05); cursor:pointer; position:relative;" onclick="reReadBottle(${b.id})">
+                    <div style="display:flex; justify-content:space-between; font-size:12px; opacity:0.7; margin-bottom:4px;">
+                        <span>来自: ${senderName}</span>
+                        <span>${dateStr}</span>
+                    </div>
+                    <div style="font-weight:bold; color:var(--text-color); font-size:14px;">${preview}</div>
+                    
+                    <!-- 删除按钮 -->
+                    <div style="position:absolute; right:10px; bottom:10px; z-index:10;" onclick="deleteBottle(event, ${b.id})">🗑️</div>
+                </div>
+            `;
+        });
+    }
+
+    // === 新版：打捞/清理海面 (放入网兜) ===
+    function salvageBottles() {
+        if(!DB.bottles) DB.bottles = [];
+        
+        // 1. 找出海面上“已读”的瓶子 (status === 'replied')
+        const readyToCollect = DB.bottles.filter(b => b.status === 'replied');
+        
+        // 2. 找出“系统生成的未读瓶子” (垃圾清理)
+        const trash = DB.bottles.filter(b => b.type === 'system');
+
+        if (readyToCollect.length === 0 && trash.length === 0) {
+            alert("🌊 海面上很干净，没有可打捞的瓶子。\n(只有【已读】的瓶子才能被收藏哦)");
+            return;
+        }
+
+        if(!confirm(`🎣 准备收网！\n\n📦 收藏: ${readyToCollect.length} 个已读瓶子\n🧹 清理: ${trash.length} 个未读空瓶\n\n确定吗？`)) return;
+
+        // 执行操作
+        let count = 0;
+        DB.bottles.forEach(b => {
+            if (b.status === 'replied') {
+                b.status = 'collected'; // 标记为已收藏
+                count++;
+            }
+        });
+        
+        // 彻底删除系统垃圾瓶 (type=system)
+        // 保留：已收藏(collected) + 还没被人捡到的(floating) + 刚捡到还没读的(arrived)
+        DB.bottles = DB.bottles.filter(b => b.type !== 'system');
+
+        localStorage.setItem('v30_bottles', JSON.stringify(DB.bottles));
+        
+        // 刷新界面
+        renderBottleSea();
+        renderNetList();
+        
+        
+        
+        alert(`✨ 成功打捞了 ${count} 个瓶子进网兜！`);
+    }
+
+    // === 重读网兜里的瓶子 ===
+    function reReadBottle(bid) {
+        const bottle = DB.bottles.find(b => b.id === bid);
+        if(bottle) showReadModal(bottle);
+    }
+
+// === 删除单个瓶子 ===
+    function deleteBottle(e, bid) {
+        e.stopPropagation();
+        if(!confirm("要把这个瓶子扔回大海(永久删除)吗？")) return;
+        DB.bottles = DB.bottles.filter(b => b.id !== bid);
+        localStorage.setItem('v30_bottles', JSON.stringify(DB.bottles));
+        renderNetList();
+    }
+
+    // === 修复：检查系统瓶子 (这就是你缺失的函数头部) ===
+    async function checkSystemBottle(bid) {
+        // 1. 找到瓶子
+        const bottle = DB.bottles.find(b => b.id === bid);
+        if (!bottle) return;
+
+        // 2. 随机选一个角色作为发送者
+        if (DB.contacts.length === 0) return alert("请先在通讯录添加一个角色！");
+        const randomRole = DB.contacts[Math.floor(Math.random() * DB.contacts.length)];
+
+        // 3. 应用皮肤设置
+        if(typeof applyBottleVisuals === 'function') applyBottleVisuals();
+        
+        // 4. 先显示弹窗（显示加载中）
+        $('read-bottle-sender').innerText = "???";
+        $('read-bottle-time').innerText = "刚刚";
+        $('read-bottle-my-content').innerText = "(这是一个神秘的空瓶子)";
+        $('read-bottle-reply').innerText = "正在读取瓶中信...";
+        $('modal-read-bottle').style.display = 'flex';
+
+        try {
+            // 5. 调用 AI
+            const sysPrompt = `
+            你现在扮演角色：${randomRole.name}。人设：${randomRole.prompt}。
+            场景：你写了一个漂流瓶扔进海里，现在被陌生人捡到了。
+            要求：
+            1. 写一段符合你人设的“心事”、“吐槽”或“生活感悟”。
+            2. 不要称呼对方（因为你不知道是谁捡到的）。
+            3. 口语化，短小精悍（50字左右）。
+            4. 语气要自然，就像随手写下的字条。
+            `;
+
+            const content = await callAI([
+                { role: 'system', content: sysPrompt },
+                { role: 'user', content: "生成内容" }
+            ]);
+
+            // 6. 显示结果
+            $('read-bottle-sender').innerText = randomRole.name; 
+            $('read-bottle-reply').innerText = content;
+            
+            // 7. 变成已读状态
+            bottle.type = 'user'; // 转正，变成普通瓶子
+            bottle.status = 'replied';
+            bottle.content = "（捞到的瓶子）";
+            bottle.reply = content;
+            bottle.finderId = randomRole.id;
+            bottle.unlockTime = Date.now();
+            
+            localStorage.setItem('v30_bottles', JSON.stringify(DB.bottles));
+            renderBottleSea(); // 刷新图标
+
+        } catch (e) {
+            alert("API 连接失败，请检查设置。\n" + e.message);
+            $('modal-read-bottle').style.display = 'none';
+        }
+    }
+    
+    
+    // === 挂载到 window ===
+    window.salvageBottles = salvageBottles;
+    window.checkSystemBottle = checkSystemBottle;
+    window.openNetBag = openNetBag;
+    window.reReadBottle = reReadBottle;
+    window.deleteBottle = deleteBottle;
+    // === V34: 名片小组件逻辑 ===
+
+// 翻转卡片
+function flipCard() {
+    const container = document.querySelector('.card-widget-container');
+    container.classList.toggle('is-flipped');
+}
+
+// 打开设置弹窗
+function openCardSettings(side) {
+    $('modal-card-settings').style.display = 'flex';
+    $('card-edit-side').value = side; // 标记正在编辑哪一面
+
+    const data = DB.businessCard[side];
+    $('card-settings-title').innerText = `编辑名片 (${side === 'front' ? '正面' : '背面'})`;
+    $('card-set-name').value = data.name;
+    $('card-set-bio').value = data.bio;
+    // 注意：URL 和文件输入框每次打开都清空，避免混淆
+    $('card-set-avatar-url').value = '';
+    $('card-set-avatar-file').value = '';
+    $('card-set-font-url').value = data.fontUrl;
+}
+
+// 保存设置
+async function saveCardSettings() {
+    const side = $('card-edit-side').value;
+    const data = DB.businessCard[side];
+
+    // 更新文本信息
+    data.name = $('card-set-name').value;
+    data.bio = $('card-set-bio').value;
+    data.fontUrl = $('card-set-font-url').value.trim();
+
+    // 更新头像图片
+    const urlInput = $('card-set-avatar-url').value.trim();
+    const fileInput = $('card-set-avatar-file').files[0];
+    const avatarKey = `cardAvatar_${side}`; // e.g., 'cardAvatar_front'
+
+    if (fileInput) {
+        const compressedBlob = await compressImage(fileInput, 200, 0.8); // 压缩头像
+        await db.settings.put({ key: avatarKey, value: compressedBlob });
+    } else if (urlInput) {
+        await db.settings.put({ key: avatarKey, value: urlInput });
+    }
+    
+    // 保存并刷新
+    localStorage.setItem('v34_card', JSON.stringify(DB.businessCard));
+    $('modal-card-settings').style.display = 'none';
+    
+    await renderBusinessCard(); // 重新渲染卡片
+}
+
+// 渲染卡片 (核心函数)
+async function renderBusinessCard() {
+    for (const side of ['front', 'back']) {
+        const data = DB.businessCard[side];
+        const cardElem = $(`card-${side}`);
+        
+        // 渲染文字
+        $(`card-name-${side}`).innerText = data.name;
+        $(`card-bio-${side}`).innerText = data.bio;
+
+        // 渲染头像
+        const avatarKey = `cardAvatar_${side}`;
+        const avatarSetting = await db.settings.get(avatarKey);
+        let avatarSrc = '';
+        if (avatarSetting) {
+            if (avatarSetting.value instanceof Blob) {
+                avatarSrc = URL.createObjectURL(avatarSetting.value);
+            } else {
+                avatarSrc = avatarSetting.value;
+            }
+        }
+        $(`card-avatar-${side}`).style.backgroundImage = avatarSrc ? `url('${avatarSrc}')` : 'none';
+
+        // 加载并应用字体
+        if (data.fontUrl) {
+            const fontName = `custom-card-font-${side}`;
+            // 检查是否已加载过
+            if (!document.getElementById(`font-style-${fontName}`)) {
+                const style = document.createElement('style');
+                style.id = `font-style-${fontName}`;
+                style.innerHTML = `@font-face { font-family: '${fontName}'; src: url('${data.fontUrl}'); }`;
+                document.head.appendChild(style);
+            }
+            cardElem.style.fontFamily = `'${fontName}', sans-serif`;
+        } else {
+            cardElem.style.fontFamily = ''; // 恢复默认
+        }
+    }
+}
+
+// 把新函数挂载到 window，确保 onclick 能找到它们
+window.flipCard = flipCard;
+window.openCardSettings = openCardSettings;
+window.saveCardSettings = saveCardSettings;
 </script>
 </body>
