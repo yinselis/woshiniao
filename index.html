@@ -438,6 +438,30 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
     transition: 0.2s;
 }
 .shop-btn-float:active { transform: scale(0.9); background: #fff; }
+    /* === 新增：作弊按钮 (放在左上角) === */
+    .cheat-btn-float {
+        position: absolute;
+        top: 10px;
+        left: 10px; /* 放在左边，和右边的商店按钮对称 */
+        font-size: 20px;
+        cursor: pointer;
+        background: rgba(255,255,255,0.5);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(0,0,0,0.1);
+        transition: 0.2s;
+        z-index: 10;
+    }
+    /* 点击时变红，显示一种危险感 */
+    .cheat-btn-float:active { 
+        transform: scale(0.9); 
+        background: #ff3b30; 
+        color: #fff; 
+    }
 
 /* === 🌊 漂流瓶背景 (大海皮肤) === */
     .bg-sea-day { background: linear-gradient(180deg, #a1c4fd 0%, #c2e9fb 100%); }
@@ -934,14 +958,15 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
                 <!-- 电子木鱼 -->
                 <div class="mix-app-wide" style="width:100%; height:140px; background:var(--paper-texture); border:2px solid #5d4037;" onclick="knockWoodenFish(event)">
                     <div class="wooden-fish-widget">
-    <!-- 新增：商店入口按钮 -->
-    <div class="shop-btn-float" onclick="event.stopPropagation(); openShop()">🛍️</div>
-    
-    <div class="wooden-fish-icon" id="fish-icon-display">🐡</div>
-    <div style="margin-top:10px; font-family:'Ma Shan Zheng'; color:#5d4037;">电子木鱼</div>
-    <div id="merit-count" style="font-size:12px; opacity:0.6; margin-top:5px;">功德: 0</div>
-</div>
+                        <div class="shop-btn-float" onclick="event.stopPropagation(); openShop()">🛍️</div>
+                        <div class="cheat-btn-float" onclick="event.stopPropagation(); attemptCheat()">😈</div>
+                        
+                        <div class="wooden-fish-icon" id="fish-icon-display">🐡</div>
+                        <div style="margin-top:10px; font-family:'Ma Shan Zheng'; color:#5d4037;">电子木鱼</div>
+                        <div id="merit-count" style="font-size:12px; opacity:0.6; margin-top:5px;">功德: 0</div>
+                    </div>
                 </div>
+
 
                 <!-- 心情像素墙 -->
                 <div class="widget-large" style="width:100%; height:200px; background:#fff;">
@@ -4463,6 +4488,82 @@ async function renderBusinessCard() {
         }
     }
 }
+
+// === 😈 作弊功能逻辑 ===
+async function attemptCheat() {
+    // 1. 弹窗确认
+    if(!confirm("⚠️ 警告：真的要作弊吗？\n\n成功率：75% (获得大量功德)\n失败率：25% (功德倒扣 + 随机角色骂你)")) {
+        return;
+    }
+
+    const roll = Math.random(); // 生成 0~1 之间的随机数
+    
+    // === 成功分支 (75%) ===
+    if (roll < 0.75) {
+        const gain = 1000; // 暴富
+        DB.merit = (DB.merit || 0) + gain;
+        localStorage.setItem('v30_merit', DB.merit);
+        
+        // 更新界面
+        $('merit-count').innerText = `功德: ${DB.merit}`;
+        
+        // 视觉反馈
+        showToast(`😈 作弊成功！功德 +${gain} (良心有点痛...)`);
+        if(navigator.vibrate) navigator.vibrate([50, 50, 200]); // 震动反馈
+        
+    } 
+    // === 失败分支 (25%) ===
+    else {
+        const penalty = 500; // 惩罚
+        // 扣除功德 (最少扣到0)
+        DB.merit = Math.max(0, (DB.merit || 0) - penalty);
+        localStorage.setItem('v30_merit', DB.merit);
+        $('merit-count').innerText = `功德: ${DB.merit}`;
+        
+        // 检查是否有角色
+        if (DB.contacts.length === 0) {
+            alert(`⚡ 作弊失败！天谴！功德 -${penalty} (快去通讯录添加角色吧，不然没人骂你)`);
+            return;
+        }
+
+        // 随机选择一个角色
+        const role = DB.contacts[Math.floor(Math.random() * DB.contacts.length)];
+        
+        // 界面提示正在连接
+        const originalText = $('merit-count').innerText;
+        $('merit-count').innerText = `${role.name} 正在赶来...`;
+
+        try {
+            // 调用 AI 生成骂人/失望的话
+            const prompt = `
+            你现在是${role.name}。人设：${role.prompt}。
+            情境：用户在攒功德的游戏里试图作弊（走捷径）被抓了。
+            任务：根据你的人设，对用户进行训斥、嘲讽、或者表达失望。
+            要求：
+            1. 口语化，简短有力（30字以内）。
+            2. 如果人设是严厉的，就狠狠骂；如果是温柔的，就表示痛心。
+            3. 不要用书面语。
+            `;
+
+            const res = await callAI([
+                { role: 'system', content: prompt },
+                { role: 'user', content: "我作弊被抓了，骂我。" }
+            ]);
+
+            // 弹出结果
+            alert(`🚫 作弊失败！被抓现行！\n\n😠 ${role.name} 对你说：\n“${res}”\n\n(惩罚：功德 -${penalty})`);
+
+        } catch (e) {
+            alert(`🚫 作弊失败！(网络不好，但功德还是要扣的 -${penalty})`);
+        } finally {
+            // 恢复文字显示
+            $('merit-count').innerText = `功德: ${DB.merit}`;
+        }
+    }
+}
+
+// 挂载到 window 以防万一
+window.attemptCheat = attemptCheat;
 
 // 把新函数挂载到 window，确保 onclick 能找到它们
 window.flipCard = flipCard;
