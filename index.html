@@ -1126,15 +1126,23 @@ select.setting-input { appearance: none; background-image: url("data:image/svg+x
                 </div>
 
             </div> <!-- page-6-grid 结束 -->
-        </div> <!-- page-6 结束 -->
-    
-            <div class="pagination-dots">
+<!-- 找到这一行 -->
+</div> <!-- page-6 结束 -->
+
+<!-- 关键修改：原来小白点在这下面，我们要把小白点放到下面这个 </div> 的外面 -->
+</div> <!-- scroll-container 结束 (在这里闭合滚动容器) -->
+
+<!-- 把小白点的代码移动到这里，让它和滚动容器平级 -->
+<div class="pagination-dots">
     <div class="dot active" id="dot-1"></div>
     <div class="dot" id="dot-2"></div>
     <div class="dot" id="dot-3"></div>
     <div class="dot" id="dot-4"></div>
     <div class="dot" id="dot-5"></div>
-    <div class="dot" id="dot-6"></div> <!-- ✅ 新增这一行 -->
+    <div class="dot" id="dot-6"></div>
+</div>
+
+<!-- 这里是 phone-container 的结尾 -->
 </div>
         
                 <!-- === Modals === -->
