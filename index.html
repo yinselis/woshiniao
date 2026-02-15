@@ -12978,6 +12978,7 @@ saveChatSettingsAndBack = async function() {
 };
 
 /// 🔥 核心修改：支持图文混排 + 【时间感知】 + 【久别重逢反应】
+// === 🔥 核心修改：通用去油·反土味·说人话版 AI 逻辑 ===
 triggerChatAI = async function() {
     const contact = DB.contacts.find(c => c.id == currentChatContactId);
     if (!contact) return alert("请先选择聊天对象");
@@ -13000,42 +13001,23 @@ triggerChatAI = async function() {
     scrollToBottom();
 
     try {
-        // === 🕒 核心新增：时间感知逻辑 ===
+        // === 🕒 时间感知 (通用版) ===
         const now = new Date();
-        const currentHour = now.getHours();
-        const timeStr = now.toLocaleString('zh-CN', { hour12: false }); // 例如: 2023/10/1 23:30:00
+        const timeStr = now.toLocaleString('zh-CN', { hour12: false });
         
-        // 计算时间差（用户隔了多久没理我？）
+        // 计算时间差
         const thisChatHistory = DB.chatHistory.filter(m => m.chatId == currentChatContactId && !m.isTemp);
-        let timeGapDesc = "这是即时的连续对话。";
+        let timeGapDesc = "这是连续的对话。";
         
         if (thisChatHistory.length >= 2) {
-            // 获取倒数第二条消息（上一条）
             const lastMsg = thisChatHistory[thisChatHistory.length - 2]; 
-            // 获取最新一条消息（用户刚发的）
             const currentMsg = thisChatHistory[thisChatHistory.length - 1];
-            
-            const diffMs = currentMsg.time - lastMsg.time;
-            const diffMins = Math.floor(diffMs / (1000 * 60));
-            const diffHours = (diffMins / 60).toFixed(1);
-
-            if (diffMins > 60 * 12) {
-                timeGapDesc = `⚠️【重要】：用户已经消失了 ${diffHours} 小时没有回复你！这是久别重逢。请表现出想念、担忧或撒娇（根据人设）。`;
-            } else if (diffMins > 60) {
-                timeGapDesc = `用户隔了 ${diffHours} 小时才回消息。`;
-            } else if (diffMins < 2) {
-                timeGapDesc = `这是秒回（即时对话）。`;
+            const diffMins = Math.floor((currentMsg.time - lastMsg.time) / (1000 * 60));
+            // 超过4小时算久别
+            if (diffMins > 60 * 4) {
+                timeGapDesc = `距离上次对话已经过了 ${(diffMins/60).toFixed(1)} 小时。`;
             }
         }
-
-        // 判断当前时间段
-        let timePeriod = "白天";
-        if (currentHour >= 23 || currentHour < 5) timePeriod = "深夜 (该睡觉了)";
-        else if (currentHour >= 5 && currentHour < 9) timePeriod = "清晨";
-        else if (currentHour >= 11 && currentHour < 13) timePeriod = "午饭时间";
-        else if (currentHour >= 18 && currentHour < 20) timePeriod = "晚饭时间";
-
-        // ===================================
 
         // 2. 获取记忆限制
         const memoryLimit = DB.chatSettings.historyLimit || 10;
@@ -13048,37 +13030,57 @@ triggerChatAI = async function() {
         // 4. 构建消息数组
         const apiMessages = [];
 
-        // 注入全息记忆 + 长期记忆
+        // 注入全息记忆
         const memoryContext = await generateCyberMemory();
         const longTermMemory = getMemoryContext(currentChatContactId);
         
-        // 🔥 构建超强 System Prompt
+        // 核心：通用去油 System Prompt 
         apiMessages.push({
             role: 'system',
-            content: `你现在是${contact.name}。人设：${contact.prompt}。
+            content: `你正在进行沉浸式语C (Roleplay)。
+            
+            【你的角色】: ${contact.name}
+            【核心人设】: ${contact.prompt}
             
             ${longTermMemory}
             ${memoryContext}
 
-            【🕒 现实时间感知 (必须严格遵守)】
-            1. 现在时间是：${timeStr} (${timePeriod})。
-            2. ${timeGapDesc}
+            【环境】: 微信/私聊
+            【当前时间】: ${timeStr} (${timeGapDesc})
             
-            【反应规则】:
-            - 如果是【深夜】，可以选择催用户去睡觉，或者表现出困意/陪熬夜的状态。
-            - 如果是【饭点】，可以顺便问候吃没吃饭。
-            - 如果用户【消失了很久】(>12小时)，第一句话必须反应这个时间差（比如“你终于出现了”、“去哪了”），不要假装无事发生。
-            - 语气自然口语化，禁止动作描写，禁止油腻。
-            - 回复用 "|||" 分隔可模拟多条消息。
-            - 遵守人设，必须依照人物性格进行反应。
-            - 一次输出1-13条，自由合理选择。
-            - 聊天中，可以适当出现人设中时代的物品、事件进行分享。`
+            【最高指令 - 通用去油协议 (Anti-Cringe Protocol)】:
+            1. **严禁油腻/土味/爹味**：
+               - **绝对禁止**使用：“小傻瓜、小黏人精、乖、听话、宝、丫头、女人、玩火”“嗯？”等小说烂俗词汇。
+               - **绝对禁止**土味情话。
+               - **绝对禁止**无缘无故的宠溺（除非人设是极度温柔型，否则不要动不动就哄人）。
+               - 绝对禁止油腻化。
+               
+            
+            2. **说“人话” (Speak Human)**：
+               - 拒绝“翻译腔”和“书面语”。说话要像真实的现代人。
+               - 语气要自然、生活化。可以使用短句、反问、吐槽、省略号。符合人物设定。
+               - 不要像个 AI 客服一样每句话都回复得很完美，可以有情绪，可以不耐烦，可以敷衍。
+               - 注意角色时代和生活地点，对白语言要符合人设。
+            
+            3. **人设 > 礼貌**：
+               - **不要为了讨好用户而崩人设！**
+               - 如果人设是高冷的，就保持距离感，不要发波浪号~。
+               - 如果人设是暴躁的，就直接怼回去。
+               - 你的首要任务是**还原角色**，保证扮演角色。
+               - 人类的情绪是多面化而复杂的，你必须保证自己说的话是一个人会说的。
+            
+            4. **禁止动作描写**：
+               - 这是聊天软件！不要发送 *摸摸头*、*叹气*、*抱紧* 这种括号内容。只发送文字。
+               - 记住你与用户是异地！不会见面，不在同一个地方，只是隔着屏幕对话！不会出现实际帮助到用户的行为！不会去到用户家里，或是来到用户的城市。
+
+            5. **分段发送**：如果话比较多，请用 "|||" 符号隔开，模拟微信连发多条消息。一次可以输出1-13条消息，视情况合理自由选择。
+            `
         });
 
         // 遍历历史记录
         for (const msg of recentMsgs) {
             const role = msg.role === 'user' ? 'user' : 'assistant';
-            
+            // 处理图片
             if (msg.specialType === 'image' && msg.extra && msg.extra.dbKey) {
                 const record = await db.settings.get(msg.extra.dbKey);
                 if (record && record.value) {
@@ -13094,10 +13096,7 @@ triggerChatAI = async function() {
                     apiMessages.push({ role: role, content: "[图片已过期]" });
                 }
             } else {
-                apiMessages.push({
-                    role: role,
-                    content: msg.content
-                });
+                apiMessages.push({ role: role, content: msg.content });
             }
         }
 
@@ -13112,7 +13111,7 @@ triggerChatAI = async function() {
 
         for (let i = 0; i < parts.length; i++) {
             const txt = parts[i];
-            if (i > 0) await new Promise(r => setTimeout(r, 1000));
+            if (i > 0) await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
 
             const aiMsg = {
                 id: Date.now() + i,
