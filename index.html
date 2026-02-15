@@ -5076,8 +5076,8 @@ body.theme-night .chat-time-stamp span {
             
             <!-- 描述文字 -->
             <div class="cp-desc-text">
-                这里是只属于我们两个人的小天地<br>
-                记录每一个心动瞬间...
+                <br>
+                
             </div>
 
             <!-- 数据栏 (粉钻) -->
@@ -13796,22 +13796,49 @@ function clearAllChatHistory() {
 // 👩‍❤️‍👨 情侣空间 V3.0 (全屏 APP 版)
 // ============================================================
 
-// 1. 数据初始化 (扩展结构)
-if (!DB.coupleSpace) {
-    DB.coupleSpace = { 
-        diamond: 0, 
-        lastCheckIn: '', 
-        settings: {},
-        // 新增数据结构
-        diary: { list: [], autoEnabled: false, lastAutoDate: '' },
-        cart: { items: [], history: [] }, // items=购物车, history=已送
-        truth: [] // 真心话记录
-    };
+// 1. 数据初始化 (终极修复版：深度合并，防止覆盖)
+const savedCpData = localStorage.getItem('v46_couple_space');
+
+// 默认结构
+const defaultCpData = { 
+    diamond: 0, 
+    lastCheckIn: '', 
+    startDate: '', 
+    settings: {},
+    diary: { list: [], autoEnabled: false, lastAutoDate: '' },
+    cart: { items: [], history: [] },
+    truth: [] 
+};
+
+if (savedCpData) {
+    try {
+        const parsed = JSON.parse(savedCpData);
+        // 合并逻辑：如果有存档，就用存档；如果存档缺字段，就用默认值补全
+        DB.coupleSpace = {
+            ...defaultCpData, // 先铺底
+            ...parsed,        // 再覆盖存档
+            diary: {
+                ...defaultCpData.diary,
+                ...(parsed.diary || {}) // 确保 diary 内部字段也不会丢
+            },
+            cart: {
+                ...defaultCpData.cart,
+                ...(parsed.cart || {})
+            }
+        };
+    } catch (e) {
+        console.error("数据解析失败，重置为默认", e);
+        DB.coupleSpace = defaultCpData;
+    }
+} else {
+    // 第一次玩，直接用默认
+    DB.coupleSpace = defaultCpData;
 }
-// 兼容旧数据补全
-if (!DB.coupleSpace.diary) DB.coupleSpace.diary = { list: [], autoEnabled: false, lastAutoDate: '' };
-if (!DB.coupleSpace.cart) DB.coupleSpace.cart = { items: [], history: [] };
-if (!DB.coupleSpace.truth) DB.coupleSpace.truth = [];
+
+// 再次确保 list 存在 (双重保险)
+if (!Array.isArray(DB.coupleSpace.diary.list)) {
+    DB.coupleSpace.diary.list = [];
+}
 
 function saveCpData() {
     localStorage.setItem('v46_couple_space', JSON.stringify(DB.coupleSpace));
@@ -13934,10 +13961,16 @@ function openCpDiary() {
     openView('view-cp-diary');
     renderCpDiaryList();
     
-    // 初始化开关状态
+    // === 修复：根据保存的数据，同步开关的视觉状态 ===
     const toggle = $('cp-diary-auto-toggle');
-    if (DB.coupleSpace.diary.autoEnabled) toggle.classList.add('on');
-    else toggle.classList.remove('on');
+    if (toggle) {
+        // 检查数据库里的状态
+        if (DB.coupleSpace.diary && DB.coupleSpace.diary.autoEnabled) {
+            toggle.classList.add('on'); // 如果是 true，加上 .on 类（变绿）
+        } else {
+            toggle.classList.remove('on'); // 否则移除（变灰）
+        }
+    }
 }
 
 function renderCpDiaryList() {
@@ -14100,7 +14133,7 @@ function renderCartList() {
                 <div class="taobao-img">${item.icon}</div>
                 <div class="taobao-info">
                     <div class="taobao-title">${item.name}</div>
-                    <div class="taobao-ai-note">Ta说: ${item.note}</div>
+                    <div class="taobao-ai-note">${item.note}</div>
                     <div class="taobao-bottom">
                         <div class="taobao-price">${item.price} 粉钻</div>
                         <button class="taobao-btn" onclick="buyGift(${item.id})">帮Ta清空</button>
