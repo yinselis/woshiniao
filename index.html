@@ -4879,86 +4879,98 @@ body.theme-night .chat-time-stamp span {
         </div>
     </div>
     
-    <!-- 说明书 (吐槽版) -->
-    <div id="view-manual" class="view-overlay">
-        <div class="header">
-            <button class="btn-icon btn-close" onclick="closeView('view-manual')">✕</button> 
-            <span>使用（劝退）手册</span> 
-            <div>📘</div>
-        </div>
-        <div style="padding:20px; overflow-y:auto; line-height:1.6; color:var(--text-color); font-size:14px; padding-bottom:80px;">
+<!-- 说明书 (毒舌劝退版 V3.0) -->
+<div id="view-manual" class="view-overlay">
+    <div class="header">
+        <button class="btn-icon btn-close" onclick="closeView('view-manual')">✕</button> 
+        <span>使用（劝退）手册</span> 
+        <div>💸</div>
+    </div>
+    <div style="padding:20px; overflow-y:auto; line-height:1.6; color:var(--text-color); font-size:14px; padding-bottom:80px;">
+        
+        <!-- 警告区 -->
+        <div style="background:#fff0f5; padding:15px; border-radius:15px; margin-bottom:20px; border:2px dashed #ff3b30; color:#c62828;">
+            <h3 style="margin-top:0; display:flex; align-items:center; gap:5px;">
+                <span>🚨</span> <span>生死攸关的警告</span>
+            </h3>
+            <p><b>1. 数据存在哪？</b><br>
+            存在你的<b>浏览器缓存</b>里。这意味着：<br>
+            ❌ <b>手贱清缓存</b> = 记忆格式化 (直接失忆)。<br>
+            ❌ <b>卸载浏览器</b> = 角色被物理超度。<br>
+            ❌ <b>用无痕模式</b> = 你在写寂寞，关掉就没。<br>
+            ✅ <b>唯一解药</b>：去设置里点 <b>[📤 导出备份]</b>。建议每天点一次，不然哪天手机丢了，别来找我哭。</p>
             
-            <!-- 警告区 -->
-            <div style="background:#fff0f5; padding:15px; border-radius:15px; margin-bottom:20px; border:2px dashed #ff3b30; color:#c62828;">
-                <h3 style="margin-top:0; display:flex; align-items:center; gap:5px;">
-                    <span>🚨</span> <span>数据自毁预警 (必读)</span>
-                </h3>
-                <p><b>1. 图片存在哪？</b><br>
-                存在你的浏览器里。这意味着：<br>
-                ❌ <b>手贱清缓存</b> = 数据火葬场。<br>
-                ❌ <b>卸载浏览器</b> = 记忆格式化。<br>
-                ❌ <b>用无痕模式</b> = 你在写寂寞。</p>
+            <p><b>2. 关于钱 (API Key)</b><br>
+            这个 App 本身免费，但 AI 的脑子是按字数收费的。你和 Ta 说的每一句废话，都在燃烧你的余额。请量力而行，理性沉迷。</p>
+        </div>
+
+        <!-- 免费功能区 -->
+        <div style="background:var(--card-bg); padding:15px; border-radius:15px; margin-bottom:20px; box-shadow:var(--shadow);">
+            <h3 style="margin-top:0; border-bottom:1px solid rgba(0,0,0,0.1); padding-bottom:10px;">🟢 零氪党专区 (纯本地自嗨)</h3>
+            <p style="font-size:12px; opacity:0.6;">(这些功能断网也能用，不费钱，但费手)</p>
+            
+            <ul style="padding-left:20px; margin-top:10px; font-size:13px;">
+                <li><b>MindLog (日记)：</b> 一个带密码的记事本。写给未来的自己看（如果那时候数据还在的话）。</li>
+                <li><b>手账：</b> 让你在手机上体验“剪报纸”的快感，贴纸永远对不齐是特色，治好你的强迫症。</li>
+                <li><b>倒计时：</b> 焦虑制造机。看着数字变小，提醒你离死线/见面又近了一步。</li>
+                <li><b>待办清单：</b> 也就是“我永远不会做的事情清单”。</li>
+                <li><b>经期助手：</b> 这个 App 里唯一还在按生物学规律运行的东西。</li>
+                <li><b>每日一卦：</b> 随机数生成器。信则有，不信则...再抽一次。</li>
+                <li><b>命运扭蛋：</b> 专治“中午吃什么”这种世纪难题。</li>
+                <li><b>乖宝宝集章：</b> 电子版“小红花”，试图用虚拟印章控制成年人的行为。</li>
+                <li><b>军令状：</b> 立 flag 专用，打脸神器。</li>
+                <li><b>私密金库：</b> 存一些不想让别人看见，但自己也记不住的密码。</li>
+                <li><b>电子木鱼：</b> 赛博积德。敲一下功德+1，骂一句脏话功德-100。</li>
+                <li><b>体重管理：</b> 羞辱模拟器。看着曲线波动来获得心理压力。</li>
+                <li><b>拼字积木：</b> 只要你不点“对话”或“出题”，它就是个免费的拼图游戏。</li>
+                <li><b>名片/壁纸：</b> 换个好看的图，假装自己拥有了一个新 App。</li>
+            </ul>
+        </div>
+
+        <!-- 付费功能区 -->
+        <div style="background:var(--card-bg); padding:15px; border-radius:15px; margin-bottom:20px; box-shadow:var(--shadow); border:1px solid var(--accent-color);">
+            <h3 style="margin-top:0; border-bottom:1px solid rgba(0,0,0,0.1); padding-bottom:10px;">🟡 氪金陷阱 (API 碎钞机)</h3>
+            <p style="font-size:12px; opacity:0.6;">(点一下就要花钱，请把 AI 当成按字数计费的陪聊)</p>
+
+            <ul style="padding-left:20px; margin-top:10px; font-size:13px;">
+                <li><b>💬 聊天/微信：</b> 核心烧钱大户。你发一句，Ta 回一句，Token 就在欢声笑语中灰飞烟灭。支持发图、语音、红包，花样越多，钱包越瘦。</li>
                 
-                <p><b>2. 怎么备份？</b><br>
-                设置里有个 <b>[📤 导出备份]</b>。建议每天点一次，不然哪天手机丢了或者浏览器崩了，别来找我哭。</p>
-
-                <p><b>3. 为什么不是全屏？</b><br>
-                因为你没把它<b>“添加到主屏幕”</b>！<br>
-                Safari 点击底部分享按钮 -> 添加到主屏幕。<br>
-                不做这一步，它就是个普通的网页，还有丑陋的地址栏。</p>
-            </div>
-
-            <!-- 免费功能区 -->
-            <div style="background:var(--card-bg); padding:15px; border-radius:15px; margin-bottom:20px; box-shadow:var(--shadow);">
-                <h3 style="margin-top:0; border-bottom:1px solid rgba(0,0,0,0.1); padding-bottom:10px;">🟢 免费的电子垃圾 (本地运行)</h3>
-                <p style="font-size:12px; opacity:0.6;">(这些功能断网也能用，纯属自嗨，不消耗我的 API Key)</p>
+                <li><b>🥂 沉浸式约会：</b> 全场消费由你的 API Key 买单。从开场白到结束语，每一句浪漫的描写都是真金白银。</li>
                 
-                <ul style="padding-left:20px; margin-top:10px;">
-                    <li><b>MindLog (日记)：</b> 也就是个带密码的记事本，写给未来的自己看（如果那时候数据还在的话）。</li>
-                    <li><b>手账：</b> 让你在手机上体验“剪报纸”的快感，贴纸歪歪扭扭是特色的，别问为什么对不齐。</li>
-                    <li><b>倒计时：</b> 焦虑制造机。看着数字变小，提醒你离死线/见面又近了一步。</li>
-                    <li><b>待办清单：</b> 也就是“我永远不会做的事情清单”。</li>
-                    <li><b>经期助手：</b> 这个 App 里唯一还在按规律运行的东西。</li>
-                    <li><b>每日一卦：</b> 随机数生成器。信则有，不信则...再抽一次。</li>
-                    <li><b>命运扭蛋：</b> 专治“中午吃什么”这种世纪难题。</li>
-                    <li><b>乖宝宝集章：</b> 电子版“小红花”，试图用虚拟印章控制人类行为。</li>
-                    <li><b>军令状：</b> 立 flag 专用，打脸神器。</li>
-                    <li><b>私密金库：</b> 存一些不想让别人看见，但自己也记不住的密码。</li>
-                    <li><b>电子木鱼：</b> 赛博积德。敲一下功德+1，骂一句脏话功德-100。</li>
-                    <li><b>体重管理：</b> 羞辱模拟器。看着曲线波动来获得心理压力。</li>
-                </ul>
-            </div>
+                <li><b>💓 亲昵 (Touch)：</b> 戳一下屏幕，AI 就要运行几亿次矩阵运算来编一句“脸红心跳”的反应哄你开心。</li>
+                
+                <li><b>🪴 赛博花房：</b> 这里的花不需要水，需要钱。送花给 Ta，换取一句感谢。这可能是世界上最贵的电子植物。</li>
+                
+                <li><b>🍟 爱心外卖：</b> 这里的食物不能吃，但能扣费。你给 Ta 点虚拟外卖，Ta 给你虚拟的情绪价值。</li>
+                
+                <li><b>🛒 购物车：</b> AI 会根据人设生成一堆它想买的东西。你点击“帮Ta清空”，实际上清空的是你的 Token 余额。</li>
+                
+                <li><b>✨ AI 回复 (日记/手账)：</b> 让 AI 假装关心你的流水账，并发表一些看似深刻实则废话的点评。</li>
+                
+                <li><b>🔮 梦境解析：</b> 把你乱七八糟的梦发给 AI，让它一本正经地胡说八道。</li>
+                
+                <li><b>📝 请示单：</b> 赛博乞讨。向 AI 扮演的 Dom 申请喝奶茶，通过率取决于 AI 的随机心情。</li>
+                
+                <li><b>📬 时光信箱/漂流瓶：</b> 假装有人给你写信。其实是 AI 分饰多角在陪你演戏。</li>
+                
+                <li><b>🎮 游戏嘴炮 (井字棋/五子棋)：</b> 下棋是免费的，但如果你悔棋或者赢了，AI 嘲讽你的时候是收费的。</li>
+                
+                <li><b>🎟️ 刮刮乐：</b> 刮开涂层是免费的，但兑奖时 AI 的撒娇是收费的。</li>
+                
+                <li><b>📖 晚安故事：</b> 哄睡服务。比数羊贵，但比数羊管用（大概）。</li>
+                
+                <li><b>🎧 共享耳机：</b> AI 会听你正在听的歌（其实是看歌名），然后发一条很有氛围感的弹幕。</li>
+            </ul>
+        </div>
 
-            <!-- 付费功能区 -->
-            <div style="background:var(--card-bg); padding:15px; border-radius:15px; margin-bottom:20px; box-shadow:var(--shadow); border:1px solid var(--accent-color);">
-                <h3 style="margin-top:0; border-bottom:1px solid rgba(0,0,0,0.1); padding-bottom:10px;">🟡 烧钱的智商税 (消耗 API)</h3>
-                <p style="font-size:12px; opacity:0.6;">(点一下就要花钱，请把 AI 当成按字数收费的陪聊)</p>
-
-                <ul style="padding-left:20px; margin-top:10px;">
-                    <li><b>✨ AI 回复 (日记/手账)：</b> 让 AI 假装关心你的流水账，并发表一些看似深刻实则废话的点评。</li>
-                    <li><b>🔮 梦境解析：</b> 把你乱七八糟的梦发给 AI，让它一本正经地胡说八道。</li>
-                    <li><b>📝 请示单：</b> 赛博乞讨。向 AI 扮演的 Dom 申请喝奶茶，通过率取决于 AI 的随机心情。</li>
-                    <li><b>🥗 饮食点评：</b> 发给 AI 你的垃圾食品清单，花钱找骂。</li>
-                    <li><b>📬 时光信箱：</b> 假装有人给你写信。其实是 AI 在陪你演戏。</li>
-                    <li><b>🍾 漂流瓶：</b> 把心事扔进虚拟大海，捞上来的是 AI 扮演的陌生人给你灌的鸡汤。</li>
-                    <li><b>💓 亲昵 (Touch)：</b> 戳屏幕。AI 会根据你戳的位置脑补出一场大戏。</li>
-                    <li><b>🧩 拼字积木：</b> 只有点“对话”或“出题”时才费钱。本质是 AI 帮你写勒索信。</li>
-                    <li><b>🎮 游戏嘴炮 (井字棋/五子棋)：</b> 下棋是免费的，但如果你悔棋或者赢了，AI 嘲讽你的时候是收费的。</li>
-                    <li><b>🎟️ 刮刮乐：</b> 刮开涂层是免费的，但兑奖时 AI 的撒娇是收费的。</li>
-                    <li><b>📖 晚安故事：</b> 哄睡服务。比数羊贵，但比数羊管用（大概）。</li>
-                    <li><b>🪴 赛博花房：</b> 送花给 AI。花是虚拟的，感动是计算出来的，钱是真的扣了。</li>
-                </ul>
-            </div>
-
-            <h3 style="margin:10px 0;">🔧 开发者留言</h3>
-            <div style="font-size:13px; opacity:0.9; background:#eee; padding:10px; border-radius:8px;">
-                <p>“这个 App 没有任何后端，所有数据都在你手机里。如果它崩了，那是浏览器的锅，或者是你手机不行，反正不是我代码的问题 (逃)。”</p>
-                <p>—— 卑微的开发者(ai写的)</p>
-            </div>
+        <h3 style="margin:10px 0;">🔧 开发者留言</h3>
+        <div style="font-size:13px; opacity:0.9; background:#eee; padding:10px; border-radius:8px;">
+            <p>“这个 App 没有任何后端，所有数据都在你手机里。如果它崩了，那是浏览器的锅，或者是你手机不行，反正不是我代码的问题 (逃)。”</p>
+            <p>—— 卑微的开发者 (AI代笔)</p>
         </div>
     </div>
+</div>
     
- 
  <!-- 🏠 秘密基地 (Home App) 界面 -->
 <div id="view-home" class="view-overlay">
     <!-- 顶部导航栏 -->
