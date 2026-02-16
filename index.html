@@ -3641,6 +3641,168 @@ body.theme-night .chat-time-stamp span {
     100% { transform: rotate(-20deg) scale(1); opacity: 0.8; }
 }
 
+/* === 🥂 约会 APP 样式 === */
+
+.date-location-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.date-loc-card {
+    background: rgba(255, 255, 255, 0.6);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 15px 5px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.date-loc-card:active { transform: scale(0.95); }
+.date-loc-card.selected {
+    background: #fff;
+    border-color: #ec407a;
+    box-shadow: 0 4px 10px rgba(236, 64, 122, 0.2);
+}
+
+.date-loc-card.special {
+    background: linear-gradient(135deg, #fce4ec 0%, #fff 100%);
+    border: 1px dashed #ec407a;
+}
+
+.loc-icon { font-size: 24px; margin-bottom: 5px; }
+.loc-name { font-size: 12px; font-weight: bold; color: #880e4f; }
+.loc-desc { font-size: 10px; opacity: 0.6; }
+
+/* 开场白的小说卡片样式 */
+.novel-card {
+    background: #fff;
+    padding: 25px 20px;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    border-left: 5px solid #ec407a;
+    margin-bottom: 20px;
+    animation: fadeIn 1s;
+}
+
+.novel-text {
+    font-family: 'Noto Serif SC', serif; /* 衬线体，更有小说感 */
+    font-size: 15px;
+    line-height: 1.8;
+    color: #4a4a4a;
+    text-align: justify;
+    white-space: pre-wrap;
+}
+
+.novel-meta {
+    font-size: 12px;
+    color: #999;
+    text-align: right;
+    margin-top: 15px;
+    font-style: italic;
+}
+
+/* 约会中的气泡 (区别于普通聊天) */
+.date-bubble {
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 85%;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.date-bubble.ai {
+    background: #fff;
+    color: #333;
+    border-top-left-radius: 2px;
+    margin-right: auto;
+}
+
+.date-bubble.user {
+    background: #fce4ec; /* 淡淡的粉 */
+    color: #880e4f;
+    border-top-right-radius: 2px;
+    margin-left: auto;
+}
+
+/* 约会小说卡片 - 调整下边距，防止贴底 */
+.novel-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    border-left: 4px solid #ec407a;
+    margin-bottom: 10px;
+    flex-shrink: 0; /* 防止被压缩 */
+}
+
+/* AI 的气泡 */
+.date-bubble.ai {
+    background: #fff;
+    color: #333;
+    border: 1px solid #f0f0f0;
+    align-self: flex-start; /* 靠左 */
+    border-top-left-radius: 2px;
+    margin-right: 40px;
+}
+
+/* 用户的气泡 */
+.date-bubble.user {
+    background: #fce4ec; /* 粉色 */
+    color: #880e4f;
+    align-self: flex-end; /* 靠右 */
+    border-top-right-radius: 2px;
+    margin-left: 40px;
+}
+
+/* === 📖 约会回忆录样式 === */
+.date-memory-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 10px rgba(233, 30, 99, 0.1);
+    border-left: 4px solid #ec407a;
+    position: relative;
+}
+.dm-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px; font-size: 12px; color: #880e4f;
+    border-bottom: 1px dashed #ffcdd2; padding-bottom: 5px;
+}
+.dm-content {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #4a4a4a;
+}
+.dm-tag {
+    background: #fce4ec; color: #ec407a; padding: 2px 8px; border-radius: 4px; font-weight: bold;
+}
+
+/* === 💬 输入框换行 & 自动增高 (核心修改) === */
+.chat-input-bar textarea,
+#date-chat-stage textarea {
+    resize: none; /* 禁止用户手动拖拽大小 */
+    overflow-y: auto; /* 内容超出时显示内部滚动条 */
+    max-height: 100px; /* 最多增高到约 5 行的高度 */
+    line-height: 1.4;
+    padding: 10px;
+    font-family: inherit; /* 继承 App 字体 */
+    font-size: 16px;
+    transition: height 0.1s; /* 高度变化时有轻微动画 */
+}
+
+/* 垂直对齐底部，这样按钮不会随着输入框增高而飘起来 */
+.chat-input-bar,
+#date-chat-stage > div { /* 约会界面的输入栏 */
+    align-items: flex-end; /* 关键！*/
+    padding-bottom: 8px; /* 增加一点底部间距，更好看 */
+    min-height: 60px; /* 保证输入栏的最小高度 */
+}
 </style>
 </head>
 <body class="theme-day">
@@ -5445,7 +5607,8 @@ body.theme-night .chat-time-stamp span {
             </button>
 
             <!-- 输入框 -->
-            <input id="chat-input" type="text" placeholder="发消息..." style="flex:1; min-width:0;" onkeypress="if(event.keyCode==13) sendChatMessage()">
+            <!-- 👇 新版：支持换行的文本域 👇 -->
+<textarea id="chat-input" rows="1" placeholder="发消息..." style="flex:1; min-width:0;"></textarea>
             
             <!-- 发送按钮 -->
             <button class="btn-icon send-btn" onclick="sendChatMessage()">
@@ -5742,6 +5905,129 @@ body.theme-night .chat-time-stamp span {
         </div>
 
     </div>
+</div>
+
+<!-- === 🥂 沉浸式约会 (Date App - 升级版) === -->
+<div id="view-date-app" class="view-overlay" style="background: linear-gradient(135deg, #fff0f5 0%, #fff 100%); z-index: 300;">
+    
+    <!-- 1. 顶部栏 -->
+    <div class="header" style="background: transparent; border: none; flex-shrink: 0;">
+        <button class="btn-icon" onclick="closeView('view-date-app')" style="color: #880e4f;">✕</button> 
+        <span style="color: #880e4f; font-weight: bold;">浪漫约会</span> 
+        
+        <div style="display:flex; gap:10px;">
+            <!-- 📖 回忆录按钮 (准备阶段显示) -->
+            <button id="btn-date-history" class="btn-icon" onclick="openDateMemories()" style="color: #880e4f; font-size:18px;">📖</button>
+            <!-- 🏁 结束约会按钮 (进行阶段显示，默认隐藏) -->
+            <button id="btn-end-date-session" class="btn-normal" onclick="endDateStory()" style="display:none; padding: 5px 12px; font-size: 12px; background: #ec407a; color: white; border-radius: 15px; height: 30px;">结束约会</button>
+        </div>
+    </div>
+
+    <!-- 2. 准备阶段 (选人、选地点) -->
+    <div id="date-setup-stage" style="padding: 20px; height: 100%; overflow-y: auto; display: flex; flex-direction: column; padding-bottom: 50px;">
+        
+        <!-- 选人 -->
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 14px; color: #880e4f; margin-bottom: 10px;">今晚和谁约会？</div>
+            <select id="date-role-select" class="setting-input" style="background: rgba(255,255,255,0.8); border: 1px solid #ff80ab; color: #880e4f; text-align: center; font-size: 16px; padding: 10px;">
+                <!-- JS 填充 -->
+            </select>
+        </div>
+
+        <!-- 选地点 -->
+        <div style="font-size: 14px; color: #880e4f; margin-bottom: 10px; font-weight: bold;">选择约会地点</div>
+        
+        <div class="date-location-grid">
+            <div class="date-loc-card" onclick="selectDateLoc('candle', this)">
+                <div class="loc-icon">🕯️</div>
+                <div class="loc-name">烛光晚餐</div>
+            </div>
+            <div class="date-loc-card" onclick="selectDateLoc('beach', this)">
+                <div class="loc-icon">🌊</div>
+                <div class="loc-name">海边漫步</div>
+            </div>
+            <div class="date-loc-card" onclick="selectDateLoc('bar', this)">
+                <div class="loc-icon">🍸</div>
+                <div class="loc-name">深夜清吧</div>
+            </div>
+            <div class="date-loc-card" onclick="selectDateLoc('home', this)">
+                <div class="loc-icon">🏠</div>
+                <div class="loc-name">温馨家里</div>
+            </div>
+            <div class="date-loc-card" onclick="selectDateLoc('hotel', this)">
+                <div class="loc-icon">🏨</div>
+                <div class="loc-name">高层酒店</div>
+            </div>
+            <!-- AI 盲盒 -->
+            <div class="date-loc-card special" onclick="selectDateLoc('ai_random', this)">
+                <div class="loc-icon">🎲</div>
+                <div class="loc-name">听你安排</div>
+                <div class="loc-desc">(AI 决定)</div>
+            </div>
+        </div>
+
+        <!-- 自定义地点 -->
+        <div style="margin-top: 20px;">
+            <div style="font-size: 12px; color: #880e4f; margin-bottom: 5px;">或者去个特别的地方...</div>
+            <input id="date-custom-input" class="setting-input" placeholder="例如：游乐园鬼屋 / 此时此刻的梦里" oninput="clearLocSelection()">
+        </div>
+
+        <!-- 开始按钮 (已修复 onclick) -->
+        <div style="margin-top: 30px; width: 100%; display: flex; justify-content: center;">
+            <button id="btn-start-date" class="btn-normal" style="
+                background: #ec407a; 
+                color: white; 
+                box-shadow: 0 5px 15px rgba(236, 64, 122, 0.4);
+                width: 80%; 
+                height: 50px; 
+                border-radius: 25px;
+                font-size: 16px;
+                font-weight: bold;
+                flex-shrink: 0;"
+                onclick="startDateStory()"> 
+                🥂 出发去约会
+            </button>
+        </div>
+    </div>
+
+    <!-- 3. 进行阶段 (聊天界面) -->
+    <div id="date-chat-stage" style="display: none; width: 100%; height: 100%; position: relative; overflow: hidden;">
+        
+        <!-- 聊天记录区 -->
+        <div id="date-msg-container" style="
+            position: absolute; top: 0; left: 0; right: 0; bottom: 70px;
+            overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px;
+            -webkit-overflow-scrolling: touch;">
+        </div>
+
+        <!-- 输入框 -->
+        <div style="
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 70px;
+            padding: 10px 15px; background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px); border-top: 1px solid rgba(236, 64, 122, 0.2);
+            display: flex; align-items: center; gap: 10px; z-index: 50;">
+            
+            <!-- 👇 新版：支持换行的文本域 👇 -->
+<textarea id="date-chat-input" rows="1" placeholder="回应 Ta..." style="
+    flex: 1; background: #fff0f5; color: #880e4f; border: none; 
+    border-radius: 20px; padding: 10px 15px; outline: none;"></textarea>
+            
+            <button class="btn-icon send-btn" style="
+                background: #ec407a; color: white; width: 40px; height: 40px; 
+                border-radius: 50%; display: flex; align-items: center; justify-content: center;" 
+                onclick="sendDateMsg()">➤</button>
+        </div>
+    </div>
+</div>
+
+<!-- === 📖 约会回忆录弹窗 (新增) === -->
+<div id="modal-date-memories" class="modal">
+    <div class="modal-card" style="background: #fff0f5; border: 2px solid #ec407a; height: 80vh; display: flex; flex-direction: column;">
+        <h3 style="color: #880e4f; margin-top: 0;">💖 约会日记</h3>
+        <div id="date-memory-list" style="flex: 1; overflow-y: auto; text-align: left;"></div>
+        <button class="btn-normal btn-secondary" onclick="$('modal-date-memories').style.display='none'" style="margin-top: 15px; flex-shrink:0;">关闭</button>
+    </div>
+</div>
 </div>
 
 <!-- === ⚙️ 日记设置弹窗 === -->
@@ -6097,6 +6383,39 @@ function renderRoleOptionsHTML() {
 
     const $ = id => document.getElementById(id);
     
+    // === 💬 自动增高输入框 & 绑定回车发送 (新功能) ===
+function autoGrowTextarea(el) {
+    // 先重置高度，以便正确计算 scrollHeight
+    el.style.height = 'auto';
+    // 设置为内容实际高度
+    el.style.height = (el.scrollHeight) + 'px';
+}
+
+// === 👇👇👇 这是新版代码，请用它替换上面的旧代码 👇👇👇 ===
+function setupAutoGrowTextarea(textareaElement, sendFunction) {
+    if (!textareaElement) return;
+
+    // 自动增高功能对所有设备都有效
+    textareaElement.addEventListener('input', () => autoGrowTextarea(textareaElement));
+
+    // 【核心修正】判断是否为非触控设备（通常认为是桌面电脑）
+    const isDesktop = !('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    
+    // 只在桌面设备上绑定“回车发送”的功能
+    if (isDesktop) {
+        textareaElement.addEventListener('keydown', (e) => {
+            // 如果是 Enter 且没有按 Shift，就发送
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault(); // 阻止默认的换行行为
+                sendFunction();     // 调用发送函数
+            }
+            // 如果是 Shift+Enter，浏览器默认就是换行，我们不需要处理
+        });
+    }
+    // 对于手机等触控设备，我们不绑定任何键盘事件，
+    // 这样“回车键”就会执行它的默认行为——也就是你需要的“换行”！
+}
+
         // === RPG System ===
     const RPG_TITLES = ["萌新", "见习生", "记录者", "生活家", "大师", "传说", "半神", "神"];
     function gainXP(amount) {
@@ -12382,6 +12701,7 @@ function sendChatMessage() {
     renderChatMessages();
     scrollToBottom();
     input.value = '';
+autoGrowTextarea(input);
 
     const contact = DB.contacts.find(c => c.id == currentChatContactId);
     if(contact) updateChatListPreview(contact.id, text);
@@ -12758,6 +13078,13 @@ window.onload = async () => {
     }
 
     console.log("✅ 系统启动完成");
+
+    
+    // 👇👇👇 把这段新代码加在这里 👇👇👇
+    // --- 绑定输入框自动增高 ---
+    setupAutoGrowTextarea($('chat-input'), sendChatMessage);
+    setupAutoGrowTextarea($('date-chat-input'), sendDateMsg);
+    // 👆👆👆 代码添加结束 👆👆👆
 };
 
 // === 🧠 Token 计算器逻辑 ===
@@ -16196,6 +16523,361 @@ window.generateAiTakeout = generateAiTakeout;
 window.orderTakeout = orderTakeout;
 window.clearTakeoutItems = clearTakeoutItems;
 window.toggleTakeoutReceive = toggleTakeoutReceive;
+
+// ============================================================
+// 🥂 沉浸式约会逻辑 (Date App) - 持久化 & 回忆录版
+// ============================================================
+
+// 0. 初始化数据结构
+if (!DB.coupleSpace.dateMemories) {
+    DB.coupleSpace.dateMemories = []; // 存放结束后的回忆
+}
+
+let currentDateState = {
+    roleId: null,
+    location: '',
+    history: [] 
+};
+
+// 1. 打开 APP (自动恢复现场)
+function openDateApp() {
+    openView('view-date-app');
+    
+    // 初始化角色列表
+    const select = $('date-role-select');
+    select.innerHTML = renderRoleOptionsHTML();
+    
+    // 🔥 检查是否有进行中的约会
+    const savedSession = localStorage.getItem('v49_date_active');
+    
+    if (savedSession) {
+        // === 恢复现场 ===
+        currentDateState = JSON.parse(savedSession);
+        
+        // 恢复界面显示
+        $('date-setup-stage').style.display = 'none';
+        $('date-chat-stage').style.display = 'flex';
+        
+        // 恢复顶部按钮
+        $('btn-date-history').style.display = 'none';
+        $('btn-end-date-session').style.display = 'block';
+        
+        // 重新渲染聊天记录
+        const container = $('date-msg-container');
+        container.innerHTML = '';
+        
+        currentDateState.history.forEach((msg, index) => {
+            // 第一条是小说开场白，特殊渲染
+            if (index === 0 && msg.role === 'assistant') {
+                const novelDiv = document.createElement('div');
+                novelDiv.className = 'novel-card';
+                // 尝试找回名字，如果找不到就显示 Ta
+                const roleName = DB.contacts.find(c=>c.id==currentDateState.roleId)?.name || 'Ta';
+                novelDiv.innerHTML = `
+                    <div class="novel-text">${msg.content.replace(/\n/g, '<br>')}</div>
+                    <div class="novel-meta">—— ${roleName} (回忆)</div>
+                `;
+                container.appendChild(novelDiv);
+            } else {
+                // 普通对话
+                const div = document.createElement('div');
+                div.className = `date-bubble ${msg.role === 'user' ? 'user' : 'ai'}`;
+                div.innerHTML = msg.content.replace(/\n/g, '<br>');
+                container.appendChild(div);
+            }
+        });
+        
+        // 滚到底部
+        setTimeout(() => container.scrollTop = container.scrollHeight, 100);
+        
+    } else {
+        // === 新约会 ===
+        resetDateUI();
+    }
+}
+
+// 重置界面到初始状态
+function resetDateUI() {
+    $('date-setup-stage').style.display = 'flex';
+    $('date-chat-stage').style.display = 'none';
+    $('date-msg-container').innerHTML = '';
+    
+    $('btn-date-history').style.display = 'block';
+    $('btn-end-date-session').style.display = 'none'; // 隐藏结束按钮
+    
+    clearLocSelection();
+    $('date-custom-input').value = '';
+    currentDateState = { roleId: null, location: '', history: [] };
+}
+
+// 2. 选择地点 (点击卡片)
+function selectDateLoc(type, el) {
+    document.querySelectorAll('.date-loc-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    $('date-custom-input').value = '';
+    
+    const locNames = {
+        'candle': '高级西餐厅，烛光晚餐',
+        'beach': '夕阳下的海边沙滩',
+        'bar': '氛围暧昧的爵士清吧',
+        'home': '温暖私密的家里',
+        'hotel': '俯瞰城市夜景的高层酒店落地窗前',
+        'ai_random': 'surprise'
+    };
+    currentDateState.location = locNames[type];
+}
+
+function clearLocSelection() {
+    document.querySelectorAll('.date-loc-card').forEach(c => c.classList.remove('selected'));
+    currentDateState.location = ''; 
+}
+
+// 3. 开始约会 (生成开场白)
+async function startDateStory() {
+    const cid = $('date-role-select').value;
+    const role = DB.contacts.find(c => c.id == cid);
+    if (!role) return alert("请先选择约会对象！");
+    
+    let loc = currentDateState.location;
+    const customLoc = $('date-custom-input').value.trim();
+    if (customLoc) loc = customLoc;
+    
+    if (!loc) return alert("请选择或输入一个约会地点！");
+
+    // UI Loading
+    const btn = $('btn-start-date');
+    const oldText = btn.innerText;
+    btn.disabled = true;
+    btn.innerText = "❤️ 正在前往目的地...";
+
+    // 初始化状态
+    currentDateState.roleId = cid;
+    currentDateState.location = loc; // 保存地点名，方便最后AI总结
+
+    try {
+        let locPrompt = loc === 'surprise' ? "地点由你决定，请给我一个惊喜。" : `地点是：${loc}。`;
+        
+        const systemPrompt = `
+        你现在正在进行【语C (语言Cosplay)】扮演。
+        【角色】: ${role.name}。人设: ${role.prompt}
+        【情境】: 你和用户正在约会。${locPrompt}
+        【任务】: 输出约会的**开场剧情**。
+        【要求】:
+        1. 第一人称“我”。
+        2. 沉浸式小说感，描写细腻（光影、声音、你的装扮、心情）。
+        3. 400-600字。
+        4. 结尾必须是你对用户说的第一句话或动作。
+        5. 严禁油腻、土味。
+        `;
+
+        const res = await callAI([
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: "开始约会，请描写开场。" }
+        ]);
+
+        // 切换界面
+        $('date-setup-stage').style.display = 'none';
+        $('date-chat-stage').style.display = 'flex';
+        
+        // 切换顶部按钮
+        $('btn-date-history').style.display = 'none';
+        $('btn-end-date-session').style.display = 'block'; // 显示结束按钮
+        
+        // 渲染开场白
+        const container = $('date-msg-container');
+        const novelDiv = document.createElement('div');
+        novelDiv.className = 'novel-card';
+        novelDiv.innerHTML = `
+            <div class="novel-text">${res.replace(/\n/g, '<br>')}</div>
+            <div class="novel-meta">—— ${role.name} · ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+        `;
+        container.appendChild(novelDiv);
+        
+        // 存入历史
+        currentDateState.history.push({ role: 'assistant', content: res });
+        
+        // 🔥 保存到本地缓存 (持久化)
+        saveActiveDateSession();
+
+    } catch (e) {
+        alert("约会刚才被打断了 (网络错误): " + e.message);
+        $('date-setup-stage').style.display = 'flex'; 
+        $('date-chat-stage').style.display = 'none';
+    } finally {
+        btn.disabled = false;
+        btn.innerText = oldText;
+    }
+}
+
+// 4. 发送后续对话
+async function sendDateMsg() {
+    const input = $('date-chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+    
+    const role = DB.contacts.find(c => c.id == currentDateState.roleId);
+    const container = $('date-msg-container');
+
+    // 渲染用户气泡
+    const userDiv = document.createElement('div');
+    userDiv.className = 'date-bubble user';
+    userDiv.innerText = text;
+    container.appendChild(userDiv);
+    container.scrollTop = container.scrollHeight;
+    
+    input.value = '';
+    autoGrowTextarea(input);
+    currentDateState.history.push({ role: 'user', content: text });
+    saveActiveDateSession(); // 保存
+
+    // Loading
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'date-bubble ai';
+    loadingDiv.style.opacity = 0.6;
+    loadingDiv.innerText = `${role.name} 正在看着你...`;
+    container.appendChild(loadingDiv);
+    container.scrollTop = container.scrollHeight;
+
+    try {
+        const systemPrompt = `
+        你正在扮演 ${role.name}，正在和用户约会中。人设：${role.prompt}。
+        【要求】:
+        1. 接续剧情，保持沉浸感 (语C风格)。
+        2. 第一人称。
+        3. 包含动作/神态描写 (直接描写，融入进整段对话中)。
+        4. 禁止油腻霸总土味描述和形容。
+        5. 必须遵守人物设定、性格、语气、语言风格、动作、对白语言。
+        6. 使用温暖的白描写法，摒弃多余冗杂的形容。
+        `;
+
+        const recentHistory = currentDateState.history.slice(-10);
+
+        const res = await callAI([
+            { role: 'system', content: systemPrompt },
+            ...recentHistory
+        ]);
+
+        loadingDiv.remove();
+        
+        const aiDiv = document.createElement('div');
+        aiDiv.className = 'date-bubble ai';
+        aiDiv.innerHTML = res.replace(/\n/g, '<br>');
+        container.appendChild(aiDiv);
+        
+        currentDateState.history.push({ role: 'assistant', content: res });
+        saveActiveDateSession(); // 保存
+        
+        container.scrollTop = container.scrollHeight;
+
+    } catch (e) {
+        loadingDiv.innerText = "(有点走神了...请重试)";
+    }
+}
+
+// 5. 保存当前会话到 LocalStorage
+function saveActiveDateSession() {
+    localStorage.setItem('v49_date_active', JSON.stringify(currentDateState));
+}
+
+// 6. 🔥 结束约会 & 生成回忆
+async function endDateStory() {
+    if (!confirm("确定要结束这次约会吗？\n结束前，Ta 会写下一段关于今天的回忆。")) return;
+
+    const role = DB.contacts.find(c => c.id == currentDateState.roleId);
+    if (!role) return resetDateUI(); // 异常情况直接重置
+
+    const btn = $('btn-end-date-session');
+    const oldText = btn.innerText;
+    btn.disabled = true;
+    btn.innerText = "📝 正在写日记...";
+
+    try {
+        // 生成总结 Prompt
+        const prompt = `
+        你现在是${role.name}。人设：${role.prompt}。
+        情境：你刚刚结束了和用户的一场浪漫约会。
+        地点：${currentDateState.location}。
+        
+        任务：请写一段【约会日记/回忆录】。
+        内容：回顾今天的甜蜜时刻，表达你的感受，或者对下次见面的期待。
+        要求：
+        1. 第一人称，禁止动作描写，使用仿心理描写的对话描写，必须遵守人物设定，性格，语气，对白语言。
+        2. 篇幅适中（100-300字）。
+        3. 像写在私密手账里的话。
+        `;
+
+        // 提取最近的对话作为上下文参考
+        const context = currentDateState.history.slice(-6).map(m => m.content).join('\n');
+
+        const res = await callAI([
+            { role: 'system', content: prompt },
+            { role: 'user', content: `基于以下对话写回忆录:\n${context}` }
+        ]);
+
+        // 存入回忆录
+        DB.coupleSpace.dateMemories.unshift({
+            id: Date.now(),
+            date: new Date().toLocaleDateString(),
+            roleName: role.name,
+            location: currentDateState.location,
+            content: res
+        });
+        saveCpData(); // 保存到 DB
+
+        // 清除活动状态
+        localStorage.removeItem('v49_date_active');
+        
+        // 弹窗展示结果
+        alert(`🌹 约会圆满结束！\n\n${role.name} 在日记里写道：\n\n“${res}”\n\n(已收入回忆录)`);
+        
+        // 奖励
+        gainDiamond(100, '完美约会');
+        
+        // 重置界面
+        resetDateUI();
+
+    } catch (e) {
+        alert("保存回忆时出错了: " + e.message);
+        // 如果出错，暂不结束，让用户可以重试
+    } finally {
+        btn.disabled = false;
+        btn.innerText = oldText;
+    }
+}
+
+// 7. 打开回忆录
+function openDateMemories() {
+    $('modal-date-memories').style.display = 'flex';
+    const list = $('date-memory-list');
+    list.innerHTML = '';
+
+    if (!DB.coupleSpace.dateMemories || DB.coupleSpace.dateMemories.length === 0) {
+        list.innerHTML = '<div style="text-align:center; opacity:0.5; margin-top:50px;">暂无约会记录</div>';
+        return;
+    }
+
+    DB.coupleSpace.dateMemories.forEach(mem => {
+        list.innerHTML += `
+            <div class="date-memory-card">
+                <div class="dm-header">
+                    <span class="dm-tag">${mem.roleName}</span>
+                    <span>${mem.date}</span>
+                </div>
+                <div style="font-size:12px; color:#999; margin-bottom:8px;">📍 ${mem.location}</div>
+                <div class="dm-content">${mem.content.replace(/\n/g, '<br>')}</div>
+            </div>
+        `;
+    });
+}
+
+// 挂载
+window.openDateApp = openDateApp;
+window.selectDateLoc = selectDateLoc;
+window.startDateStory = startDateStory;
+window.sendDateMsg = sendDateMsg;
+window.endDateStory = endDateStory;
+window.openDateMemories = openDateMemories;
+window.clearLocSelection = clearLocSelection;;
 
 </script>
 </body>
