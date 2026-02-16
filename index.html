@@ -3388,6 +3388,259 @@ body.theme-night .chat-time-stamp span {
 }
 .cart-reveal-btn:active { transform: scale(0.95); }
 
+/* === 🍱 饮食日记新样式 === */
+
+/* 右上角的日历输入框 */
+.meal-date-picker {
+    background: rgba(0,0,0,0.05);
+    border: none;
+    border-radius: 12px;
+    padding: 5px 10px;
+    font-family: 'DIN Alternate', sans-serif; /* 数字字体好看点 */
+    font-weight: bold;
+    color: var(--accent-color);
+    outline: none;
+    font-size: 14px;
+}
+
+/* AI 填写的食谱样式 */
+.meal-item-text.is-ai {
+    color: #d81b60; /* 深粉色，一眼看出是AI写的 */
+    font-family: 'Ma Shan Zheng', cursive; /* 手写体，更有感觉 */
+    font-size: 15px; /* 稍微大一点 */
+}
+
+/* 普通食谱样式 */
+.meal-item-text {
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+/* === 🎬 约电影样式 === */
+.movie-ticket {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    margin-bottom: 20px;
+    /* 锯齿边缘效果 */
+    background-image: radial-gradient(circle at 0 100%, transparent 10px, #fff 11px), 
+                      radial-gradient(circle at 100% 100%, transparent 10px, #fff 11px);
+    background-position: bottom left, bottom right;
+    background-size: 50% 100%;
+    background-repeat: no-repeat;
+    padding-bottom: 20px;
+}
+
+.m-header {
+    background: #d32f2f;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.m-title {
+    font-size: 24px;
+    margin: 20px 15px 10px 15px;
+    color: #333;
+    font-family: 'Noto Serif SC', serif;
+}
+
+.m-info-grid { padding: 0 15px; }
+.m-label { font-size: 10px; color: #999; text-transform: uppercase; font-weight: bold; }
+.m-text { font-size: 14px; color: #555; line-height: 1.6; margin-top: 2px; }
+
+.m-divider {
+    height: 0;
+    border-top: 2px dashed #eee;
+    margin: 20px 10px;
+    position: relative;
+}
+/* 虚线两圆点 */
+.m-divider::before, .m-divider::after {
+    content: ''; position: absolute; top: -10px;
+    width: 20px; height: 20px; background: #2b2b2b; border-radius: 50%;
+}
+.m-divider::before { left: -20px; }
+.m-divider::after { right: -20px; }
+
+.m-invite-section {
+    display: flex;
+    align-items: flex-start;
+    padding: 0 15px;
+    gap: 10px;
+}
+
+.m-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: #eee;
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+}
+
+.m-bubble {
+    background: #f5f5f5;
+    padding: 10px 15px;
+    border-radius: 0 15px 15px 15px;
+    font-size: 14px;
+    color: #333;
+    font-family: 'Ma Shan Zheng', cursive;
+    line-height: 1.5;
+}
+
+.m-actions {
+    display: flex; gap: 15px; margin-top: 10px;
+}
+
+.m-btn {
+    flex: 1; padding: 12px; border: none; border-radius: 30px;
+    font-size: 16px; font-weight: bold; cursor: pointer;
+    transition: transform 0.2s;
+}
+.m-btn:active { transform: scale(0.95); }
+.m-btn.accept { background: #ffd700; color: #3e2723; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
+.m-btn.reject { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* === 🎬 约电影 V2.0 样式补丁 === */
+
+/* 菜单卡片 */
+.movie-menu-card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+}
+.movie-menu-card:active {
+    transform: scale(0.96);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* 历史记录小票 */
+.history-ticket {
+    background: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    position: relative;
+    /* 锯齿底边 */
+    background-image: radial-gradient(circle at 10px 100%, transparent 5px, #fff 6px);
+    background-size: 20px 10px;
+    background-position: bottom left;
+    background-repeat: repeat-x;
+    padding-bottom: 20px;
+}
+.ht-title { font-weight: bold; font-size: 16px; color: #333; font-family: 'Noto Serif SC', serif; }
+.ht-date { font-size: 10px; color: #999; margin-bottom: 5px; }
+.ht-role { font-size: 12px; color: #d32f2f; margin-top: 5px; font-weight: bold; }
+.ht-status { 
+    position: absolute; top: 15px; right: 15px; 
+    font-size: 12px; padding: 2px 8px; border-radius: 4px;
+}
+.status-success { background: #e8f5e9; color: #2e7d32; }
+.status-fail { background: #ffebee; color: #c62828; }
+
+/* 动画 */
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* === 📜 恋爱契约样式 === */
+.contract-paper {
+    background: #fdfbf7;
+    /* 羊皮纸纹理 */
+    background-image: radial-gradient(#d7ccc8 1px, transparent 1px),
+                      linear-gradient(to bottom, #fdfbf7 0%, #f4e4bc 100%);
+    background-size: 20px 20px, 100% 100%;
+    width: 100%;
+    min-height: 500px;
+    padding: 30px 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border-radius: 2px;
+    position: relative;
+    color: #3e2723;
+    font-family: 'Noto Serif SC', serif;
+    /* 边缘撕裂效果 (CSS Clip-path) */
+    clip-path: polygon(
+        0% 0%, 100% 0%, 100% 100%, 
+        95% 98%, 90% 100%, 85% 98%, 80% 100%, 75% 98%, 70% 100%, 65% 98%, 60% 100%, 
+        55% 98%, 50% 100%, 45% 98%, 40% 100%, 35% 98%, 30% 100%, 25% 98%, 20% 100%, 
+        15% 98%, 10% 100%, 5% 98%, 0% 100%
+    );
+    transition: transform 0.3s;
+}
+
+.c-header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #3e2723; padding-bottom: 10px; }
+.c-title { font-size: 24px; font-weight: bold; letter-spacing: 2px; }
+.c-subtitle { font-size: 10px; letter-spacing: 5px; opacity: 0.6; margin-top: 5px; }
+
+.c-parties { font-size: 14px; margin-bottom: 20px; line-height: 1.8; }
+.c-body { 
+    font-size: 15px; 
+    line-height: 1.8; 
+    min-height: 200px; 
+    white-space: pre-wrap; 
+    font-family: 'Ma Shan Zheng', cursive; /* 手写体 */
+}
+
+.c-footer { margin-top: 30px; display: flex; flex-direction: column; gap: 15px; align-items: flex-end; }
+.c-sign-box { display: flex; align-items: flex-end; gap: 10px; font-size: 14px; }
+.c-signature { 
+    font-family: 'Zeyada', cursive; 
+    font-size: 24px; 
+    color: #000; 
+    border-bottom: 1px dashed #3e2723; 
+    min-width: 100px; 
+    text-align: center;
+    height: 30px;
+}
+.c-date { font-size: 12px; margin-top: 10px; opacity: 0.7; }
+
+/* 印章特效 */
+.c-seal {
+    position: absolute;
+    bottom: 80px;
+    right: 30px;
+    width: 100px;
+    height: 100px;
+    border: 4px solid #d32f2f;
+    border-radius: 50%;
+    color: #d32f2f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 32px;
+    font-weight: bold;
+    transform: rotate(-20deg) scale(2); /* 初始放大 */
+    opacity: 0;
+    pointer-events: none;
+    background: rgba(211, 47, 47, 0.05);
+    box-shadow: inset 0 0 10px rgba(211, 47, 47, 0.2);
+}
+
+/* 盖章动画 */
+.c-seal.stamped {
+    animation: stamp-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes stamp-in {
+    0% { transform: rotate(-20deg) scale(2); opacity: 0; }
+    100% { transform: rotate(-20deg) scale(1); opacity: 0.8; }
+}
+
 </style>
 </head>
 <body class="theme-day">
@@ -3710,6 +3963,59 @@ body.theme-night .chat-time-stamp span {
 </div>
         
                 <!-- === Modals === -->
+<!-- === 🍟 外卖送达结果弹窗 (修复版：带滚动条+关闭键) === -->
+<div id="modal-takeout-result" class="modal" style="z-index: 2000;">
+    <div class="modal-card" style="
+        background: #fff; 
+        border-radius: 20px; 
+        padding: 0; 
+        overflow: hidden; 
+        width: 85%; 
+        max-width: 320px; 
+        max-height: 80vh; /* 限制最大高度，防止超屏 */
+        display: flex; 
+        flex-direction: column;
+        position: relative;">
+        
+        <!-- 顶部图片/标题区 -->
+        <div style="background: #ff7043; padding: 20px; text-align: center; color: white; flex-shrink: 0;">
+            <!-- 新增：右上角关闭按钮 -->
+            <div onclick="document.getElementById('modal-takeout-result').style.display='none'" 
+                 style="position: absolute; right: 15px; top: 15px; font-size: 20px; cursor: pointer; opacity: 0.8;">
+                 ✕
+            </div>
+            
+            <div style="font-size: 40px; margin-bottom: 5px;">🛵</div>
+            <div style="font-size: 18px; font-weight: bold;">外卖送到啦！</div>
+        </div>
+        
+        <!-- 内容区 (核心修改：允许滚动) -->
+        <div style="
+            padding: 20px; 
+            text-align: left; 
+            flex: 1; 
+            overflow-y: auto; /* 关键：内容超出时显示滚动条 */
+            -webkit-overflow-scrolling: touch;">
+            
+            <div id="takeout-result-content" style="
+                font-size: 16px; 
+                line-height: 1.8; 
+                color: #333; 
+                font-family: 'Ma Shan Zheng', cursive; 
+                white-space: pre-wrap;">
+                <!-- AI 回复会显示在这里 -->
+            </div>
+        </div>
+
+        <!-- 按钮区 (核心修改：固定在底部) -->
+        <div style="padding: 15px 20px 20px 20px; flex-shrink: 0; background: #fff; border-top: 1px solid #f0f0f0;">
+            <button class="btn-normal" onclick="document.getElementById('modal-takeout-result').style.display='none'" 
+                    style="background: #ff7043; border-radius: 25px; width: 100%; box-shadow: 0 4px 10px rgba(255, 112, 67, 0.3);">
+                放心了
+            </button>
+        </div>
+    </div>
+</div>
                     <div id="modal-otd" class="modal">
         <div class="modal-card" style="background: #fffaf0;">
             <div class="otd-card">
@@ -3907,7 +4213,114 @@ body.theme-night .chat-time-stamp span {
         </div>
     </div>
         <!-- Apps Views -->
+<!-- === 🍟 爱心外卖 (Love Takeout) === -->
+<div id="view-cp-takeout" class="view-overlay" style="background: #fffbf0; z-index: 300;">
+    <div class="header" style="background: #ff7043; color: white; border: none;">
+        <button class="btn-icon" onclick="closeView('view-cp-takeout')" style="color: white;">←</button>
+        <span>Ta 的外卖单</span>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <div style="font-size: 12px; background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 12px;">
+                💎 <span id="takeout-diamond-display">0</span>
+            </div>
+            <!-- 设置按钮 -->
+            <button class="btn-icon" onclick="$('modal-takeout-settings').style.display='flex'" style="color:white; font-size:18px;">⚙️</button>
+        </div>
+    </div>
     
+    <!-- 顶部 Tab -->
+    <div style="display: flex; background: #fff; padding: 10px; font-size: 14px; font-weight: bold; border-bottom: 1px solid #eee;">
+        <div id="tab-takeout-menu" style="flex: 1; text-align: center; color: #ff7043; border-bottom: 2px solid #ff7043; padding-bottom: 5px; cursor: pointer;" onclick="switchTakeoutTab('menu')">想吃菜单</div>
+        <div id="tab-takeout-history" style="flex: 1; text-align: center; color: #333; padding-bottom: 5px; cursor: pointer;" onclick="switchTakeoutTab('history')">投喂记录</div>
+    </div>
+
+    <div style="overflow-y: auto; flex: 1; padding: 10px;">
+        <!-- 菜单列表 -->
+        <div id="cp-takeout-list"></div>
+        <!-- 历史记录 -->
+        <div id="cp-takeout-history" style="display: none;"></div>
+    </div>
+</div>
+
+<!-- 外卖设置弹窗 -->
+<div id="modal-takeout-settings" class="modal">
+    <div class="modal-card">
+        <h3>🍟 外卖设置</h3>
+        <div class="summary-toggle-row">
+            <span>接受 Ta 给我点外卖</span>
+            <!-- 开关 -->
+            <div id="takeout-receive-toggle" class="toggle-switch" onclick="toggleTakeoutReceive()"></div>
+        </div>
+        <div style="font-size: 12px; opacity: 0.6; text-align: left; margin-top: 5px;">
+            开启后，当你打开外卖界面时，偶尔会收到 Ta 给你点的惊喜外卖（虚拟的，不扣你的粉钻）。
+        </div>
+        <button class="btn-normal btn-secondary" style="margin-top: 20px;" onclick="$('modal-takeout-settings').style.display='none'">关闭</button>
+    </div>
+</div>
+
+    <!-- === 📜 恋爱契约 (Love Contract) === -->
+<div id="view-contract" class="view-overlay" style="background: #2c2c2e; z-index: 300;">
+    <div class="header" style="background: transparent; color: #fff; border: none;">
+        <button class="btn-icon" onclick="closeView('view-contract')" style="color: #fff;">✕</button>
+        <span>恋爱契约</span>
+        <div style="width: 40px;"></div>
+    </div>
+
+    <div style="padding: 20px; display: flex; flex-direction: column; align-items: center; height: 100%; overflow-y: auto;">
+        
+        <!-- 1. 契约纸张 -->
+        <div id="contract-paper" class="contract-paper">
+            <!-- 顶部装饰 -->
+            <div class="c-header">
+                <div class="c-title">❤ 恋爱契约书 ❤</div>
+                <div class="c-subtitle">LOVE AGREEMENT</div>
+            </div>
+
+            <!-- 甲方乙方 -->
+            <div class="c-parties">
+                <div class="c-row">甲方 (我): <span id="c-party-a" style="border-bottom: 1px solid #333; padding: 0 10px;">用户</span></div>
+                <div class="c-row">乙方 (Ta): <span id="c-party-b" style="border-bottom: 1px solid #333; padding: 0 10px;">角色名</span></div>
+            </div>
+
+            <!-- 条款内容 (AI 生成) -->
+            <div id="c-clauses" class="c-body">
+                <div style="text-align:center; opacity:0.5; margin-top:30px;">
+                    (点击下方按钮起草契约)
+                </div>
+            </div>
+
+            <!-- 签字区 -->
+            <div class="c-footer">
+                <div class="c-sign-box">
+                    <span>甲方签字:</span>
+                    <div id="c-sign-a" class="c-signature"></div>
+                </div>
+                <div class="c-sign-box">
+                    <span>乙方签字:</span>
+                    <div id="c-sign-b" class="c-signature"></div>
+                </div>
+                <div class="c-date">日期: <span id="c-date-display">--</span></div>
+            </div>
+
+            <!-- 盖章 (默认隐藏，签署后显示) -->
+            <div id="c-seal" class="c-seal">生效</div>
+        </div>
+
+        <!-- 2. 操作按钮区 -->
+        <div id="c-actions" style="width: 100%; margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+            <!-- 起草阶段 -->
+            <button id="btn-draft" class="btn-normal" style="background: #eebb4d; color: #3e2723;" onclick="draftContract()">🖋️ 让 Ta 起草契约</button>
+            
+            <!-- 签署阶段 (默认隐藏) -->
+            <button id="btn-sign" class="btn-normal" style="display:none; background: #d32f2f; color: #fff;" onclick="signContract()">✍️ 按手印签署</button>
+            
+            <!-- 生效后阶段 (默认隐藏) -->
+            <button id="btn-break" class="btn-normal" style="display:none; background: #333; color: #fff; border: 1px solid #555;" onclick="breakContract()">💀 我违约了 (领罚)</button>
+            <button id="btn-void" class="btn-normal btn-secondary" style="display:none;" onclick="voidContract()">🗑️ 撕毁重签</button>
+        </div>
+
+    </div>
+</div>
+
     <!-- 手账 -->
     <div id="view-journal" class="view-overlay"><div class="header"><button class="btn-icon btn-back" onclick="closeView('view-journal')">✕</button> <span>我的手账</span> <button class="btn-icon btn-add" onclick="createNewJournal()">+</button></div><div id="journal-shelf" class="journal-shelf"></div>
         <div id="journal-editor-view" style="position:absolute; inset:0; background:var(--bg-color); z-index:10; display:none; flex-direction:column;">
@@ -4076,7 +4489,30 @@ body.theme-night .chat-time-stamp span {
     <div id="view-period" class="view-overlay"><div class="header"><button class="btn-icon btn-back" onclick="closeView('view-period')">✕</button> <span>经期助手</span> <button class="btn-icon btn-add" onclick="addNewPeriodLog()">+</button></div><div style="padding:20px; overflow-y:auto;"><div class="period-header-card"><div style="font-size:14px; opacity:0.7;">当前状态</div><div id="p-app-status" style="font-size:24px; font-weight:bold; margin:10px 0; color:#d32f2f;">--</div></div><div style="font-size:16px; font-weight:bold; margin-bottom:10px;">历史记录</div><div id="period-history-list"></div></div></div>
     
     <!-- 饮食 -->
-    <div id="view-meals" class="view-overlay"><div class="header"><button class="btn-icon btn-close" onclick="closeView('view-meals')">✕</button> <span>好好吃饭</span> <div style="width:40px"></div></div><div class="meal-app-container" style="padding:15px; overflow-y:auto;"><div class="meal-ai-tools"><button class="meal-ai-btn" onclick="askMealAI('recommend')">👨‍🍳 推荐食谱</button><button class="meal-ai-btn" onclick="askMealAI('critique_all')">🥗 点评全天</button><button class="meal-ai-btn" onclick="askMealAI('exchange')">🥘 交换食谱</button></div><div id="meal-ai-response" style="display:none; background:#fffbf0; padding:15px; border-radius:12px; margin-bottom:15px; border:1px dashed #eebb4d; color:#594a2a; font-size:14px; line-height:1.6;"></div><div id="meal-cards-area"></div></div></div>
+<div id="view-meals" class="view-overlay">
+    <div class="header">
+        <button class="btn-icon btn-close" onclick="closeView('view-meals')">✕</button> 
+        <span>好好吃饭</span> 
+        <!-- 👇 新增：日历选择器 👇 -->
+        <input type="date" id="meal-date-input" class="meal-date-picker" onchange="changeMealDate(this.value)">
+    </div>
+    
+    <div class="meal-app-container" style="padding:15px; overflow-y:auto; padding-bottom:80px;">
+        <div class="meal-ai-tools">
+            <button class="meal-ai-btn" onclick="askMealAI('recommend')">👨‍🍳 推荐食谱</button>
+            <button class="meal-ai-btn" onclick="askMealAI('critique_all')">🥗 点评全天</button>
+            <!-- 👇 这个按钮逻辑变了 -->
+            <button class="meal-ai-btn" style="border-color:#d81b60; color:#d81b60;" onclick="askMealAI('exchange')">🥘 交换食谱</button>
+        </div>
+        
+        <!-- AI 回复框 (仅用于点评和推荐，交换食谱不再用这个) -->
+        <div id="meal-ai-response" style="display:none; background:#fffbf0; padding:15px; border-radius:12px; margin-bottom:15px; border:1px dashed #eebb4d; color:#594a2a; font-size:14px; line-height:1.6;"></div>
+        
+        <div id="meal-cards-area">
+            <!-- JS 动态渲染卡片 -->
+        </div>
+    </div>
+</div>
     
     <!-- MindLog Pro (已修改上传逻辑) -->
     <div id="view-diary" class="view-overlay">
@@ -5205,6 +5641,109 @@ body.theme-night .chat-time-stamp span {
     </div>
 </div>
 
+<!-- === 🎬 约电影 (Movie Date) V2.0 === -->
+<div id="view-movie-date" class="view-overlay" style="background: #2b2b2b;">
+    <div class="header" style="background: transparent; color: #fff; border: none;">
+        <button class="btn-icon" onclick="closeView('view-movie-date')" style="color: #fff;">✕</button>
+        <span>周末影院</span>
+        <!-- 新增：历史记录按钮 -->
+        <button class="btn-icon" onclick="openMovieHistory()" style="color: #fff; font-size: 18px;">🕒</button>
+    </div>
+
+    <div style="padding: 20px; display: flex; flex-direction: column; height: 100%; overflow-y: auto;">
+        
+        <!-- 1. 模式选择菜单 (默认显示) -->
+        <div id="movie-menu" style="display: flex; flex-direction: column; gap: 20px; margin-top: 20%; animation: fadeIn 0.5s;">
+            <div class="movie-menu-card" onclick="switchMovieMode('ai')">
+                <div style="font-size: 40px;">🎲</div>
+                <div>
+                    <div style="font-size: 18px; font-weight: bold;">听你的</div>
+                    <div style="font-size: 12px; opacity: 0.7;">让 Ta 挑一部电影</div>
+                </div>
+            </div>
+            <div class="movie-menu-card" onclick="switchMovieMode('user')">
+                <div style="font-size: 40px;">🎫</div>
+                <div>
+                    <div style="font-size: 18px; font-weight: bold;">我来推荐</div>
+                    <div style="font-size: 12px; opacity: 0.7;">我有一部好片想看</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. 用户填写表单 (我来推荐模式) -->
+        <div id="movie-user-form" style="display: none; animation: slideUp 0.3s;">
+            <h3 style="color: #fff; margin-bottom: 20px;">我想看...</h3>
+            
+            <label style="color: #999; font-size: 12px;">电影名称</label>
+            <input id="m-input-title" class="setting-input" style="background: #333; color: #fff; border: 1px solid #555;" placeholder="例如：泰坦尼克号">
+            
+            <label style="color: #999; font-size: 12px; margin-top: 15px; display: block;">一句话简介</label>
+            <textarea id="m-input-intro" class="setting-input" rows="2" style="background: #333; color: #fff; border: 1px solid #555;" placeholder="关于一艘大船的故事..."></textarea>
+            
+            <label style="color: #999; font-size: 12px; margin-top: 15px; display: block;">推荐理由 (说服Ta)</label>
+            <textarea id="m-input-reason" class="setting-input" rows="2" style="background: #333; color: #fff; border: 1px solid #555;" placeholder="真的很感人，陪我去看嘛..."></textarea>
+
+            <button class="m-btn accept" style="margin-top: 30px; width: 100%;" onclick="submitUserMovie()">发起邀请 💌</button>
+            <button class="btn-normal" style="background: transparent; color: #999; margin-top: 10px; width: 100%; box-shadow: none;" onclick="backToMovieMenu()">返回</button>
+        </div>
+
+        <!-- 3. Loading 状态 -->
+        <div id="movie-loading" style="text-align: center; color: #fff; margin-top: 50%; display: none;">
+            <div style="font-size: 40px; animation: spin 1s infinite;">🎬</div>
+            <div style="margin-top: 10px; opacity: 0.8;" id="movie-loading-text">正在挑选影片...</div>
+        </div>
+
+        <!-- 4. 电影票卡片 (核心展示区) -->
+        <div id="movie-card-content" style="display: none;">
+            <!-- 票根主体 (样式保持不变) -->
+            <div class="movie-ticket" id="movie-ticket-node">
+                <div class="m-header">
+                    <span class="m-tag">MOVIE TICKET</span>
+                    <span class="m-date" id="m-date-display">TONIGHT</span>
+                </div>
+                
+                <h2 id="m-title" class="m-title">电影标题</h2>
+                
+                <div class="m-info-grid">
+                    <div class="m-label">简介</div>
+                    <div id="m-intro" class="m-text">...</div>
+                    
+                    <div class="m-label" style="margin-top:10px;">推荐理由</div>
+                    <div id="m-reason" class="m-text" style="color: #ffcc80;">...</div>
+                </div>
+
+                <div class="m-divider"></div>
+
+                <!-- 邀请/回复语 -->
+                <div class="m-invite-section">
+                    <div id="m-avatar" class="m-avatar"></div>
+                    <div class="m-bubble" id="m-invite-text">...</div>
+                </div>
+            </div>
+
+            <!-- 操作按钮 (AI推荐时显示) -->
+            <div class="m-actions" id="m-action-btns">
+                <button class="m-btn reject" onclick="respondMovie(false)">下次吧 🙅‍♂️</button>
+                <button class="m-btn accept" onclick="respondMovie(true)">好呀! 🎟️</button>
+            </div>
+
+            <!-- 结果展示区 (我推荐时/结束后显示) -->
+            <div id="m-result-area" style="display: none; margin-top: 20px; color: #fff; text-align: center;">
+                <div id="m-result-text" class="m-bubble" style="background: #fff; color: #333; display: inline-block;"></div>
+                <button class="btn-normal" style="margin-top: 20px; background: rgba(255,255,255,0.2);" onclick="backToMovieMenu()">再看一张</button>
+            </div>
+        </div>
+
+        <!-- 5. 历史记录列表 -->
+        <div id="movie-history-view" style="display: none;">
+            <h3 style="color: #fff; border-bottom: 1px solid #444; padding-bottom: 10px;">观影回忆录</h3>
+            <div id="movie-history-list" style="margin-top: 15px;"></div>
+            <button class="btn-normal" style="background: transparent; color: #999; margin-top: 20px; width: 100%; border: 1px solid #555;" onclick="closeMovieHistory()">返回</button>
+        </div>
+
+    </div>
+</div>
+
 <!-- === ⚙️ 日记设置弹窗 === -->
 <div id="modal-cp-diary-settings" class="modal">
     <div class="modal-card">
@@ -6162,6 +6701,7 @@ window.buySeed = buySeed;
 
             await db.diaries.add(newEntry);
                         gainXP(10); // 写日记 +10 XP
+                        gainDiamond(20, '记录生活'); // 🔥 新增：奖励粉钻
             DB.diaries.unshift(newEntry);
             
             $('ml-input').value=''; 
@@ -6309,88 +6849,104 @@ $('role-select-confirm').onclick = async () => {
     } 
     
     // ===========================
-    // 分支 2: 饮食 AI (集成体重逻辑)
+    // 分支 2: 饮食 AI (修改了这里！)
     // ===========================
     else if (replyTarget === 'meal') {
         const aiBox = $('meal-ai-response');
-        aiBox.style.display = 'block';
-        aiBox.innerText = `${role.name} 正在查看你的体重记录和菜单...`;
+        aiBox.style.display = 'block'; 
         
-        // --- 获取体重数据 ---
+        if (pendingMealType === 'exchange') {
+            aiBox.innerHTML = `⏳ <b>${role.name}</b> 正在回忆今天吃了什么...`;
+        } else {
+            aiBox.innerHTML = `⏳ <b>${role.name}</b> 正在思考...`;
+        }
+
+        // ... 获取体重数据的代码 ...
         const sortedWeights = [...DB.weightLogs].sort((a,b) => new Date(b.date) - new Date(a.date));
         const latest = sortedWeights[0];
-        const previous = sortedWeights[1];
-        
         let healthContext = "用户暂无体重记录。";
-        if (latest) {
-            healthContext = `用户当前体重: ${latest.weight}kg (日期: ${latest.date})。`;
-            // 计算趋势
-            if (previous) {
-                const diff = (latest.weight - previous.weight).toFixed(1);
-                if (diff < 0) healthContext += ` 相比上次减轻了 ${Math.abs(diff)}kg (很棒)。`;
-                else if (diff > 0) healthContext += ` 相比上次重了 ${diff}kg。`;
-                else healthContext += ` 体重无变化。`;
-            }
-            // 检查运动
-            if (latest.exercise) {
-                healthContext += ` 今天已做运动: "${latest.exercise}"。`;
-            } else {
-                healthContext += ` 今天记录显示暂未运动。`;
-            }
-        }
+        if (latest) healthContext = `用户当前体重: ${latest.weight}kg。`;
         // --------------------
         
-                let prompt = "";
-        const itemsJSON = JSON.stringify(DB.meals.items);
-        
-        // 通用人设前缀
-        const basePersona = `你现在扮演用户的"${role.name}"。人设如下：${role.prompt}。
-        【重要原则】：
-        1. 必须完全符合人设的语气（如果是严厉的就严厉，温柔的就温柔）。
-        2. 关注健康，不要单纯追求瘦，如果用户体重过轻要关心，过重则根据人设鼓励或督促。
-        3. 结合用户的【身体数据】进行回复。
-        【身体数据】：${healthContext}`;
+        let prompt = "";
+        const todayData = DB.mealHistory[currentMealDate] || { breakfast:[], lunch:[], dinner:[], snack:[] };
+        const itemsJSON = JSON.stringify(todayData);
+        const basePersona = `你现在扮演用户的"${role.name}"。人设：${role.prompt}。`;
 
-        // 根据不同的操作类型生成 Prompt
-        if(pendingMealType === 'recommend') {
+        // === 🥘 交换食谱逻辑 (修改了 Prompt) ===
+        if (pendingMealType === 'exchange') {
             prompt = `${basePersona}
-            任务：请根据我的体重变化和运动情况，为我推荐一份今天的健康食谱（含早中晚）。
-            要求：直接给出食谱和理由，口语化交流。`;
+            任务：请根据你的人设和生活背景，编造一份你今天的一日三餐。
+            
+            【强制格式要求】：
+            1. 必须返回一个纯 JSON 对象。
+            2. 不要包含 Markdown 标记。
+            3. 格式如下：
+            {
+                "breakfast": "食物名称(简短评价)",
+                "lunch": "食物名称(简短评价)",
+                "dinner": "食物名称(简短评价)",
+                "snack": "食物名称"
+            }
+            4. ⚠️ 重要：如果某顿饭没吃（比如不吃早餐），请将该字段设为空字符串 ""，不要填“无”或“没吃”。
+            5. 内容要符合人设（古代人吃古代的，现代人吃现代的）。`;
         } 
-        else if(pendingMealType === 'exchange') {
-            prompt = `${basePersona}
-            任务：像闲聊一样，告诉我你今天吃了什么（符合你的人设），然后评价一下我的状况，并问我想吃什么。`;
-        } 
-        else if(pendingMealType === 'critique_all') {
-            prompt = `${basePersona}
-            这是我今天的饮食记录：${itemsJSON}。
-            任务：点评我吃得怎么样。结合我今天的体重和运动情况来夸奖或批评我。`;
-        } 
-        else {
-            // 单个时段点评
-            const mealList = JSON.stringify(DB.meals.items[pendingMealType]);
-            const timeMap = {breakfast:'早餐', lunch:'午餐', dinner:'晚餐', snack:'零食'};
-            prompt = `${basePersona}
-            我${timeMap[pendingMealType]}吃了：${mealList}。
-            任务：根据我目前的体重趋势，评价这顿饭是否合适。`;
+        else if (pendingMealType === 'recommend') {
+             prompt = `${basePersona} 任务：根据我的体重情况(${healthContext})，为我推荐今天的健康食谱...`;
+        } else {
+             prompt = `${basePersona} 点评我的饮食：${itemsJSON}。结合我的体重情况(${healthContext})...`;
         }
         
-                try {
+        try {
             const res = await callAI([
-                {
-                    role:'system', 
-                    content: `You are roleplaying as ${role.name}. Keep strictly to the persona. Direct speech only.`
-                }, 
-                {role:'user', content: prompt}
+                { role: 'system', content: "You are a JSON generator." }, 
+                { role: 'user', content: prompt }
             ]);
-            aiBox.innerText = res;
+
+            // === 处理交换食谱的返回 (修改了判断逻辑) ===
+            if (pendingMealType === 'exchange') {
+                try {
+                    const cleanJson = res.replace(/```json/g, '').replace(/```/g, '').trim();
+                    const aiMenu = JSON.parse(cleanJson);
+                    
+                    // 辅助函数：判断是否真的吃了
+                    const hasEaten = (text) => text && text.trim() !== "" && text !== "无" && text !== "没吃";
+
+                    let addedCount = 0;
+                    if (hasEaten(aiMenu.breakfast)) { addMealItem('breakfast', aiMenu.breakfast, true); addedCount++; }
+                    if (hasEaten(aiMenu.lunch)) { addMealItem('lunch', aiMenu.lunch, true); addedCount++; }
+                    if (hasEaten(aiMenu.dinner)) { addMealItem('dinner', aiMenu.dinner, true); addedCount++; }
+                    if (hasEaten(aiMenu.snack)) { addMealItem('snack', aiMenu.snack, true); addedCount++; }
+                    
+                    // 🟢 成功提示
+                    aiBox.style.background = "#e8f5e9"; 
+                    aiBox.style.borderColor = "#c8e6c9";
+                    
+                    if (addedCount > 0) {
+                        aiBox.innerHTML = `✅ <b>${role.name}</b> 的食谱已记录！(粉色字体)`;
+                    } else {
+                        aiBox.innerHTML = `🥣 <b>${role.name}</b> 今天好像什么都没吃... (修仙中?)`;
+                    }
+                    
+                    setTimeout(() => {
+                        aiBox.style.display = 'none';
+                        aiBox.style.background = "#fffbf0"; 
+                        aiBox.style.borderColor = "#eebb4d";
+                    }, 2000);
+                    
+                } catch (parseErr) {
+                    console.error(parseErr);
+                    aiBox.innerText = "AI 格式错误，请重试...";
+                }
+            } else {
+                // 普通点评/推荐
+                aiBox.innerText = res;
+            }
         } catch(e) {
             aiBox.innerText = "连接失败: " + e.message;
         }
     }
-        
-        // ... 上面是 meal 的逻辑 ...
-
+    
     // ===========================
     // 分支 4: 花园送花 (新增)
     // ===========================
@@ -6698,10 +7254,15 @@ $('role-select-confirm').onclick = async () => {
 // === 放在 askMealAI 上面 ===
 let pendingMealType = null; 
 
-// === 修复版：askMealAI 函数 ===
 function askMealAI(type) { 
     replyTarget = 'meal'; 
     pendingMealType = type; 
+    
+    // 如果是交换食谱，我们需要先检查今天是不是已经有记录了，避免重复
+    if (type === 'exchange') {
+        // 可以加个判断，如果已经有AI记录了提示一下，不过为了简单先不加
+    }
+
     const selectBox = document.getElementById('role-select-input');
     if (selectBox) {
         selectBox.innerHTML = renderRoleOptionsHTML();
@@ -7135,9 +7696,16 @@ function importData(input) {
         function toggleTodo(i) { 
         DB.todos[i].done = !DB.todos[i].done; 
         if(DB.todos[i].done) gainXP(5); // 完成待办 +5 XP
-        localStorage.setItem('v15_todo', JSON.stringify(DB.todos)); 
-        renderTodosWidget(); 
+            // 🔥 新增：只有勾选完成时才给奖励
+    if(DB.todos[i].done) {
+        gainXP(5); 
+        gainDiamond(10, '完成待办');
     }
+    
+    localStorage.setItem('v15_todo', JSON.stringify(DB.todos)); 
+    renderTodosWidget(); 
+}
+
     function delTodo(i) { DB.todos.splice(i,1); localStorage.setItem('v15_todo', JSON.stringify(DB.todos)); renderTodosWidget(); }
     function renderContacts() { $('contact-list').innerHTML = DB.contacts.map(c=>`<div style="background:var(--card-bg); padding:15px; margin-bottom:10px; border-radius:12px; display:flex; justify-content:space-between; align-items:center;"><span>${c.name}</span> <span onclick="editContact(${c.id})" style="cursor:pointer; font-size:20px;">⚙️</span></div>`).join(''); }
     function editContact(id) { 
@@ -7187,10 +7755,116 @@ function importData(input) {
 }
     function deleteContact() { const id = $('c-id').value; if(id && confirm("Del?")) { DB.contacts = DB.contacts.filter(c => c.id != id); localStorage.setItem('v15_con', JSON.stringify(DB.contacts)); renderContacts(); $('modal-contact').style.display='none'; } }
     
-            function renderMealsApp() { const area=$('meal-cards-area'); area.innerHTML=''; const types={breakfast:'早餐 🍳',lunch:'午餐 🍱',dinner:'晚餐 🍷',snack:'零食 🍪'}; Object.keys(types).forEach(type=>{ const items=(DB.meals.items[type]||[]).map((i, idx)=>`<div style="display:flex; justify-content:space-between; padding:4px 0;"><span>- ${i.text}</span><span style="color:#ff3b30; cursor:pointer; font-weight:bold;" onclick="removeMeal('${type}', ${idx})">×</span></div>`).join(''); area.innerHTML+=`<div style="background:var(--card-bg); border-radius:20px; padding:15px; margin-bottom:15px;"><div style="display:flex; justify-content:space-between; align-items:center;"><div style="font-weight:bold;">${types[type]}</div><button class="btn-small" onclick="clearMealType('${type}')" style="margin:0; padding:2px 8px; font-size:10px; opacity:0.6;">清空</button></div><div style="margin:5px 0; opacity:0.8;">${items}</div><div style="display:flex; gap:5px; margin-top:10px;"><input class="setting-input" id="in-${type}" placeholder="Add..." style="margin:0; flex:1;"><button class="btn-normal" style="width:auto;" onclick="addMealItem('${type}')">+</button></div></div>`; }); }
-    function addMealItem(t) { const v=$(`in-${t}`).value; if(v){ DB.meals.items[t].push({text:v}); localStorage.setItem('v15_meals', JSON.stringify(DB.meals)); renderMealsApp(); } }
-    function removeMeal(type, index) { DB.meals.items[type].splice(index, 1); localStorage.setItem('v15_meals', JSON.stringify(DB.meals)); renderMealsApp(); }
-    function clearMealType(type) { if(confirm('清空该类目所有记录？')) { DB.meals.items[type] = []; localStorage.setItem('v15_meals', JSON.stringify(DB.meals)); renderMealsApp(); } }
+// ============================================================
+// 🍱 好好吃饭 V2.0 (日历版 + AI共食)
+// ============================================================
+
+// 1. 初始化数据结构
+if (!DB.mealHistory) {
+    // 尝试读取旧数据迁移，或者新建
+    DB.mealHistory = JSON.parse(localStorage.getItem('v47_meal_history')) || {};
+}
+
+// 当前选中的日期 (默认为今天)
+let currentMealDate = new Date().toISOString().split('T')[0];
+
+// 2. 切换日期
+function changeMealDate(date) {
+    if (!date) return;
+    currentMealDate = date;
+    renderMealsApp();
+}
+
+// 3. 渲染主界面
+function renderMealsApp() {
+    // 同步日历输入框的值
+    const dateInput = document.getElementById('meal-date-input');
+    if (dateInput) dateInput.value = currentMealDate;
+
+    // 获取当天数据，如果没有则初始化空结构
+    if (!DB.mealHistory[currentMealDate]) {
+        DB.mealHistory[currentMealDate] = { breakfast:[], lunch:[], dinner:[], snack:[] };
+    }
+    const dayData = DB.mealHistory[currentMealDate];
+
+    const area = $('meal-cards-area');
+    area.innerHTML = '';
+    
+    const types = { breakfast:'早餐 🍳', lunch:'午餐 🍱', dinner:'晚餐 🍷', snack:'零食 🍪' };
+    
+    Object.keys(types).forEach(type => {
+        const items = dayData[type] || [];
+        
+        // 生成列表 HTML
+        const itemsHtml = items.map((item, idx) => `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px dashed rgba(0,0,0,0.05);">
+                <span class="meal-item-text ${item.isAI ? 'is-ai' : ''}">
+                    ${item.isAI ? '' : '- '}${item.text}
+                </span>
+                <span style="color:#ccc; cursor:pointer; font-size:16px; padding:0 5px;" onclick="removeMeal('${type}', ${idx})">×</span>
+            </div>
+        `).join('');
+
+        area.innerHTML += `
+            <div style="background:var(--card-bg); border-radius:20px; padding:15px; margin-bottom:15px; box-shadow:var(--shadow);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <div style="font-weight:bold; color:var(--text-color);">${types[type]}</div>
+                    <button class="btn-small" onclick="clearMealType('${type}')" style="margin:0; padding:2px 8px; font-size:10px; opacity:0.6;">清空</button>
+                </div>
+                
+                <div style="margin-bottom:10px;">${itemsHtml}</div>
+                
+                <div style="display:flex; gap:5px;">
+                    <input class="setting-input" id="in-${type}" placeholder="吃点什么..." style="margin:0; flex:1; font-size:13px; padding:8px;">
+                    <button class="btn-normal" style="width:auto; padding:0 15px;" onclick="addMealItem('${type}')">+</button>
+                </div>
+            </div>
+        `;
+    });
+}
+
+// 4. 添加记录 (保存到对应日期)
+function addMealItem(type, text = null, isAI = false) {
+    const inputVal = text || $(`in-${type}`).value;
+    if (!inputVal) return;
+
+    if (!DB.mealHistory[currentMealDate]) {
+        DB.mealHistory[currentMealDate] = { breakfast:[], lunch:[], dinner:[], snack:[] };
+    }
+
+    DB.mealHistory[currentMealDate][type].push({
+        text: inputVal,
+        isAI: isAI // 标记是否为 AI 添加
+    });
+
+    saveMealData();
+    renderMealsApp();
+}
+
+// 5. 删除记录
+function removeMeal(type, index) {
+    if (DB.mealHistory[currentMealDate] && DB.mealHistory[currentMealDate][type]) {
+        DB.mealHistory[currentMealDate][type].splice(index, 1);
+        saveMealData();
+        renderMealsApp();
+    }
+}
+
+// 6. 清空某类
+function clearMealType(type) {
+    if(confirm(`确定清空 ${currentMealDate} 的该餐记录吗？`)) {
+        if (DB.mealHistory[currentMealDate]) {
+            DB.mealHistory[currentMealDate][type] = [];
+            saveMealData();
+            renderMealsApp();
+        }
+    }
+}
+
+// 7. 保存数据到 LocalStorage
+function saveMealData() {
+    localStorage.setItem('v47_meal_history', JSON.stringify(DB.mealHistory));
+}
     
         function renderExtras() { document.querySelectorAll('.mood-btn').forEach(b=>b.style.opacity='0.4'); if($('mood-'+DB.extras.mood)) $('mood-'+DB.extras.mood).style.opacity='1'; $('fridge-memo').value = DB.extras.fridge || ''; const diff = new Date(DB.extras.cdDate) - new Date(new Date().setHours(0,0,0,0)); $('cd-text').innerText = diff >= 0 ? `距离${DB.extras.cdText}` : `${DB.extras.cdText}已过`; $('cd-num').innerText = Math.ceil(Math.abs(diff)/(86400000)); }
         function setMood(m) { 
@@ -8499,6 +9173,8 @@ function copyCommand(id) {
 
         localStorage.setItem('v32_weight', JSON.stringify(DB.weightLogs));
         gainXP(hasEx ? 15 : 5); 
+        // 🔥 新增：奖励粉钻 (运动给30，没运动给10)
+gainDiamond(hasEx ? 30 : 10, hasEx ? '运动打卡' : '记录体重');
         alert(`记录成功！${hasEx ? '运动辛苦啦！XP+15' : 'XP+5'}`);
         renderWeightApp();
     };
@@ -10629,6 +11305,9 @@ function finishFocusSession() {
     // 触发 AI 奖励
     pokeFocusCharacter('finish');
     
+        // 🔥 新增：奖励粉钻 🔥
+    gainDiamond(50, '专注达标');
+    
     // 震动提醒
     if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
 }
@@ -11835,6 +12514,42 @@ function scrollToBottom() {
     }
 }
 
+// === 🆕 新增辅助函数：刷新列表预览 ===
+function refreshChatListPreview(chatId) {
+    // 1. 找到这个人的所有剩余消息
+    const history = DB.chatHistory.filter(m => m.chatId == chatId && !m.isRecalled);
+    
+    // 2. 找到列表里的会话项
+    const chatSession = DB.activeChats.find(c => c.contactId == chatId);
+    if (!chatSession) return;
+
+    if (history.length > 0) {
+        // 如果还有消息，取最后一条的内容
+        const lastMsg = history[history.length - 1];
+        let preview = lastMsg.content;
+        
+        // 处理特殊消息类型的预览文字
+        if (lastMsg.specialType === 'image') preview = '[图片]';
+        else if (lastMsg.specialType === 'voice') preview = '[语音]';
+        else if (lastMsg.specialType === 'redpacket') preview = '[红包]';
+        else if (lastMsg.specialType === 'location') preview = '[位置]';
+        
+        chatSession.lastMsg = preview;
+        chatSession.time = new Date(lastMsg.time).toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'});
+    } else {
+        // 如果消息删光了
+        chatSession.lastMsg = '';
+        chatSession.time = '';
+    }
+
+    // 3. 保存并刷新界面
+    localStorage.setItem('v42_chats', JSON.stringify(DB.activeChats));
+    // 如果当前在聊天列表页，就刷新一下 UI
+    if (document.getElementById('view-chat-app').classList.contains('active')) {
+        renderChatList();
+    }
+}
+
 function updateChatListPreview(contactId, text) {
     if (!DB.activeChats) return;
     const chat = DB.activeChats.find(c => c.contactId == contactId);
@@ -11875,20 +12590,37 @@ async function generateCyberMemory() {
     }
 
     // --- 🍱 饮食状态 (Meals) ---
-    if (DB.meals && DB.meals.items) {
-        const m = DB.meals.items;
-        const eaten = [];
-        if(m.breakfast.length) eaten.push(`早:${m.breakfast.map(i=>i.text).join(',')}`);
-        if(m.lunch.length) eaten.push(`午:${m.lunch.map(i=>i.text).join(',')}`);
-        if(m.dinner.length) eaten.push(`晚:${m.dinner.map(i=>i.text).join(',')}`);
-        if(m.snack.length) eaten.push(`零食:${m.snack.map(i=>i.text).join(',')}`);
-        
-        if (eaten.length > 0) {
-            memoryStream += `[饮食]: 今天吃了 -> ${eaten.join(' | ')}。\n`;
-        } else {
-            memoryStream += `[饮食]: 今天还没记录吃了什么，可以关心一下她饿不饿。\n`;
+    // 👇 修改开始 👇
+    // 获取今天的日期字符串
+    const todayStrForMeal = new Date().toISOString().split('T')[0];
+    // 从新的 mealHistory 读取
+    const todayMeals = (DB.mealHistory && DB.mealHistory[todayStrForMeal]) 
+                       ? DB.mealHistory[todayStrForMeal] 
+                       : { breakfast:[], lunch:[], dinner:[], snack:[] };
+
+    const eaten = [];
+    // 过滤掉 AI 写的 (isAI: true)，只统计用户自己吃的
+    const userB = todayMeals.breakfast.filter(i => !i.isAI).map(i => i.text);
+    const userL = todayMeals.lunch.filter(i => !i.isAI).map(i => i.text);
+    const userD = todayMeals.dinner.filter(i => !i.isAI).map(i => i.text);
+    const userS = todayMeals.snack.filter(i => !i.isAI).map(i => i.text);
+
+    if(userB.length) eaten.push(`早:${userB.join(',')}`);
+    if(userL.length) eaten.push(`午:${userL.join(',')}`);
+    if(userD.length) eaten.push(`晚:${userD.join(',')}`);
+    if(userS.length) eaten.push(`零食:${userS.join(',')}`);
+    
+    if (eaten.length > 0) {
+        memoryStream += `[饮食]: 今天吃了 -> ${eaten.join(' | ')}。\n`;
+    } else {
+        // 👇 修改了这里：加了概率判断 👇
+        // 只有 20% 的概率会写入这条记忆，防止 AI 每次都唠叨
+        if (Math.random() < 0.3) {
+            memoryStream += `[饮食]: (提示) 用户今天还没记录饮食，如果话题合适，可以顺便关心一下。\n`;
         }
+        // 剩下 80% 的情况，AI 根本不知道你没记饮食，所以不会问。
     }
+    
 
     // --- ⚖️ 体重与运动 (Weight) ---
     if (DB.weightLogs && DB.weightLogs.length > 0) {
@@ -12233,9 +12965,17 @@ function ctxDelete() {
         closeContextMenu();
         return;
     }
+    // 获取当前要删除的消息对象，以便知道是哪个会话
+    const msg = DB.chatHistory.find(m => m.id === _contextMenuMsgId);
+    const chatId = msg ? msg.chatId : null;
+
     DB.chatHistory = DB.chatHistory.filter(m => m.id !== _contextMenuMsgId);
     saveChatHistory();
     renderChatMessages();
+    
+    // 👇👇👇 新增这一行：删除后刷新列表预览 👇👇👇
+    if(chatId) refreshChatListPreview(chatId); 
+    
     showToast('🗑️ 已删除');
     closeContextMenu();
 }
@@ -12553,10 +13293,18 @@ function multiDeleteMessages() {
     const n = selectedMsgIds.size;
     if (n === 0) return alert("请先选择消息");
     if (!confirm(`确定删除 ${n} 条消息？`)) return;
+    
+    // 记录当前的会话ID
+    const chatId = currentChatContactId;
+
     DB.chatHistory = DB.chatHistory.filter(m => !selectedMsgIds.has(m.id));
     saveChatHistory();
     exitMultiSelectMode();
     renderChatMessages();
+    
+    // 👇👇👇 新增这一行：删除后刷新列表预览 👇👇👇
+    if(chatId) refreshChatListPreview(chatId);
+
     showToast(`🗑️ 已删除 ${n} 条`);
 }
 
@@ -13910,10 +14658,10 @@ function renderCoupleSpace() {
                 <div class="cp-icon-box" style="background: #ab47bc;">💌</div>
                 <div class="cp-app-name">真心话</div>
             </div>
-            <div class="cp-app-icon" onclick="generateMovieInvite()">
-                <div class="cp-icon-box" style="background: #5c6bc0;">🎬</div>
-                <div class="cp-app-name">约电影</div>
-            </div>
+            <div class="cp-app-icon" onclick="openMovieDate()">
+    <div class="cp-icon-box" style="background: #5c6bc0;">🎬</div>
+    <div class="cp-app-name">约电影</div>
+</div>
             <div class="cp-app-icon" onclick="generateLoveContract()">
                 <div class="cp-icon-box" style="background: #ffa726;">📜</div>
                 <div class="cp-app-name">恋爱契约</div>
@@ -13982,12 +14730,30 @@ function renderCpDiaryList() {
         return;
     }
 
+// 🔥 新增：删除 AI 日记
+function deleteCpDiary(id) {
+    if(!confirm("确定要撕掉这篇日记吗？")) return;
+    
+    DB.coupleSpace.diary.list = DB.coupleSpace.diary.list.filter(d => d.id !== id);
+    saveCpData();
+    renderCpDiaryList();
+    showToast("🗑️ 日记已删除");
+}
+// 挂载到 window
+window.deleteCpDiary = deleteCpDiary;
+
     // 倒序排列
     [...diaries].reverse().forEach(d => {
         list.innerHTML += `
-            <div class="cp-diary-card">
+            <div class="cp-diary-card" style="position:relative;">
                 <div class="cp-diary-date">${d.date} · ${d.weather || '晴'}</div>
                 <div class="cp-diary-content">${d.content}</div>
+                
+                <!-- 🔥 新增：删除按钮 -->
+                <div style="position:absolute; top:15px; right:15px; color:#ff3b30; cursor:pointer; opacity:0.6;" 
+                     onclick="deleteCpDiary(${d.id})">
+                     🗑️
+                </div>
             </div>
         `;
     });
@@ -14033,9 +14799,10 @@ async function generateAiDiary(role, isAuto) {
         内容：记录一件关于用户的小事，或者表达对用户的思念/吐槽/傲娇想法。
         要求：
         1. 必须符合人设口吻。
-        2. 短小精悍（100-200字）。
+        2. 短小精悍（100-500字）。
         3. 格式：直接写正文，不要标题。
         4. 包含一个随机天气（如：晴、雨、心情多云）。
+        5. 内容主题自由发挥，禁止跟上次日记重复。
         `;
 
         const res = await callAI([
@@ -14496,6 +15263,939 @@ function claimDailyDiamond() {
 
 window.claimDailyDiamond = claimDailyDiamond;
 window.editLoveStartDate = editLoveStartDate;
+
+// === 💎 核心：赚取粉钻通用函数 ===
+function gainDiamond(amount, reason) {
+    // 确保数据结构存在
+    if (!DB.coupleSpace) return;
+    
+    DB.coupleSpace.diamond = (DB.coupleSpace.diamond || 0) + amount;
+    saveCpData(); // 保存数据
+    
+    // 如果当前在情侣空间或购物车，实时刷新显示
+    if($('cp-diamond-count')) $('cp-diamond-count').innerText = DB.coupleSpace.diamond;
+    if($('cart-diamond-display')) $('cart-diamond-display').innerText = DB.coupleSpace.diamond;
+    
+    // 弹出提示
+    showToast(`💎 粉钻 +${amount} (${reason})`);
+    
+    // 震动反馈
+    if(navigator.vibrate) navigator.vibrate([50, 50]);
+}
+// 挂载到 window
+window.gainDiamond = gainDiamond;
+
+// === 🎬 约电影逻辑 V2.0 (完整版) ===
+
+// 0. 初始化历史数据
+if (!DB.movieHistory) {
+    DB.movieHistory = JSON.parse(localStorage.getItem('v48_movie_history')) || [];
+}
+
+let currentMovieData = null; // 暂存当前电影数据
+let movieMode = 'ai'; // 'ai' (Ta推荐) 或 'user' (我推荐)
+
+// 1. 打开主界面 (进入菜单)
+function openMovieDate() {
+    // 强制更新头像 (防止换了头像这里不刷新)
+    const role = getRoleOrAlert(true); // true表示静默获取
+    if(role) updateMovieAvatar(role);
+
+    openView('view-movie-date');
+    backToMovieMenu(); // 重置到菜单页
+}
+
+function backToMovieMenu() {
+    $('movie-menu').style.display = 'flex';
+    $('movie-user-form').style.display = 'none';
+    $('movie-loading').style.display = 'none';
+    $('movie-card-content').style.display = 'none';
+    $('movie-history-view').style.display = 'none';
+}
+
+// 2. 切换模式
+function switchMovieMode(mode) {
+    movieMode = mode;
+    const role = getRoleOrAlert(); 
+    if(!role) return;
+
+    $('movie-menu').style.display = 'none';
+
+    if (mode === 'ai') {
+        // AI 推荐模式：直接开始生成
+        generateMovieInvite();
+    } else {
+        // 用户推荐模式：显示表单
+        $('movie-user-form').style.display = 'block';
+        // 清空表单
+        $('m-input-title').value = '';
+        $('m-input-intro').value = '';
+        $('m-input-reason').value = '';
+    }
+}
+
+// 3. 辅助：更新头像
+function updateMovieAvatar(role) {
+    const avatarEl = $('m-avatar');
+    db.settings.get(`focus_img_${role.id}`).then(record => {
+        if (record && record.value) {
+            const url = URL.createObjectURL(record.value);
+            avatarEl.style.backgroundImage = `url('${url}')`;
+            avatarEl.innerText = '';
+        } else {
+            avatarEl.style.backgroundImage = '';
+            avatarEl.style.backgroundColor = '#ccc';
+            avatarEl.innerText = role.name[0];
+            avatarEl.style.display = 'flex';
+            avatarEl.style.alignItems = 'center';
+            avatarEl.style.justifyContent = 'center';
+        }
+    });
+}
+
+// 4. 核心：AI 推荐电影 (Ta Recommends)
+async function generateMovieInvite() {
+    const role = getRoleOrAlert();
+    if(!role) return;
+
+    // UI 状态
+    $('movie-loading').style.display = 'block';
+    $('movie-loading-text').innerText = `${role.name} 正在挑选影片...`;
+    
+    try {
+        const systemPrompt = `
+        你现在是${role.name}。人设：${role.prompt}。
+        任务：你要邀请用户看一场电影。请编造（或推荐）一部电影。
+        
+        【强制格式要求】：
+        1. 必须返回一个纯 JSON 对象。
+        2. 不要包含 Markdown 标记。
+        3. 格式如下：
+        {
+            "title": "电影名称",
+            "intro": "一句话简介(50字内)",
+            "reason": "推荐理由(符合你的人设)",
+            "invite": "邀请的话(口语化，对用户说)"
+        }
+        4. 电影可以是真实存在的，也可以是根据人设背景编造的虚构电影。
+        5. 语气必须完全符合人设。
+        `;
+
+        const res = await callAI([
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: "Generate a movie invitation." }
+        ]);
+
+        const cleanJson = res.replace(/```json/g, '').replace(/```/g, '').trim();
+        const data = JSON.parse(cleanJson);
+        
+        // 补全数据
+        data.roleName = role.name;
+        data.date = new Date().toLocaleDateString();
+        data.initiator = 'ai'; // 发起人是 AI
+        currentMovieData = data;
+
+        // 渲染票面
+        renderTicket(data);
+
+        // 显示操作按钮 (接受/拒绝)
+        $('m-action-btns').style.display = 'flex';
+        $('m-result-area').style.display = 'none';
+        
+        $('movie-loading').style.display = 'none';
+        $('movie-card-content').style.display = 'block';
+
+    } catch (e) {
+        alert("生成失败，请重试: " + e.message);
+        backToMovieMenu();
+    }
+}
+
+// 5. 核心：用户推荐电影 (I Recommend)
+async function submitUserMovie() {
+    const role = getRoleOrAlert();
+    if(!role) return;
+
+    const title = $('m-input-title').value.trim();
+    const intro = $('m-input-intro').value.trim();
+    const reason = $('m-input-reason').value.trim();
+
+    if(!title || !reason) return alert("请至少填写电影名和推荐理由~");
+
+    // UI 切换
+    $('movie-user-form').style.display = 'none';
+    $('movie-loading').style.display = 'block';
+    $('movie-loading-text').innerText = `${role.name} 正在看你的推荐...`;
+
+    try {
+        const systemPrompt = `
+        你现在是${role.name}。人设：${role.prompt}。
+        情境：用户邀请你去看电影《${title}》。
+        用户的推荐理由是：“${reason}”。
+        
+        任务：
+        1. 决定是否接受邀请（根据你的人设喜好）。
+        2. 如果接受：表现出开心、期待。
+        3. 如果拒绝：委婉拒绝，或者提出换一部。
+        4. 输出一段简短的回复（30字以内，口语化）。
+        `;
+
+        const reply = await callAI([
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: "我想带你去看这部电影，去吗？" }
+        ]);
+
+        // 构造数据
+        const data = {
+            title: title,
+            intro: intro || "（用户自选影片）",
+            reason: reason, // 这里显示用户写的理由
+            invite: reply,  // 这里显示 AI 的回复
+            roleName: role.name,
+            date: new Date().toLocaleDateString(),
+            initiator: 'user' // 发起人是用户
+        };
+        currentMovieData = data;
+
+        // 渲染票面
+        renderTicket(data);
+        
+        // 修改气泡样式，表示这是 AI 的回复
+        $('m-invite-text').style.background = "#e8f5e9";
+        $('m-invite-text').style.color = "#2e7d32";
+
+        // 用户推荐的，不需要“接受/拒绝”按钮，直接保存
+        $('m-action-btns').style.display = 'none';
+        $('m-result-area').style.display = 'block';
+        $('m-result-text').innerText = "🎫 票根已生成";
+        
+        // 自动保存到历史
+        saveMovieHistory(data, 'success'); // 默认视为成功约会
+
+        $('movie-loading').style.display = 'none';
+        $('movie-card-content').style.display = 'block';
+
+    } catch (e) {
+        alert("AI 走神了: " + e.message);
+        $('movie-user-form').style.display = 'block'; // 恢复表单
+        $('movie-loading').style.display = 'none';
+    }
+}
+
+// 6. 渲染票面通用函数
+function renderTicket(data) {
+    $('m-title').innerText = data.title;
+    $('m-intro').innerText = data.intro;
+    $('m-reason').innerText = data.reason;
+    $('m-invite-text').innerText = data.invite;
+    $('m-date-display').innerText = data.date;
+    
+    // 如果是我推荐的，理由颜色变一下，区分开
+    if (data.initiator === 'user') {
+        $('m-reason').style.color = "#81d4fa"; // 蓝色系
+        $('m-reason').innerText = `(你的理由) ${data.reason}`;
+    } else {
+        $('m-reason').style.color = "#ffcc80"; // 黄色系
+    }
+}
+
+// 7. 用户回应 AI 的邀请
+async function respondMovie(isAccepted) {
+    const role = getRoleOrAlert();
+    
+    // UI 变化
+    $('m-action-btns').style.display = 'none';
+    $('m-result-area').style.display = 'block';
+    $('m-result-text').innerText = isAccepted ? "❤️ 约会成立！" : "💔 已婉拒";
+
+    // 保存历史
+    saveMovieHistory(currentMovieData, isAccepted ? 'success' : 'fail');
+
+    if (isAccepted) {
+        gainDiamond(50, '约会成功');
+        if(typeof startSakuraEffect === 'function') {
+            startSakuraEffect();
+            setTimeout(stopCurrentEffect, 3000);
+        }
+    }
+
+    // 可选：让 AI 再回一句话（为了省 Token，这里只做简单提示，或者你可以复用之前的 respondMovie 逻辑）
+}
+
+// 8. 历史记录系统
+function saveMovieHistory(data, status) {
+    const record = {
+        id: Date.now(),
+        ...data,
+        status: status // 'success' or 'fail'
+    };
+    DB.movieHistory.unshift(record);
+    localStorage.setItem('v48_movie_history', JSON.stringify(DB.movieHistory));
+}
+
+function openMovieHistory() {
+    $('movie-menu').style.display = 'none';
+    $('movie-user-form').style.display = 'none';
+    $('movie-card-content').style.display = 'none';
+    $('movie-history-view').style.display = 'block';
+    
+    const list = $('movie-history-list');
+    list.innerHTML = '';
+
+    if (DB.movieHistory.length === 0) {
+        list.innerHTML = '<div style="text-align:center; opacity:0.5; margin-top:50px;">暂无观影记录</div>';
+        return;
+    }
+
+    DB.movieHistory.forEach(item => {
+        const isSuccess = item.status === 'success';
+        const statusText = isSuccess ? '已成行' : '已取消';
+        const statusClass = isSuccess ? 'status-success' : 'status-fail';
+        const initiatorText = item.initiator === 'user' ? '我发起的' : `${item.roleName} 邀请`;
+
+        list.innerHTML += `
+            <div class="history-ticket">
+                <div class="ht-status ${statusClass}">${statusText}</div>
+                <div class="ht-title">《${item.title}》</div>
+                <div class="ht-date">${item.date} · ${initiatorText}</div>
+                <div style="font-size:13px; color:#555; margin-top:8px;">"${item.intro}"</div>
+                <div class="ht-role">💬 ${item.roleName}: ${item.invite}</div>
+            </div>
+        `;
+    });
+}
+
+function closeMovieHistory() {
+    $('movie-history-view').style.display = 'none';
+    // 返回菜单
+    $('movie-menu').style.display = 'flex';
+}
+
+// 挂载函数
+window.openMovieDate = openMovieDate;
+window.switchMovieMode = switchMovieMode;
+window.submitUserMovie = submitUserMovie;
+window.generateMovieInvite = generateMovieInvite;
+window.respondMovie = respondMovie;
+window.backToMovieMenu = backToMovieMenu;
+window.openMovieHistory = openMovieHistory;
+window.closeMovieHistory = closeMovieHistory;
+
+// ============================================================
+// 📜 恋爱契约逻辑 (Love Contract)
+// ============================================================
+
+// 1. 初始化数据
+if (!DB.coupleSpace.contract) {
+    DB.coupleSpace.contract = {
+        status: 'none', // none, drafted, signed
+        content: '',
+        date: '',
+        roleName: '',
+        userName: ''
+    };
+}
+
+// 2. 打开契约界面 (入口)
+function generateLoveContract() {
+    // 强制获取角色
+    const role = getRoleOrAlert(true);
+    if (!role) return alert("请先在右上角选择一个签约对象 (角色)！");
+
+    openView('view-contract');
+    
+    // 填充基本信息
+    $('c-party-a').innerText = DB.chatSettings.myName || '我';
+    $('c-party-b').innerText = role.name;
+    
+    renderContractState();
+}
+
+// 3. 根据状态渲染界面
+function renderContractState() {
+    const data = DB.coupleSpace.contract;
+    const role = getRoleOrAlert(true);
+    
+    // 元素获取
+    const body = $('c-clauses');
+    const signA = $('c-sign-a');
+    const signB = $('c-sign-b');
+    const date = $('c-date-display');
+    const seal = $('c-seal');
+    
+    // 按钮获取
+    const btnDraft = $('btn-draft');
+    const btnSign = $('btn-sign');
+    const btnBreak = $('btn-break');
+    const btnVoid = $('btn-void');
+
+    // 重置显示
+    btnDraft.style.display = 'none';
+    btnSign.style.display = 'none';
+    btnBreak.style.display = 'none';
+    btnVoid.style.display = 'none';
+    seal.classList.remove('stamped');
+    seal.style.opacity = 0;
+
+    if (data.status === 'none') {
+        // 初始状态
+        body.innerHTML = '<div style="text-align:center; opacity:0.5; margin-top:50px;">(空白契约)<br>等待起草...</div>';
+        signA.innerText = '';
+        signB.innerText = '';
+        date.innerText = '--';
+        btnDraft.style.display = 'block';
+    } 
+    else if (data.status === 'drafted') {
+        // 已起草，待签署
+        body.innerText = data.content;
+        signA.innerText = ''; // 还没签
+        signB.innerText = role ? role.name : 'Ta'; // 对方已同意
+        date.innerText = new Date().toLocaleDateString();
+        btnSign.style.display = 'block';
+        btnVoid.style.display = 'block';
+    } 
+    else if (data.status === 'signed') {
+        // 已签署生效
+        body.innerText = data.content;
+        signA.innerText = DB.chatSettings.myName || '我';
+        signB.innerText = data.roleName;
+        date.innerText = data.date;
+        seal.classList.add('stamped'); // 盖章
+        
+        btnBreak.style.display = 'block'; // 显示违约按钮
+        btnVoid.style.display = 'block';
+    }
+}
+
+// 4. 核心：AI 起草契约
+async function draftContract() {
+    const role = getRoleOrAlert();
+    if (!role) return;
+
+    const btn = $('btn-draft');
+    btn.disabled = true;
+    btn.innerText = `${role.name} 正在思考条款...`;
+
+    try {
+        const systemPrompt = `
+        你现在是${role.name}。人设：${role.prompt}。
+        任务：起草一份《恋爱契约书》，列出你希望用户（你的恋人/所有物）遵守的条款。
+        
+        【要求】：
+        1. 必须符合角色设定，语气、性格、对白语言。
+        2. 条款数量：3-5条。
+        3. 格式：直接列出条款，每条一行。不要写标题，不要写废话。
+        4. 语气：第一人称。
+        5. 包含一条“违约惩罚”。
+        6. 禁止油腻霸总土味的语录。
+        `;
+
+        const res = await callAI([
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: "起草契约吧。" }
+        ]);
+
+        // 保存草稿
+        DB.coupleSpace.contract.status = 'drafted';
+        DB.coupleSpace.contract.content = res;
+        DB.coupleSpace.contract.roleName = role.name;
+        
+        saveCpData();
+        renderContractState();
+
+    } catch (e) {
+        alert("起草失败: " + e.message);
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "🖋️ 重新起草";
+    }
+}
+
+// 5. 签署契约 (按手印)
+function signContract() {
+    if (!confirm("确定签署这份契约吗？\n签署后即刻生效，违约将受到惩罚。")) return;
+
+    if (navigator.vibrate) navigator.vibrate(100); // 震动增加仪式感
+    
+    DB.coupleSpace.contract.status = 'signed';
+    DB.coupleSpace.contract.date = new Date().toLocaleDateString();
+    DB.coupleSpace.contract.userName = DB.chatSettings.myName || '我';
+    
+    saveCpData();
+    renderContractState();
+    
+    // 撒花特效
+    if(typeof startSakuraEffect === 'function') {
+        startSakuraEffect();
+        setTimeout(stopCurrentEffect, 3000);
+    }
+    
+    alert("❤️ 契约已生效！请信守承诺。");
+}
+
+// 6. 撕毁/重置
+function voidContract() {
+    if (!confirm("⚠️ 警告：撕毁契约可能会让 Ta 伤心或生气。\n确定要作废重签吗？")) return;
+    
+    DB.coupleSpace.contract = { status: 'none', content: '', date: '', roleName: '', userName: '' };
+    saveCpData();
+    renderContractState();
+}
+
+// 7. 违约惩罚 (Punishment Mode)
+async function breakContract() {
+    const role = getRoleOrAlert(true);
+    if (!role) return;
+
+    if (!confirm("你确定要承认自己【违约】了吗？\n(可能会触发特殊惩罚对话)")) return;
+
+    const btn = $('btn-break');
+    btn.disabled = true;
+    btn.innerText = "正在领罚...";
+
+    try {
+        const systemPrompt = `
+        你现在是${role.name}。人设：${role.prompt}。
+        情境：用户签署了恋爱契约，但刚刚承认自己【违约】了（违反了条款）。
+        
+        任务：
+        1. 根据你的人设做出反应。
+        2. 给出具体的“惩罚内容”（如：罚你做20个深蹲、罚你说10遍爱我、罚你今晚不许睡）。
+        3. 口语化，简短有力。必须符合人物设定，性格、口吻、对白语言。
+        `;
+
+        const res = await callAI([
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: "对不起，我违约了...惩罚我吧。" }
+        ]);
+
+        alert(`💀 违约判定生效！\n\n${role.name} 说：\n“${res}”`);
+        
+        // 扣除粉钻作为系统惩罚
+        if (DB.coupleSpace.diamond > 0) {
+            const penalty = Math.floor(DB.coupleSpace.diamond * 0.1); // 扣10%
+            DB.coupleSpace.diamond -= penalty;
+            saveCpData();
+            showToast(`💔 违约金：粉钻 -${penalty}`);
+        }
+
+    } catch (e) {
+        alert("网络错误，惩罚延后...");
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "💀 我违约了 (领罚)";
+    }
+}
+
+// 挂载
+window.generateLoveContract = generateLoveContract;
+window.draftContract = draftContract;
+window.signContract = signContract;
+window.voidContract = voidContract;
+window.breakContract = breakContract;
+
+// ============================================================
+// 🍟 爱心外卖 (Love Takeout) 完整逻辑 - 修复版
+// ============================================================
+
+// 1. 数据自动修复与初始化 (关键修复：防止报错)
+(function initTakeoutData() {
+    // 确保父级存在
+    if (!DB.coupleSpace) DB.coupleSpace = {};
+    
+    // 如果 takeout 不存在，初始化它
+    if (!DB.coupleSpace.takeout) {
+        DB.coupleSpace.takeout = {
+            items: [],       // 当前菜单
+            history: [],     // 历史记录
+            allowReceive: false, // 是否接受AI投喂
+            lastReceiveDate: ''  // 上次收到AI外卖的日期
+        };
+        // 立即保存修复后的结构，防止下次刷新丢失
+        localStorage.setItem('v46_couple_space', JSON.stringify(DB.coupleSpace));
+        console.log("✅ 外卖数据结构已自动修复");
+    }
+})();
+
+// 2. 打开外卖界面
+function checkTATakeout() {
+    // 再次检查数据，双重保险
+    if (!DB.coupleSpace.takeout) {
+        alert("数据正在初始化，请重试...");
+        location.reload(); // 刷新以应用修复
+        return;
+    }
+
+    openView('view-cp-takeout');
+    
+    // 更新粉钻显示
+    const diamondEl = document.getElementById('takeout-diamond-display');
+    if(diamondEl) diamondEl.innerText = DB.coupleSpace.diamond || 0;
+    
+    // 同步设置开关状态
+    const toggle = document.getElementById('takeout-receive-toggle');
+    if(toggle) {
+        if (DB.coupleSpace.takeout.allowReceive) toggle.classList.add('on');
+        else toggle.classList.remove('on');
+    }
+
+    // 默认显示菜单 Tab
+    switchTakeoutTab('menu');
+
+    // 🔥 核心：检查是否触发“反向投喂”彩蛋
+    checkAIReverseTakeout();
+}
+
+// 3. 切换 Tab
+function switchTakeoutTab(tab) {
+    const btnMenu = document.getElementById('tab-takeout-menu');
+    const btnHist = document.getElementById('tab-takeout-history');
+    const viewMenu = document.getElementById('cp-takeout-list');
+    const viewHist = document.getElementById('cp-takeout-history');
+
+    if (!btnMenu || !viewMenu) return;
+
+    if (tab === 'menu') {
+        btnMenu.style.color = '#ff7043'; btnMenu.style.borderBottom = '2px solid #ff7043';
+        btnHist.style.color = '#333'; btnHist.style.borderBottom = 'none';
+        viewMenu.style.display = 'block'; viewHist.style.display = 'none';
+        renderTakeoutList();
+    } else {
+        btnMenu.style.color = '#333'; btnMenu.style.borderBottom = 'none';
+        btnHist.style.color = '#ff7043'; btnHist.style.borderBottom = '2px solid #ff7043';
+        viewMenu.style.display = 'none'; viewHist.style.display = 'block';
+        renderTakeoutHistory();
+    }
+}
+
+// 4. 渲染菜单列表
+function renderTakeoutList() {
+    const list = document.getElementById('cp-takeout-list');
+    list.innerHTML = '';
+
+    // 空状态：显示生成按钮
+    if (DB.coupleSpace.takeout.items.length === 0) {
+        const role = getRoleOrAlert(true); // 静默获取角色
+        const name = role ? role.name : 'Ta';
+        list.innerHTML = `
+            <div class="cart-empty-state">
+                <div class="cart-empty-icon">🍔</div>
+                <div class="cart-empty-text">
+                    ${name} 肚子饿了...<br>
+                    <span style="font-size:12px; opacity:0.6;">(看看 Ta 想吃什么？)</span>
+                </div>
+                <button class="cart-reveal-btn" style="background: linear-gradient(135deg, #ff7043 0%, #ff5722 100%); box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);" onclick="generateAiTakeout()">🍽️ 生成今日菜单</button>
+            </div>
+        `;
+        return;
+    }
+
+    // 渲染列表 (复用 taobao-item 样式)
+    DB.coupleSpace.takeout.items.forEach(item => {
+        list.innerHTML += `
+            <div class="taobao-item">
+                <div class="taobao-img" style="background:#fff3e0; font-size:32px;">${item.icon}</div>
+                <div class="taobao-info">
+                    <div class="taobao-title">${item.name}</div>
+                    <div class="taobao-ai-note" style="color:#e64a19; background:#fbe9e7; border-color:#ffccbc;">${item.note}</div>
+                    <div class="taobao-bottom">
+                        <div class="taobao-price" style="color:#d84315;">${item.price} 粉钻</div>
+                        <button class="taobao-btn" style="background: linear-gradient(90deg, #ff7043, #f4511e);" onclick="orderTakeout(${item.id}, this)">给Ta点餐</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    // 底部刷新按钮
+    list.innerHTML += `
+        <div style="text-align:center; margin-top:20px;">
+            <button class="btn-small" style="color:#999; border:none; background:none;" onclick="clearTakeoutItems()">[换一批]</button>
+        </div>
+    `;
+}
+
+// 5. AI 生成菜单
+async function generateAiTakeout() {
+    const role = getRoleOrAlert(); 
+    if(!role) return;
+
+    const btn = document.querySelector('.cart-reveal-btn');
+    if(btn) { btn.innerText = "正在看菜单..."; btn.disabled = true; }
+
+    try {
+        const systemPrompt = `
+        你现在是${role.name}。人设：${role.prompt}。
+        任务：你饿了，请列出 3 个你想吃的外卖/食物。
+        
+        【要求】：
+        1. **符合人设和时代**：古代人吃烧鸡/点心，现代人吃炸鸡/奶茶/火锅。
+        2. 返回 JSON 数组格式。
+        3. 价格 (price) 10-200 之间。
+        4. "note" 是推荐理由（如：突然想吃辣的、这家评价很好）。
+        5. "icon" 是 Emoji。
+
+        【格式示例】：
+        [{"name":"麻辣小龙虾", "icon":"🦞", "price":188, "note":"好久没吃辣了，馋！"}, {"name":"冰摇红梅黑加仑", "icon":"🥤", "price":30, "note":"解渴神器。"}]
+        `;
+
+        const res = await callAI([
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: "生成外卖菜单" }
+        ]);
+
+        let items = [];
+        try {
+            const jsonMatch = res.match(/\[[\s\S]*\]/);
+            items = JSON.parse(jsonMatch ? jsonMatch[0] : res);
+        } catch (e) { throw new Error("格式解析失败"); }
+
+        items.forEach(item => item.id = Date.now() + Math.random());
+        
+        DB.coupleSpace.takeout.items = items;
+        saveCpData(); // 保存到 localStorage
+        renderTakeoutList();
+
+    } catch (e) {
+        alert("生成失败：" + e.message);
+        if(btn) { btn.innerText = "重试"; btn.disabled = false; }
+    }
+}
+
+// === 6. 下单逻辑 (升级版：状态变化 + 自定义弹窗) ===
+async function orderTakeout(itemId, btnElement) {
+    const itemIdx = DB.coupleSpace.takeout.items.findIndex(i => i.id === itemId);
+    if (itemIdx === -1) return;
+    const item = DB.coupleSpace.takeout.items[itemIdx];
+
+    // 1. 检查余额
+    if ((DB.coupleSpace.diamond || 0) < item.price) {
+        return alert(`粉钻不足！需要 ${item.price}，你只有 ${DB.coupleSpace.diamond || 0}。`);
+    }
+
+    // 2. 二次确认
+    if (!confirm(`确定消耗 ${item.price} 粉钻给 Ta 点一份【${item.name}】吗？`)) return;
+
+    // === ✨ 界面交互核心修改开始 ===
+    
+    // 获取按钮所在的整个卡片容器
+    const card = btnElement.closest('.taobao-item');
+    const originalContent = card.innerHTML; // 备份原内容
+    
+    // 锁定按钮
+    btnElement.disabled = true;
+    
+    // 改变卡片样式，显示“正在拿外卖”状态
+    card.style.position = 'relative';
+    card.style.overflow = 'hidden';
+    
+    // 插入一个“配送中”的遮罩层
+    const loadingMask = document.createElement('div');
+    loadingMask.style.cssText = `
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(255, 243, 224, 0.95);
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        z-index: 10; animation: fadeIn 0.3s;
+    `;
+    loadingMask.innerHTML = `
+        <div style="font-size: 24px; animation: bounce 1s infinite;">🏃</div>
+        <div style="font-size: 14px; color: #e64a19; font-weight: bold; margin-top: 5px;">Ta 正在拿外卖中...</div>
+        <div style="font-size: 10px; color: #ff8a65;">(正在生成回应)</div>
+    `;
+    card.appendChild(loadingMask);
+    
+    // === 界面交互结束，后台开始处理 ===
+
+    try {
+        // 扣款
+        DB.coupleSpace.diamond -= item.price;
+        if(document.getElementById('takeout-diamond-display')) {
+            document.getElementById('takeout-diamond-display').innerText = DB.coupleSpace.diamond;
+        }
+
+        // 获取角色
+        const role = getRoleOrAlert(true);
+        let reply = "好耶！"; // 默认兜底
+
+        if (role) {
+            // 生成 AI 回复
+            const systemPrompt = `
+            你现在是${role.name}。人设：${role.prompt}。
+            情境：外卖员刚刚把【${item.name}】送到了你手上，这是用户给你点的。
+            
+            任务：
+            1. 描写你拿到外卖时的语言。
+            2. 对用户说一句话（表示感谢、傲娇、或者评价这道菜）。禁止任何语言和心理描写，只存在语言描写。
+            3. 语气必须完全符合人物设定，性格，语气，对白语言。禁止AI味、霸总油腻土味语录。必须口语化。
+            `;
+            
+            const userPrompt = `外卖到了，是${item.name}！`;
+
+            reply = await callAI([
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: userPrompt }
+            ]);
+        }
+
+        // 移出菜单 + 存入历史
+        DB.coupleSpace.takeout.items.splice(itemIdx, 1);
+        
+        DB.coupleSpace.takeout.history.push({
+            id: Date.now(),
+            type: 'out', 
+            name: item.name,
+            price: item.price,
+            date: new Date().toLocaleString(),
+            reply: reply
+        });
+
+        saveCpData();
+
+        // === 🎉 成功：显示自定义弹窗 ===
+        const modalContent = document.getElementById('takeout-result-content');
+        
+        // 填充内容 (这里就是你之前断掉的地方)
+        modalContent.innerHTML = `
+            <span style="color:#d84315; font-weight:bold; font-size:18px;">${role ? role.name : 'Ta'} 说：</span>
+            <br><br>
+            ${reply.replace(/\n/g, '<br>')}
+        `;
+
+        // 显示弹窗
+        document.getElementById('modal-takeout-result').style.display = 'flex';
+
+    } catch (e) {
+        alert("网络开小差了，但餐已经送到了！\n错误：" + e.message);
+        // 如果出错，刷新列表以防卡死
+        renderTakeoutList();
+    } finally {
+        // 无论成功失败，恢复卡片原状（因为列表会刷新，这一步其实是为了保险）
+        if(card) {
+            card.innerHTML = originalContent;
+            card.style.position = '';
+            card.style.overflow = '';
+        }
+        // 刷新整个列表，把刚才买掉的菜移除
+        renderTakeoutList();
+    }
+}
+
+// 7. 渲染历史记录
+function renderTakeoutHistory() {
+    const list = document.getElementById('cp-takeout-history');
+    list.innerHTML = '';
+    const history = DB.coupleSpace.takeout.history || [];
+
+    if(history.length === 0) {
+        list.innerHTML = '<div style="text-align:center; opacity:0.5; margin-top:20px;">暂无投喂记录</div>';
+        return;
+    }
+
+    [...history].reverse().forEach(item => {
+        // 区分是我送的，还是AI送的
+        const isOut = item.type === 'out'; 
+        const bgColor = isOut ? '#e8f5e9' : '#fff3e0'; // 绿底是我送，橙底是收到的
+        const icon = isOut ? '🛵' : '🎁';
+        const titleText = isOut ? `投喂了: ${item.name}` : `收到投喂: ${item.name}`;
+        const replyLabel = isOut ? 'Ta的回应:' : 'Ta的留言:';
+
+        list.innerHTML += `
+            <div class="taobao-item" style="opacity:0.9;">
+                <div class="taobao-img" style="background:${bgColor}; font-size:24px;">${icon}</div>
+                <div class="taobao-info" style="height:auto;">
+                    <div class="taobao-title">${titleText}</div>
+                    <div style="font-size:12px; color:#666; margin-top:5px;">${item.date}</div>
+                    <div style="font-size:12px; color:#d84315; margin-top:5px; font-weight:bold;">${replyLabel} ${item.reply}</div>
+                </div>
+            </div>
+        `;
+    });
+}
+
+// 8. 清空菜单
+function clearTakeoutItems() {
+    if(confirm("清空当前菜单重新生成？")) {
+        DB.coupleSpace.takeout.items = [];
+        saveCpData();
+        renderTakeoutList();
+    }
+}
+
+// 9. 设置：切换是否接受投喂
+function toggleTakeoutReceive() {
+    const toggle = document.getElementById('takeout-receive-toggle');
+    toggle.classList.toggle('on');
+    DB.coupleSpace.takeout.allowReceive = toggle.classList.contains('on');
+    saveCpData();
+}
+
+// 10. 彩蛋：AI 反向投喂逻辑
+async function checkAIReverseTakeout() {
+    // 如果开关没开，直接退出
+    if (!DB.coupleSpace.takeout.allowReceive) return;
+
+    // 限制频率：每天最多一次
+    const today = new Date().toLocaleDateString();
+    if (DB.coupleSpace.takeout.lastReceiveDate === today) return;
+
+    // 概率：30% 概率触发
+    if (Math.random() > 0.3) return;
+
+    const role = getRoleOrAlert(true); // 静默获取角色
+    if (!role) return;
+
+    try {
+        // 生成 AI 想送的东西
+        const prompt = `
+        你现在是${role.name}。人设：${role.prompt}。
+        你想给用户点一份外卖/送一份吃的。
+        请生成：
+        1. 食物名称。
+        2. 一句暖心的留言（或者傲娇的理由）。
+        格式：JSON {"food": "...", "msg": "..."}
+        `;
+
+        const res = await callAI([
+            { role: 'system', content: prompt },
+            { role: 'user', content: "generate" }
+        ]);
+
+        const data = JSON.parse(res.match(/\{[\s\S]*\}/)[0]);
+
+        // 存入历史 (类型：in = 进来的)
+        DB.coupleSpace.takeout.history.push({
+            id: Date.now(),
+            type: 'in',
+            name: data.food,
+            price: 0, // AI 请客，不花钱
+            date: new Date().toLocaleString(),
+            reply: data.msg // 这里复用 reply 字段存留言
+        });
+
+        // 记录今天已触发
+        DB.coupleSpace.takeout.lastReceiveDate = today;
+        saveCpData();
+
+        // 弹窗提示
+        alert(`🔔 叮咚！外卖到了！\n\n${role.name} 给你点了一份【${data.food}】\n\n留言：“${data.msg}”\n(已存入投喂记录)`);
+        
+        // 如果当前在历史页，刷新一下
+        if (document.getElementById('cp-takeout-history').style.display === 'block') {
+            renderTakeoutHistory();
+        }
+
+    } catch (e) {
+        console.log("反向投喂失败", e);
+    }
+}
+
+// 挂载到 window，确保 HTML 能调用
+window.checkTATakeout = checkTATakeout;
+window.switchTakeoutTab = switchTakeoutTab;
+window.generateAiTakeout = generateAiTakeout;
+window.orderTakeout = orderTakeout;
+window.clearTakeoutItems = clearTakeoutItems;
+window.toggleTakeoutReceive = toggleTakeoutReceive;
 
 </script>
 </body>
