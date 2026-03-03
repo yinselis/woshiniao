@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>AI OS V29 - IndexedDB Upgrade</title>
+<title>鸟 OS V29 - IndexedDB Upgrade</title>
 <!-- === PWA 设置 (让它变全屏 App) === -->
 <!-- 1. 连接身份证 -->
 <link rel="manifest" href="manifest.json">
@@ -2220,9 +2220,13 @@ body.theme-night .multi-select-bottom {
     gap: 10px !important;
 }
 
-/* 我的消息在多选时也靠左排列（圆圈在最左边） */
+/* ====== 修复：我的消息在多选时保持靠右 ====== */
 .msg-row.ms-selectable.my-msg {
-    justify-content: flex-start !important;
+    justify-content: flex-start !important; /* 让圆圈保持在最左边 */
+}
+/* 把气泡本体推到最右边 */
+.msg-row.ms-selectable.my-msg > :nth-child(2) {
+    margin-left: auto !important; 
 }
 
 /* 选中高亮 */
@@ -3803,15 +3807,104 @@ body.theme-night .chat-time-stamp span {
     padding-bottom: 8px; /* 增加一点底部间距，更好看 */
     min-height: 60px; /* 保证输入栏的最小高度 */
 }
+
+/* === 1. 📢 全局通知横幅 (仿 iOS 灵动岛风格) === */
+.sys-notify-bar {
+    position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+    width: 90%; max-width: 360px;
+    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(20px);
+    color: #fff; border-radius: 30px;
+    padding: 12px 20px; display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2); z-index: 9999;
+    transition: top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.sys-notify-icon { font-size: 24px; }
+.sys-notify-content { flex: 1; }
+.sys-notify-title { font-size: 13px; font-weight: bold; margin-bottom: 2px; }
+.sys-notify-desc { font-size: 12px; opacity: 0.8; }
+
+/* === 2. 🌦️ 天气组件 (放在状态栏或首页) === */
+.weather-pill {
+    background: rgba(255,255,255,0.3); padding: 2px 8px; 
+    border-radius: 10px; font-size: 12px; display: flex; align-items: center; gap: 4px;
+    cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* === 3. 📱 双人朋友圈 (Moments) === */
+.moments-feed { padding: 20px; padding-bottom: 80px; overflow-y: auto; }
+.moment-card {
+    background: #fff; border-radius: 12px; padding: 15px; margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.02);
+}
+.moment-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.moment-avatar { width: 40px; height: 40px; border-radius: 6px; background: #eee; background-size: cover; }
+.moment-name { font-weight: bold; color: #576b95; font-size: 15px; }
+.moment-text { font-size: 15px; line-height: 1.6; color: #333; margin-bottom: 10px; white-space: pre-wrap; }
+.moment-footer { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #999; }
+.moment-actions { 
+    background: #f5f5f5; border-radius: 4px; padding: 2px 8px; 
+    display: flex; gap: 10px; align-items: center; opacity: 0; transition: 0.2s; 
+}
+.moment-card:active .moment-actions { opacity: 1; } /* 点击卡片显示操作 */
+.moment-likes-area {
+    background: #f9f9f9; margin-top: 10px; padding: 8px; border-radius: 4px; font-size: 13px; color: #576b95;
+    display: flex; align-items: center; gap: 5px;
+}
+.moment-comments { background: #f9f9f9; padding: 0 8px 8px 8px; border-radius: 0 0 4px 4px; font-size: 13px; }
+.m-comment-row { margin-top: 4px; }
+.m-comment-user { color: #576b95; font-weight: bold; }
+
+/* === 朋友圈样式修正 (消除缝隙版) === */
+.moment-interaction {
+    background: #f7f7f7; 
+    margin-top: 10px; 
+    border-radius: 6px; 
+    font-size: 13px;
+    overflow: hidden; /* 保证圆角 */
+}
+.moment-likes-area {
+    background: transparent !important; /* 去掉独立背景 */
+    margin: 0 !important;
+    padding: 8px 10px !important;
+    border-radius: 0 !important;
+    color: #576b95;
+    font-weight: bold;
+}
+.moment-comments {
+    background: transparent !important; /* 去掉独立背景 */
+    margin: 0 !important;
+    padding: 8px 10px !important;
+    border-radius: 0 !important;
+    border-top: 1px solid rgba(0,0,0,0.05); /* 加一条淡淡的分割线 */
+}
+/* 如果没有点赞，评论区就不需要顶部分割线 */
+.moment-likes-area:empty + .moment-comments {
+    border-top: none;
+}
+
 </style>
 </head>
 <body class="theme-day">
 
 <div id="phone-container">
-    <div class="status-bar">
-        <span id="clock-time">09:43</span>
-        <div style="display:flex; align-items:center; gap:6px;"><span id="battery-text">43%</span><div style="width:26px; height:13px; border:1.5px solid currentColor; border-radius:4px; padding:1px;"><div id="battery-fill" style="height:100%; background:currentColor; width:43%;"></div></div></div>
+    <!-- 替换原来的 status-bar 里的内容 -->
+<!-- === 状态栏 (修复天气点击) === -->
+<div class="status-bar">
+    <span id="clock-time">09:43</span>
+    
+    <!-- 天气胶囊 (点击切换城市) -->
+    <div class="weather-pill" onclick="changeCityWeather()">
+        <span id="weather-icon">☀️</span>
+        <span id="weather-temp">26°C</span>
     </div>
+
+    <div style="display:flex; align-items:center; gap:6px;">
+        <span id="battery-text">43%</span>
+        <div style="width:26px; height:13px; border:1.5px solid currentColor; border-radius:4px; padding:1px;">
+            <div id="battery-fill" style="height:100%; background:currentColor; width:43%;"></div>
+        </div>
+    </div>
+</div>
 
     <!-- Scroll Wrapper -->
     <div class="scroll-wrapper" id="scroll-container">
@@ -3820,6 +3913,7 @@ body.theme-night .chat-time-stamp span {
         <!-- === Page 1 (艺术乱序) === -->
         <div class="page" id="page-1">
             <div class="mix-grid">
+           
                 <!-- 封面图 (点击可设置) -->
                 <div class="widget-photo" id="widget-photo" onclick="openPhotoSettings()">
                     <div class="his-status-pill" id="his-status-display">🚗 回家路上</div>
@@ -3878,48 +3972,62 @@ body.theme-night .chat-time-stamp span {
             </div>
         </div>
 
-        <!-- === Page 2 (艺术乱序) === -->
-        <div class="page" id="page-2">
-             <div class="mix-grid">
-                <!-- 涂鸦 -->
-                <div class="scrapbook-card doodle-widget" id="doodle-card">
-                    <div class="tape"></div>
-                    <canvas id="doodle-canvas" class="doodle-canvas"></canvas>
-                    <div class="doodle-tools"><div onclick="clearDoodle()" style="font-size:12px; background:rgba(255,255,255,0.8); padding:4px 8px; border-radius:6px; cursor:pointer;">🧹</div></div>
-                </div>
-                <!-- 手账 -->
-                <div class="mix-app-wide" onclick="openView('view-journal')" style="width: calc(50% - 6px); background:#fff9c4; border-color:#fff59d;">
-                    <span style="font-size:20px;">📒</span> <span style="font-size:13px; font-weight:600;">手账</span>
-                </div>
-                <!-- 命运扭蛋 -->
-                <div class="box-widget" style="width: calc(50% - 6px); height:120px;" onclick="openView('view-gacha')">
-                    <div style="font-size:28px; margin-bottom:5px;">🎲</div>
-                    <div style="font-size:12px; text-align:center; opacity:0.8;">命运扭蛋</div>
-                </div>
-                <!-- 经期 -->
-                <div class="scrapbook-card" onclick="openView('view-period')" style="width: calc(50% - 6px); height:120px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#fff0f5; cursor:pointer; border:2px solid #ffcdd2;">
-                    <div style="font-size:24px;">🩸</div><div id="period-status-widget" style="font-size:12px; margin-top:5px; font-weight:bold; text-align:center; color:#333;">--</div>
-                </div>
-<!-- === 组合容器：角色 & 状态 (强制并排) === -->
-<div style="width: calc(50% - 6px); display: flex; gap: 12px;">
-    
-    <!-- 1. 角色 -->
-    <div class="mix-app" onclick="openView('view-contacts')" style="width: auto; flex: 1; margin: 0;">
-        <div class="icon-box"><span style="font-size:24px;">👥</span></div>
-        <span class="app-name">角色</span>
-    </div>
-
-    <!-- 2. 状态 (体重管理) -->
-    <div class="mix-app" onclick="openView('view-weight'); setTimeout(renderWeightApp, 100);" style="width: auto; flex: 1; margin: 0;">
-        <div class="icon-box" style="background:#e0f2f1; color:#009688;">
-            <span style="font-size:24px;">💪</span>
-        </div>
-        <span class="app-name">状态</span>
-    </div>
+<!-- === Page 2 (艺术乱序) === -->
+<div class="page" id="page-2">
+    <div class="mix-grid">
+        <!-- 涂鸦 -->
+        <div class="scrapbook-card doodle-widget" id="doodle-card">
+            <div class="tape"></div>
+            <canvas id="doodle-canvas" class="doodle-canvas"></canvas>
+            <div class="doodle-tools"><div onclick="clearDoodle()" style="font-size:12px; background:rgba(255,255,255,0.8); padding:4px 8px; border-radius:6px; cursor:pointer;">🧹</div></div>
         </div>
         
-        </div> <!-- 结束 mix-grid -->
-</div> <!-- 结束 page-2 -->
+        <!-- 手账 -->
+        <div class="mix-app-wide" onclick="openView('view-journal')" style="width: calc(50% - 6px); background:#fff9c4; border-color:#fff59d;">
+            <span style="font-size:20px;">📒</span> <span style="font-size:13px; font-weight:600;">手账</span>
+        </div>
+        
+        <!-- 命运扭蛋 -->
+        <div class="box-widget" style="width: calc(50% - 6px); height:120px;" onclick="openView('view-gacha')">
+            <div style="font-size:28px; margin-bottom:5px;">🎲</div>
+            <div style="font-size:12px; text-align:center; opacity:0.8;">命运扭蛋</div>
+        </div>
+        
+        <!-- 经期 -->
+        <div class="scrapbook-card" onclick="openView('view-period')" style="width: calc(50% - 6px); height:120px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#fff0f5; cursor:pointer; border:2px solid #ffcdd2;">
+            <div style="font-size:24px;">🩸</div><div id="period-status-widget" style="font-size:12px; margin-top:5px; font-weight:bold; text-align:center; color:#333;">--</div>
+        </div>
+
+        <!-- === 📍 右下角组合区 (Grid布局) === -->
+        <!-- 这里的 Grid 保证了图标排列：角色/状态在第一排，朋友圈在第二排左侧 -->
+        <div style="width: calc(50% - 6px); display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-content: start;">
+            
+            <!-- 1. 角色 -->
+            <div class="mix-app" onclick="openView('view-contacts')" style="width: 100%; margin: 0;">
+                <div class="icon-box"><span style="font-size:24px;">👥</span></div>
+                <span class="app-name">角色</span>
+            </div>
+
+            <!-- 2. 状态 -->
+            <div class="mix-app" onclick="openView('view-weight'); setTimeout(renderWeightApp, 100);" style="width: 100%; margin: 0;">
+                <div class="icon-box" style="background:#e0f2f1; color:#009688;">
+                    <span style="font-size:24px;">💪</span>
+                </div>
+                <span class="app-name">状态</span>
+            </div>
+
+            <!-- 3. 朋友圈 (⭕ 就在这里，紧贴角色下方) -->
+            <div class="mix-app" onclick="openMoments()" style="width: 100%; margin: 0;">
+                <div class="icon-box" style="background: linear-gradient(180deg, #333 0%, #000 100%); border:1px solid #444;">
+                    <span style="font-size:24px;">⭕</span>
+                </div>
+                <span class="app-name">朋友圈</span>
+            </div>
+
+        </div> <!-- 结束 Grid 组合 -->
+
+    </div> <!-- 结束 mix-grid -->
+</div> <!-- 🔴 关键：结束 Page 2 (之前可能少了这行) -->
 
                 <!-- === Page 3 (艺术乱序) === -->
         <div class="page" id="page-3">
@@ -6181,7 +6289,14 @@ body.theme-night .chat-time-stamp span {
     </div>
 </div>
 
-
+<!-- 全局通知栏 -->
+<div id="sys-notify" class="sys-notify-bar">
+    <div class="sys-notify-icon" id="notify-icon">🔔</div>
+    <div class="sys-notify-content">
+        <div class="sys-notify-title" id="notify-title">系统通知</div>
+        <div class="sys-notify-desc" id="notify-desc">内容...</div>
+    </div>
+</div>
 
     <!-- ======================================================= -->
     <!-- 👇👇👇 这里的代码被正确地放在了 phone-container 内部 👇👇👇 -->
@@ -6352,6 +6467,57 @@ body.theme-night .chat-time-stamp span {
             <button class="btn-normal" style="margin-top:25px;" onclick="$('modal-bottle-settings').style.display='none'">保存装扮</button>
         </div>
     </div>
+</div>
+
+<!-- 📱 双人朋友圈视图 (修复版：默认隐藏) -->
+<!-- 🔴 改动点：style里去掉了 display:flex，现在它会乖乖隐藏，等你点图标才出来 -->
+<div id="view-moments" class="view-overlay" style="background: #ffffff; flex-direction: column;">
+    
+    <!-- 1. 顶部固定标题栏 -->
+    <div class="header" style="background: rgba(255,255,255,0.95); border-bottom: 1px solid #eee; flex-shrink: 0;">
+        <button class="btn-icon" style="color:#000;" onclick="closeView('view-moments')">✕</button>
+        <span>朋友圈</span>
+        <button class="btn-icon" style="font-size:20px;" onclick="postNewMoment()">📷</button>
+    </div>
+    
+    <!-- 2. 核心滚动区域 (封面 + 列表都在这里面) -->
+    <div style="flex: 1; overflow-y: auto; overflow-x: hidden; position: relative;">
+        
+        <!-- 封面图区域 -->
+        <div id="moments-cover-area" onclick="triggerMomentsCover()" 
+             style="height: 240px; background-color:#eee; background-size: cover; background-position: center; position: relative; margin-bottom: 30px; cursor: pointer;">
+            
+            <!-- 提示文字 -->
+            <div id="moments-cover-hint" style="position:absolute; inset:0; display:flex; justify-content:center; align-items:center; color:#999; pointer-events:none;">点击更换封面</div>
+
+            <!-- 底部信息栏 (封面上的大名字) -->
+            <div style="position: absolute; bottom: -20px; right: 20px; display: flex; align-items: flex-end; gap: 15px;">
+                
+                <!-- 昵称 -->
+                <div id="moments-user-name" onclick="event.stopPropagation(); editMomentsName()"
+                     style="color: #333; font-weight: bold; font-size: 18px; padding-bottom: 10px; cursor: pointer; text-shadow: 0 0 5px white;">
+                     我
+                </div>
+
+                <!-- 封面右下角那个大头像 (如果你想留着装饰就留，不想留可以把下面这个 div 删掉) -->
+                <div id="moments-header-avatar" onclick="event.stopPropagation(); triggerMomentsAvatar()"
+                     style="width: 70px; height: 70px; border-radius: 12px; border: 3px solid #fff; background: #ddd; background-size: cover; background-position: center; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 动态列表 (纯文字版) -->
+        <div id="moments-list" class="moments-feed" style="padding-top: 20px;"></div>
+        
+        <!-- 底部留白 -->
+        <div style="height: 50px;"></div>
+
+    </div>
+
+    <!-- 隐藏的上传控件 -->
+    <input type="file" id="moments-cover-input" hidden accept="image/*" onchange="saveMomentsCover(this)">
+    <input type="file" id="moments-avatar-input" hidden accept="image/*" onchange="saveMomentsAvatar(this)">
 </div>
 
 <!-- === 👩‍❤️‍👨 情侣头像设置弹窗 === -->
@@ -12061,44 +12227,48 @@ window.openMusicSettings = openMusicSettings;
 window.saveMusicSettings = saveMusicSettings;
 window.resetMusicSettings = resetMusicSettings;
 
-// === 🏠 秘密基地头像更换逻辑 ===
+// === 🏠 秘密基地头像更换逻辑 (防卡死修复版) ===
+let currentHomeAvatarUrl = null;
 
-// 1. 保存头像
 async function saveHomeAvatar(input) {
     const file = input.files[0];
     if (!file) return;
 
-    // 压缩图片 (头像不需要太大，300px足够了，省空间)
-    const compressed = await compressImage(file, 300, 0.8);
-    
-    // 存入数据库
-    await db.settings.put({ key: 'home_avatar', value: compressed });
-    
-    // 立即刷新显示
-    loadHomeAvatar();
-    alert("头像更换成功！✨");
+    try {
+        const compressed = await compressImage(file, 300, 0.8);
+        await db.settings.put({ key: 'home_avatar', value: compressed });
+        await loadHomeAvatar();
+        alert("头像更换成功！✨");
+    } catch (e) {
+        alert("图片处理失败，请换一张图试试: " + e.message);
+    } finally {
+        // 🚨 极其关键：每次选完强制清空 input，让它可以再次被点击
+        input.value = ''; 
+    }
 }
 
-// 2. 加载头像
 async function loadHomeAvatar() {
     const el = $('home-avatar-display');
     if (!el) return;
 
-    const record = await db.settings.get('home_avatar');
-    
-    if (record && record.value) {
-        // 如果数据库里有图，就用数据库的
-        const url = (record.value instanceof Blob) ? URL.createObjectURL(record.value) : record.value;
-        el.style.backgroundImage = `url('${url}')`;
-    } else {
-        // 如果没有，保持默认 (CSS里定义的那个小房子)
-        // 不做操作，CSS会自动生效
+    try {
+        const record = await db.settings.get('home_avatar');
+        if (record && record.value) {
+            if (record.value instanceof Blob) {
+                if (currentHomeAvatarUrl) URL.revokeObjectURL(currentHomeAvatarUrl);
+                currentHomeAvatarUrl = URL.createObjectURL(record.value);
+                el.style.backgroundImage = `url('${currentHomeAvatarUrl}')`;
+            } else {
+                el.style.backgroundImage = `url('${record.value}')`;
+            }
+        }
+    } catch (e) {
+        console.error("加载主页头像失败", e);
     }
 }
 
 // 自动初始化头像
 (async function() {
-    // 等待一小会确保页面加载完
     setTimeout(async () => {
         await loadHomeAvatar();
     }, 500);
@@ -12617,26 +12787,41 @@ function openChatSession(contactId) {
     scrollToBottom(); 
 }
 
-// === ⚙️ 聊天设置逻辑 (修复壁纸保存) ===
+// === ⚙️ 聊天设置逻辑 (读取独立资料) ===
 function openChatSettingsView() {
     openView('view-chat-settings');
-    $('chat-set-myname').value = DB.chatSettings.myName || '';
-    $('chat-set-myidentity').value = DB.chatSettings.myIdentity || '';
+    
+    // --- 核心修改：读取专属设定 ---
+    if (!DB.chatSettings.profiles) DB.chatSettings.profiles = {};
+    const profile = DB.chatSettings.profiles[currentChatContactId] || {};
+    
+    // 兼容旧的全局设定作为默认值
+    $('chat-set-myname').value = profile.myName !== undefined ? profile.myName : (DB.chatSettings.myName || '');
+    $('chat-set-myidentity').value = profile.myIdentity !== undefined ? profile.myIdentity : (DB.chatSettings.myIdentity || '');
+    // ------------------------------
+    
     $('chat-set-bg').value = (DB.chatSettings.wallpaper && !DB.chatSettings.wallpaper.startsWith('blob:')) ? DB.chatSettings.wallpaper : '';
     $('chat-set-css').value = DB.chatSettings.customCSS || '';
-        $('chat-set-limit').value = DB.chatSettings.historyLimit || 10;
-        calculateRealtimeTokens(); 
+    $('chat-set-limit').value = DB.chatSettings.historyLimit || 10;
+    calculateRealtimeTokens(); 
 }
 
+// === 保存设置 (保存独立资料) ===
 async function saveChatSettingsAndBack() {
     const fileInput = $('chat-bg-file');
     const urlInput = $('chat-set-bg').value;
     
-    DB.chatSettings.myName = $('chat-set-myname').value;
-    DB.chatSettings.myIdentity = $('chat-set-myidentity').value;
+    // --- 核心修改：保存专属设定 ---
+    if (!DB.chatSettings.profiles) DB.chatSettings.profiles = {};
+    if (!DB.chatSettings.profiles[currentChatContactId]) DB.chatSettings.profiles[currentChatContactId] = {};
+    
+    DB.chatSettings.profiles[currentChatContactId].myName = $('chat-set-myname').value;
+    DB.chatSettings.profiles[currentChatContactId].myIdentity = $('chat-set-myidentity').value;
+    // ------------------------------
+
     DB.chatSettings.customCSS = $('chat-set-css').value;
-        let limit = parseInt($('chat-set-limit').value);
-    if (isNaN(limit) || limit < 1) limit = 10; // 防止用户填0或乱填，兜底为10
+    let limit = parseInt($('chat-set-limit').value);
+    if (isNaN(limit) || limit < 1) limit = 10; 
     DB.chatSettings.historyLimit = limit;
 
     if (fileInput.files[0]) {
@@ -12650,7 +12835,7 @@ async function saveChatSettingsAndBack() {
     localStorage.setItem('v43_chat_settings', JSON.stringify(DB.chatSettings));
     await applyChatSettings();
     closeView('view-chat-settings');
-    alert("设置已保存 ✨");
+    alert("独立设定已保存 ✨");
 }
 
 async function clearChatWallpaper() {
@@ -13177,9 +13362,14 @@ function setReplyTo(msgId) {
     if (!msg) return;
     replyingToMsg = msg;
     const contact = DB.contacts.find(c => c.id == currentChatContactId);
-    const senderName = msg.role === 'user'
-        ? (DB.chatSettings.myName || '我')
-        : (contact ? contact.name : 'Ta');
+    
+    // --- 核心修改：读取专属名字 ---
+    const profile = (DB.chatSettings.profiles && DB.chatSettings.profiles[currentChatContactId]) || {};
+    const myName = profile.myName || DB.chatSettings.myName || '我';
+    
+    const senderName = msg.role === 'user' ? myName : (contact ? contact.name : 'Ta');
+    // ------------------------------
+    
     $('rp-name').innerText = senderName + '：';
     $('rp-text').innerText = msg.content.substring(0, 40);
     $('reply-preview-bar').style.display = 'flex';
@@ -13672,14 +13862,17 @@ function multiReplyMessages() {
     if (selectedMsgs.length === 0) return alert("选中的消息已被撤回");
 
     const contact = DB.contacts.find(c => c.id == currentChatContactId);
-    const contactName = contact ? contact.name : 'Ta';
-    const myName = DB.chatSettings.myName || '我';
+const contactName = contact ? contact.name : 'Ta';
+    
+    // --- 核心修改：读取专属名字 ---
+    const profile = (DB.chatSettings.profiles && DB.chatSettings.profiles[currentChatContactId]) || {};
+    const myName = profile.myName || DB.chatSettings.myName || '我';
+    // ------------------------------
 
     const quoteLines = selectedMsgs.map(m => {
         const name = m.role === 'user' ? myName : contactName;
         return `${name}：${m.content}`;
     });
-
     const firstMsg = selectedMsgs[0];
     exitMultiSelectMode();
 
@@ -14093,23 +14286,46 @@ triggerChatAI = async function() {
     scrollToBottom();
 
     try {
-        // === 🕒 时间感知 (通用版) ===
+        // === 🕒 增强版时间与间隔感知引擎 ===
         const now = new Date();
         const timeStr = now.toLocaleString('zh-CN', { hour12: false });
+        const currentHour = now.getHours();
         
-        // 计算时间差
+        let timeContext = `【当前现实时间】: ${timeStr}\n`;
+        
+        // 1. 追加时间段的强烈暗示（指导 AI 反应）
+        if (currentHour >= 23 || currentHour < 5) {
+            timeContext += `(⚠️提示：现在是深夜/凌晨。除非在吵架，否则请根据人设催促用户早点休息，或者表现出困意/陪伴熬夜。)\n`;
+        } else if (currentHour >= 5 && currentHour < 9) {
+            timeContext += `(⚠️提示：现在是早晨。如果刚开启话题，记得道早安。)\n`;
+        } else if (currentHour >= 11 && currentHour <= 13) {
+            timeContext += `(⚠️提示：现在是饭点。可以顺口问一句有没有按时吃饭。)\n`;
+        }
+
+        // 2. 计算聊天间隔 (消失了多久)
         const thisChatHistory = DB.chatHistory.filter(m => m.chatId == currentChatContactId && !m.isTemp);
-        let timeGapDesc = "这是连续的对话。";
+        let timeGapDesc = "你们正在连续热聊中。";
         
         if (thisChatHistory.length >= 2) {
-            const lastMsg = thisChatHistory[thisChatHistory.length - 2]; 
+            // currentMsg 是用户刚发的消息，lastMsg 是上一条(可能是AI发的，也可能是用户之前发的)
             const currentMsg = thisChatHistory[thisChatHistory.length - 1];
+            const lastMsg = thisChatHistory[thisChatHistory.length - 2];
+            
             const diffMins = Math.floor((currentMsg.time - lastMsg.time) / (1000 * 60));
-            // 超过4小时算久别
-            if (diffMins > 60 * 4) {
-                timeGapDesc = `距离上次对话已经过了 ${(diffMins/60).toFixed(1)} 小时。`;
+            
+            if (diffMins > 60 * 24) {
+                const days = Math.floor(diffMins / (60 * 24));
+                timeGapDesc = `【🚨 强烈注意】：距离上次你们说话已经过了 ${days} 天！！用户很久没理你了！请根据人设做出反应（傲娇的可以发脾气、病娇的可以质问、温柔的可以表达思念）。`;
+            } else if (diffMins >= 60) {
+                const hours = (diffMins / 60).toFixed(1);
+                timeGapDesc = `【注意】：距离上次说话已经过了 ${hours} 小时。用户消失了一段时间才回你。可以顺口问问去干嘛了/是不是很忙。`;
+            } else if (diffMins > 10) {
+                timeGapDesc = `(距离上次回复隔了 ${diffMins} 分钟，用户稍作了停顿才回你。)`;
             }
         }
+        
+        timeContext += timeGapDesc;
+        // ============================================
 
         // 2. 获取记忆限制
         const memoryLimit = DB.chatSettings.historyLimit || 10;
@@ -14119,12 +14335,17 @@ triggerChatAI = async function() {
             .filter(m => m.chatId == currentChatContactId && !m.isTemp)
             .slice(-memoryLimit);
 
-        // 4. 构建消息数组
-        const apiMessages = [];
+// 4. 构建消息数组
+        const apiMessages =[];
 
         // 注入全息记忆
         const memoryContext = await generateCyberMemory();
         const longTermMemory = getMemoryContext(currentChatContactId);
+        
+        // --- 核心修改：读取你的独立人设并喂给AI ---
+        const profile = (DB.chatSettings.profiles && DB.chatSettings.profiles[currentChatContactId]) || {};
+        const myName = profile.myName || DB.chatSettings.myName || '我';
+        const myIdentity = profile.myIdentity || DB.chatSettings.myIdentity || '未提供具体身份';
         
         // 核心：通用去油 System Prompt 
         apiMessages.push({
@@ -14134,11 +14355,16 @@ triggerChatAI = async function() {
             【你的角色】: ${contact.name}
             【核心人设】: ${contact.prompt}
             
+            【与你对话的用户(我)的独立设定】:
+            - 称呼我的名字: ${myName}
+            - 我的身份/设定: ${myIdentity}
+            (请在对话中根据这个身份对待我，记住我是谁)
+            
             ${longTermMemory}
             ${memoryContext}
 
             【环境】: 微信/私聊
-            【当前时间】: ${timeStr} (${timeGapDesc})
+            ${timeContext}  <--- (这里换成了新的时间上下文变量)
             
             【最高指令 - 通用去油协议 (Anti-Cringe Protocol)】:
             1. **严禁油腻/土味/爹味**：
@@ -14146,7 +14372,6 @@ triggerChatAI = async function() {
                - **绝对禁止**土味情话。
                - **绝对禁止**无缘无故的宠溺（除非人设是极度温柔型，否则不要动不动就哄人）。
                - 绝对禁止油腻化。
-               
             
             2. **说“人话” (Speak Human)**：
                - 拒绝“翻译腔”和“书面语”。说话要像真实的现代人。
@@ -14168,7 +14393,7 @@ triggerChatAI = async function() {
             5. **分段发送**：如果话比较多，请用 "|||" 符号隔开，模拟微信连发多条消息。一次可以输出1-13条消息，视情况合理自由选择。
             `
         });
-
+        
         // 遍历历史记录
         for (const msg of recentMsgs) {
             const role = msg.role === 'user' ? 'user' : 'assistant';
@@ -14587,7 +14812,11 @@ renderChatMessages = function() {
     const messages = DB.chatHistory.filter(m => m.chatId == currentChatContactId);
     const contact = DB.contacts.find(c => c.id == currentChatContactId);
     const contactName = contact ? contact.name : 'Ta';
-    const myName = DB.chatSettings.myName || '我';
+    
+    // --- 核心修改：读取专属名字 ---
+    const profile = (DB.chatSettings.profiles && DB.chatSettings.profiles[currentChatContactId]) || {};
+    const myName = profile.myName || DB.chatSettings.myName || '我';
+    // ------------------------------
 
     if (messages.length === 0) {
         container.innerHTML = `<div style="text-align:center; opacity:0.4; margin-top:20px; font-size:12px;">- 开始聊天吧 -</div>`;
@@ -14967,19 +15196,30 @@ function renderCoupleSpace() {
         }
     }
 
-    // 🔥 4. 核心：计算恋爱天数
+    // 🔥 4. 核心：计算恋爱天数 (精准时区版)
     const titleEl = document.querySelector('.cp-title-text');
     if (titleEl) {
-        // 读取开始日期，没有则默认今天
-        const startDateStr = DB.coupleSpace.startDate || new Date().toISOString().split('T')[0];
-        const start = new Date(startDateStr);
         const now = new Date();
+        // 获取本地时区的今天日期 (格式 YYYY-MM-DD)
+        const localToday = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+
+        // 如果没有设置过纪念日，默认设为今天并保存
+        if (!DB.coupleSpace.startDate) {
+            DB.coupleSpace.startDate = localToday;
+            saveCpData();
+        }
+
+        // 将开始日期和今天都强制锁定到本地的 0点0分0秒，计算纯天数差
+        const start = new Date(DB.coupleSpace.startDate + 'T00:00:00');
+        const todayMidnight = new Date(localToday + 'T00:00:00');
         
         // 计算差值 (毫秒 -> 天)
-        const diffTime = Math.abs(now - start);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        const diffTime = todayMidnight - start;
+        // 加上1，表示“相爱第 X 天” (例如今天填今天，就是第1天，明天变第2天)
+        let diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        if (diffDays < 1) diffDays = 1; // 防止选了未来的日期变成负数
 
-        titleEl.innerHTML = `我们相爱了 <span style="font-size: 28px; color: #d81b60;">${diffDays}</span> 天 <span style="font-size:12px; color:#999; cursor:pointer;">[修改]</span>`;
+        titleEl.innerHTML = `相爱第 <span style="font-size: 28px; color: #d81b60;">${diffDays}</span> 天 <span style="font-size:12px; color:#999; cursor:pointer;">[修改]</span>`;
         
         // 绑定点击事件：修改日期
         titleEl.onclick = editLoveStartDate;
@@ -15523,41 +15763,80 @@ function openCoupleSpace() {
 // 挂载到 window 确保 HTML 能调用
 window.openCoupleSpace = openCoupleSpace;
 
-// === 补充：用户头像逻辑 ===
+// === 补充：用户头像逻辑 (防卡死修复版) ===
 async function saveCpAvatarFromModal() {
     const urlInput = $('cp-avatar-url-input').value.trim();
     const fileInput = $('cp-avatar-file-input');
-    
-    if (fileInput.files[0]) {
-        await handleUserAvatarUpload(fileInput);
-    } else if (urlInput) {
-        await db.settings.put({ key: 'user_avatar', value: urlInput });
-        loadUserAvatar();
-        $('modal-cp-avatar').style.display = 'none';
+    const btn = event.target;
+    const oldText = btn.innerText;
+
+    btn.innerText = "保存中...";
+    btn.disabled = true;
+
+    try {
+        if (fileInput.files && fileInput.files[0]) {
+            await handleUserAvatarUpload(fileInput);
+        } else if (urlInput) {
+            await db.settings.put({ key: 'user_avatar', value: urlInput });
+            await loadUserAvatar();
+            $('modal-cp-avatar').style.display = 'none';
+        } else {
+            alert("请先选择一张图片，或者输入网络链接！");
+        }
+    } catch (e) {
+        alert("保存出错，请重试: " + e.message);
+    } finally {
+        btn.innerText = oldText;
+        btn.disabled = false;
+        // 🚨 极其关键：无论如何都要清空输入框，防止第二次卡死
+        $('cp-avatar-url-input').value = '';
+        fileInput.value = ''; 
     }
 }
 
 async function handleUserAvatarUpload(input) {
     const file = input.files[0];
     if (!file) return;
-    const compressed = await compressImage(file, 300, 0.8);
-    await db.settings.put({ key: 'user_avatar', value: compressed });
-    loadUserAvatar();
-    // 如果是弹窗里的保存，就关闭弹窗
-    if($('modal-cp-avatar').style.display === 'flex') {
-        $('modal-cp-avatar').style.display = 'none';
+
+    try {
+        const compressed = await compressImage(file, 300, 0.8);
+        await db.settings.put({ key: 'user_avatar', value: compressed });
+        await loadUserAvatar();
+        
+        if($('modal-cp-avatar').style.display === 'flex') {
+            $('modal-cp-avatar').style.display = 'none';
+        }
+    } catch(e) {
+        alert("图片处理失败，请换一张试试: " + e.message);
+    } finally {
+        // 🚨 极其关键：释放文件缓存
+        input.value = ''; 
     }
 }
 
+// 🚨 核心修复：防止多次换图导致手机内存溢出崩溃
+let currentUserAvatarUrl = null; 
 async function loadUserAvatar() {
     const el = $('cp-user-avatar');
     if (!el) return;
-    const record = await db.settings.get('user_avatar');
-    if (record && record.value) {
-        const url = (record.value instanceof Blob) ? URL.createObjectURL(record.value) : record.value;
-        el.style.backgroundImage = `url('${url}')`;
-    } else {
-        el.style.backgroundImage = `url('https://cdn-icons-png.flaticon.com/512/847/847969.png')`;
+    try {
+        const record = await db.settings.get('user_avatar');
+        if (record && record.value) {
+            if (record.value instanceof Blob) {
+                // 如果之前有生成的 URL，先释放掉它的内存！
+                if (currentUserAvatarUrl) {
+                    URL.revokeObjectURL(currentUserAvatarUrl);
+                }
+                currentUserAvatarUrl = URL.createObjectURL(record.value);
+                el.style.backgroundImage = `url('${currentUserAvatarUrl}')`;
+            } else {
+                el.style.backgroundImage = `url('${record.value}')`;
+            }
+        } else {
+            el.style.backgroundImage = `url('https://cdn-icons-png.flaticon.com/512/847/847969.png')`;
+        }
+    } catch (e) {
+        console.error("加载头像失败:", e);
     }
 }
 
@@ -15579,9 +15858,11 @@ window.handleUserAvatarUpload = handleUserAvatarUpload;
 window.openCpAvatarModal = openCpAvatarModal;
 window.resetCpAvatar = resetCpAvatar;
 
-// === 💎 每日签到逻辑 ===
+// === 💎 每日签到逻辑 (兼容修复 & 特效增强版) ===
 function claimDailyDiamond() {
-    const today = new Date().toLocaleDateString();
+    // 使用精准的本地日期字符串 (YYYY-MM-DD)，彻底解决不同手机格式不一致的问题
+    const now = new Date();
+    const today = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
     
     // 检查是否已签到
     if (DB.coupleSpace.lastCheckIn === today) {
@@ -15596,17 +15877,24 @@ function claimDailyDiamond() {
     
     saveCpData(); // 保存数据
     
-    // 刷新界面显示
-    if($('cp-diamond-count')) {
-        $('cp-diamond-count').innerText = DB.coupleSpace.diamond;
-    }
+    // 🟢 关键修复：强制刷新所有可能显示粉钻的地方
+    const cpDisplay = document.getElementById('cp-diamond-count');
+    const cartDisplay = document.getElementById('cart-diamond-display');
+    const takeoutDisplay = document.getElementById('takeout-diamond-display');
     
-    // 视觉反馈
+    if(cpDisplay) cpDisplay.innerText = DB.coupleSpace.diamond;
+    if(cartDisplay) cartDisplay.innerText = DB.coupleSpace.diamond;
+    if(takeoutDisplay) takeoutDisplay.innerText = DB.coupleSpace.diamond;
+    
+    // 视觉反馈：撒花 + 震动
+    if(typeof startSakuraEffect === 'function') {
+        startSakuraEffect();
+        setTimeout(stopCurrentEffect, 2000);
+    }
+    if(navigator.vibrate) navigator.vibrate([50, 100, 50]);
+
     alert(`✨ 签到成功！\n💎 粉钻 +${reward}\n(当前余额: ${DB.coupleSpace.diamond})`);
 }
-
-window.claimDailyDiamond = claimDailyDiamond;
-window.editLoveStartDate = editLoveStartDate;
 
 // === 💎 核心：赚取粉钻通用函数 ===
 function gainDiamond(amount, reason) {
@@ -16896,5 +17184,583 @@ window.endDateStory = endDateStory;
 window.openDateMemories = openDateMemories;
 window.clearLocSelection = clearLocSelection;;
 
+// ============================================================
+// 📢 功能 1: 全局通知系统 (仿真 iOS)
+// ============================================================
+function showSystemNotify(title, desc, icon="🔔") {
+    const bar = document.getElementById('sys-notify');
+    document.getElementById('notify-icon').innerText = icon;
+    document.getElementById('notify-title').innerText = title;
+    document.getElementById('notify-desc').innerText = desc;
+    
+    bar.style.top = "20px"; // 滑下来
+    
+    // 震动
+    if(navigator.vibrate) navigator.vibrate(50);
+    
+    // 3秒后收回去
+    setTimeout(() => {
+        bar.style.top = "-100px";
+    }, 3500);
+}
+
+// ============================================================
+// 🌦️ 功能 2: 天气与关怀系统
+// ============================================================
+// 默认天气
+let currentWeather = { type: 'Sunny', icon: '☀️', temp: 26 };
+
+function toggleWeather() {
+    const weathers = [
+        { type: 'Sunny', icon: '☀️', temp: 28 },
+        { type: 'Cloudy', icon: '☁️', temp: 22 },
+        { type: 'Rainy', icon: '🌧️', temp: 18 },
+        { type: 'Snowy', icon: '❄️', temp: -2 }
+    ];
+    
+    // 循环切换
+    let idx = weathers.findIndex(w => w.type === currentWeather.type);
+    idx = (idx + 1) % weathers.length;
+    currentWeather = weathers[idx];
+    
+    // 更新UI
+    document.getElementById('weather-icon').innerText = currentWeather.icon;
+    document.getElementById('weather-temp').innerText = currentWeather.temp + "°C";
+    
+    // 触发通知
+    let tip = "天气不错，心情也要美美的";
+    if(currentWeather.type === 'Rainy') tip = "外面下雨了，记得带伞哦";
+    if(currentWeather.type === 'Snowy') tip = "好冷呀，多穿点衣服！";
+    
+    showSystemNotify(`天气更新: ${currentWeather.type}`, tip, currentWeather.icon);
+    
+    // 保存到本地，供 AI 读取
+    localStorage.setItem('v50_weather', JSON.stringify(currentWeather));
+}
+
+// ============================================================
+// 📱 朋友圈自定义逻辑 (独立数据)
+// ============================================================
+
+// 1. 打开朋友圈 (加载所有自定义数据)
+async function openMoments() {
+    openView('view-moments');
+    
+    // 加载名字
+    const name = localStorage.getItem('moments_custom_name') || '点击设置昵称';
+    document.getElementById('moments-user-name').innerText = name;
+
+    // 加载封面
+    try {
+        const coverRecord = await db.settings.get('moments_custom_cover');
+        const coverEl = document.getElementById('moments-cover-area');
+        const hintEl = document.getElementById('moments-cover-hint');
+        
+        if (coverRecord && coverRecord.value) {
+            const url = (coverRecord.value instanceof Blob) ? URL.createObjectURL(coverRecord.value) : coverRecord.value;
+            coverEl.style.backgroundImage = `url('${url}')`;
+            hintEl.style.display = 'none';
+        } else {
+            // 默认图
+            coverEl.style.backgroundImage = "url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1000')";
+            hintEl.style.display = 'none';
+        }
+    } catch(e) {}
+
+    // 加载独立头像
+    try {
+        const avatarRecord = await db.settings.get('moments_custom_avatar');
+        const avatarEl = document.getElementById('moments-header-avatar');
+        
+        if (avatarRecord && avatarRecord.value) {
+            const url = (avatarRecord.value instanceof Blob) ? URL.createObjectURL(avatarRecord.value) : avatarRecord.value;
+            avatarEl.style.backgroundImage = `url('${url}')`;
+        } else {
+            // 如果没设置，尝试显示全局用户头像，还没有就显示默认灰
+            const globalAvatar = await db.settings.get('user_avatar');
+            if (globalAvatar && globalAvatar.value) {
+                 const gUrl = (globalAvatar.value instanceof Blob) ? URL.createObjectURL(globalAvatar.value) : globalAvatar.value;
+                 avatarEl.style.backgroundImage = `url('${gUrl}')`;
+            } else {
+                 avatarEl.style.backgroundColor = '#ddd';
+            }
+        }
+    } catch(e) {}
+
+    renderMoments();
+    
+    // 随机触发 AI 互动 (所有角色池)
+    if(Math.random() > 0.7) {
+        setTimeout(aiPostMoment, 2000);
+    }
+}
+
+// 2. 修改昵称
+function editMomentsName() {
+    openCustomPrompt("设置朋友圈昵称", (val) => {
+        if(!val) return;
+        localStorage.setItem('moments_custom_name', val);
+        document.getElementById('moments-user-name').innerText = val;
+    }, "例如：小仙女");
+}
+
+// 3. 更换封面
+function triggerMomentsCover() {
+    document.getElementById('moments-cover-input').click();
+}
+
+async function saveMomentsCover(input) {
+    const file = input.files[0];
+    if(!file) return;
+    const compressed = await compressImage(file, 800, 0.7); // 压缩一下
+    await db.settings.put({ key: 'moments_custom_cover', value: compressed });
+    openMoments(); // 刷新显示
+    alert("封面已更换！");
+}
+
+// 4. 更换独立头像
+function triggerMomentsAvatar() {
+    document.getElementById('moments-avatar-input').click();
+}
+
+async function saveMomentsAvatar(input) {
+    const file = input.files[0];
+    if(!file) return;
+    const compressed = await compressImage(file, 300, 0.7); // 头像小一点
+    await db.settings.put({ key: 'moments_custom_avatar', value: compressed });
+    openMoments(); // 刷新显示
+    alert("朋友圈头像已独立更换！");
+}
+
+// ============================================================
+// 📱 朋友圈渲染逻辑 (纯净版：无列表头像)
+// ============================================================
+async function renderMoments() {
+    const list = document.getElementById('moments-list');
+    list.innerHTML = '';
+    
+    if(!DB.moments || DB.moments.length === 0) {
+        list.innerHTML = '<div style="text-align:center; color:#999; margin-top:50px;">这里空荡荡的...<br>发条动态记录生活吧</div>';
+        return;
+    }
+
+    // 获取当前用户昵称
+    const myName = document.getElementById('moments-user-name').innerText;
+
+    // 按时间倒序
+    const sorted = [...DB.moments].sort((a,b) => b.id - a.id);
+    
+    for (const item of sorted) {
+        let nameDisplay = myName;
+        let deleteBtn = '';
+        
+        // 判断是谁发的
+        const isAI = (item.role !== 'user');
+
+        if (isAI) {
+            // AI 的名字
+            const role = DB.contacts.find(c => c.id == item.roleId);
+            nameDisplay = role ? role.name : '未知角色';
+        } else {
+            // 我发的，显示删除按钮
+            deleteBtn = `<span style="color:#576b95; font-size:12px; cursor:pointer; margin-left:10px;" onclick="deleteMoment(${item.id})">删除</span>`;
+        }
+
+        // --- 准备互动区 (点赞 & 评论) ---
+        let interactionHtml = '';
+        let likesContent = '';
+        let commentsContent = '';
+
+        if(item.likes && item.likes.length > 0) {
+            likesContent = `<div class="moment-likes-area">♡ ${item.likes.join(', ')}</div>`;
+        }
+
+        if(item.comments && item.comments.length > 0) {
+            commentsContent = `<div class="moment-comments">
+                ${item.comments.map(c => `
+                    <div class="m-comment-row">
+                        <span class="m-comment-user">${c.name}:</span> ${c.text}
+                    </div>
+                `).join('')}
+            </div>`;
+        }
+
+        if (likesContent || commentsContent) {
+            interactionHtml = `<div class="moment-interaction">${likesContent}${commentsContent}</div>`;
+        }
+
+        // --- 生成卡片 (无头像结构) ---
+        // 样式说明：margin-left: 0，直接靠左
+        list.innerHTML += `
+            <div class="moment-card" style="padding: 15px;">
+                <div class="moment-header" style="margin-bottom: 5px; display: block;">
+                    <!-- 名字直接显示，颜色加粗 -->
+                    <div class="moment-name" style="font-size: 15px; color: #576b95; margin-bottom: 6px;">${nameDisplay}</div>
+                    <!-- 内容 -->
+                    <div class="moment-text" style="font-size: 15px; color: #333; line-height: 1.6;">${item.text}</div>
+                </div>
+                
+                <!-- 底部时间和操作栏 -->
+                <div class="moment-footer" style="display:flex; justify-content:space-between; margin-top: 8px;">
+                    <div style="display:flex; align-items:center; opacity: 0.6; font-size: 12px;">
+                        <span>${new Date(item.id).toLocaleString([], {hour12:false, month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit'})}</span>
+                        ${deleteBtn}
+                    </div>
+                    <!-- 点赞按钮 -->
+                    <div onclick="likeMoment(${item.id})" style="background:#f2f2f2; padding:2px 10px; border-radius:4px; cursor:pointer; font-size:14px; color:#576b95;">
+                        🤍
+                    </div>
+                </div>
+                
+                <!-- 互动区 -->
+                <div style="margin-top: 10px;">
+                    ${interactionHtml}
+                </div>
+            </div>
+        `;
+    }
+}
+// ============================================================
+// 📷 朋友圈核心逻辑补全 (修复相机按钮)
+// ============================================================
+
+// 1. 发布新动态 (点击相机按钮触发)
+function postNewMoment() {
+    // 调用输入弹窗
+    openCustomPrompt("发朋友圈", (val) => {
+        if(!val) return;
+        
+        // 初始化数据结构 (防止报错)
+        if (!DB.moments) DB.moments = [];
+
+        const newMoment = {
+            id: Date.now(),
+            role: 'user', // 标记是我发的
+            text: val,
+            likes: [],
+            comments: []
+        };
+        
+        // 存入数据
+        DB.moments.push(newMoment);
+        localStorage.setItem('v50_moments', JSON.stringify(DB.moments));
+        
+        // 刷新显示
+        renderMoments();
+        
+        // 🎉 触发 AI 互动：过一会 AI 会来点赞或评论
+        setTimeout(() => triggerAiMomentInteraction(newMoment.id), 5000 + Math.random() * 5000);
+        
+    }, "这一刻的想法...");
+}
+
+// 2. 点赞功能 (给 AI 点赞)
+function likeMoment(id) {
+    if (!DB.moments) return;
+    const moment = DB.moments.find(m => m.id === id);
+    if(moment) {
+        // 获取当前自定义的昵称
+        const myName = localStorage.getItem('moments_custom_name') || '我';
+        
+        if(!moment.likes.includes(myName)) {
+            moment.likes.push(myName);
+            localStorage.setItem('v50_moments', JSON.stringify(DB.moments));
+            renderMoments(); // 刷新
+        }
+    }
+}
+
+// 3. AI 互动逻辑 (AI 给用户点赞/评论)
+async function triggerAiMomentInteraction(momentId) {
+    const moment = DB.moments.find(m => m.id === momentId);
+    if(!moment) return;
+    
+    // 随机选一个角色
+    if(DB.contacts.length === 0) return;
+    const role = DB.contacts[Math.floor(Math.random() * DB.contacts.length)];
+    
+    // 50% 概率点赞，50% 概率评论
+    if(Math.random() > 0.5) {
+        // 点赞
+        if(!moment.likes.includes(role.name)) {
+            moment.likes.push(role.name);
+            // 弹窗通知 (如果有通知系统)
+            if(window.showSystemNotify) showSystemNotify("朋友圈", `${role.name} 赞了你`, "❤️");
+        }
+    } else {
+        // 评论
+        try {
+            const res = await callAI([
+                {role:'system', content: `你现在是${role.name}。人设：${role.prompt}。用户发了朋友圈："${moment.text}"。请给一条简短的评论（吐槽、关心或互动）。禁止带引号。`},
+                {role:'user', content: 'Comment on this.'}
+            ]);
+            moment.comments.push({name: role.name, text: res});
+            if(window.showSystemNotify) showSystemNotify("朋友圈", `${role.name} 评论了你`, "💬");
+        } catch(e) {}
+    }
+    
+    localStorage.setItem('v50_moments', JSON.stringify(DB.moments));
+    
+    // 如果当前正开着朋友圈，就刷新一下
+    if(document.getElementById('view-moments').classList.contains('active')) {
+        renderMoments();
+    }
+}
+
+// 4. AI 自动发朋友圈 (模拟真人生活)
+async function aiPostMoment() {
+    if(DB.contacts.length === 0) return;
+    const role = DB.contacts[Math.floor(Math.random() * DB.contacts.length)];
+    
+    // 简单限制：如果最近一条是这个角色发的，就不发了，防止刷屏
+    if(DB.moments.length > 0 && DB.moments[DB.moments.length-1].roleId == role.id) return;
+
+    try {
+        // 获取当前天气（如果有的话）
+        let weatherDesc = "天气不错";
+        if(window.currentWeather) weatherDesc = window.currentWeather.type;
+
+        const prompt = `
+        你现在是${role.name}。人设：${role.prompt}。
+        当前环境/天气：${weatherDesc}。
+        任务：发一条“朋友圈”（类似推特/微博）。
+        要求：
+        1. 分享生活碎片、心情、或者对天气的吐槽。
+        2. 极简，口语化，不要长篇大论。
+        3. 像真人一样。不要带任何标签。
+        `;
+        
+        const text = await callAI([
+            {role:'system', content: prompt},
+            {role:'user', content: 'Post a moment.'}
+        ]);
+        
+        DB.moments.push({
+            id: Date.now(),
+            role: 'ai',
+            roleId: role.id,
+            text: text,
+            likes: [],
+            comments: []
+        });
+        localStorage.setItem('v50_moments', JSON.stringify(DB.moments));
+        
+        if(document.getElementById('view-moments').classList.contains('active')) {
+            renderMoments();
+        }
+        
+    } catch(e) {}
+}
+
+// 挂载函数到 window，确保 HTML 能找到它们
+window.postNewMoment = postNewMoment;
+window.likeMoment = likeMoment;
+window.aiPostMoment = aiPostMoment;
+
+// ============================================================
+// 💾 朋友圈数据持久化修复补丁 (防止刷新消失)
+// ============================================================
+
+// 1. 立即执行：尝试读取本地存档
+(function initMomentsData() {
+    try {
+        // 尝试从 LocalStorage 读取 'v50_moments'
+        const saved = localStorage.getItem('v50_moments');
+        if (saved) {
+            // 如果有存档，解析并赋值给 DB.moments
+            DB.moments = JSON.parse(saved);
+            console.log("✅ 朋友圈存档读取成功:", DB.moments.length, "条");
+        } else {
+            // 如果没存档，初始化为空数组 (如果还没定义的话)
+            if (!DB.moments) DB.moments = [];
+        }
+    } catch (e) {
+        console.error("朋友圈读取失败，重置为空", e);
+        DB.moments = [];
+    }
+})();
+
+// 2. 覆盖发布函数：增加强制保存
+window.postNewMoment = function() {
+    openCustomPrompt("发朋友圈", (val) => {
+        if(!val) return;
+        
+        if (!DB.moments) DB.moments = [];
+
+        const newMoment = {
+            id: Date.now(),
+            role: 'user', 
+            text: val,
+            likes: [],
+            comments: []
+        };
+        
+        DB.moments.push(newMoment);
+        
+        // 💾 关键：立即保存到硬盘
+        localStorage.setItem('v50_moments', JSON.stringify(DB.moments));
+        
+        renderMoments();
+        
+        // 触发 AI 互动
+        setTimeout(() => triggerAiMomentInteraction(newMoment.id), 3000 + Math.random() * 5000);
+        
+    }, "这一刻的想法...");
+};
+
+// 3. 覆盖删除函数：增加强制保存
+window.deleteMoment = function(id) {
+    if(confirm("确定删除这条朋友圈吗？")) {
+        DB.moments = DB.moments.filter(m => m.id !== id);
+        
+        // 💾 关键：删除后立即保存
+        localStorage.setItem('v50_moments', JSON.stringify(DB.moments));
+        
+        renderMoments();
+    }
+};
+
+// 4. 覆盖点赞函数：增加强制保存
+window.likeMoment = function(id) {
+    if (!DB.moments) return;
+    const moment = DB.moments.find(m => m.id === id);
+    if(moment) {
+        const myName = localStorage.getItem('moments_custom_name') || '我';
+        
+        if(!moment.likes.includes(myName)) {
+            moment.likes.push(myName);
+            
+            // 💾 关键：保存
+            localStorage.setItem('v50_moments', JSON.stringify(DB.moments));
+            
+            renderMoments();
+        }
+    }
+};
+
+// 5. 覆盖 AI 互动函数：确保 AI 的回复也能保存
+window.triggerAiMomentInteraction = async function(momentId) {
+    const moment = DB.moments.find(m => m.id === momentId);
+    if(!moment) return;
+    
+    if(DB.contacts.length === 0) return;
+    const role = DB.contacts[Math.floor(Math.random() * DB.contacts.length)];
+    
+    if(Math.random() > 0.5) {
+        // 点赞
+        if(!moment.likes.includes(role.name)) {
+            moment.likes.push(role.name);
+            if(window.showSystemNotify) showSystemNotify("朋友圈", `${role.name} 赞了你`, "❤️");
+        }
+    } else {
+        // 评论
+        try {
+            const res = await callAI([
+                {role:'system', content: `你现在是${role.name}。人设：${role.prompt}。用户发了朋友圈："${moment.text}"。请给一条简短的评论（吐槽、关心或互动）。禁止带引号。`},
+                {role:'user', content: 'Comment on this.'}
+            ]);
+            moment.comments.push({name: role.name, text: res});
+            if(window.showSystemNotify) showSystemNotify("朋友圈", `${role.name} 评论了你`, "💬");
+        } catch(e) {}
+    }
+    
+    // 💾 关键：AI 互动完立即保存
+    localStorage.setItem('v50_moments', JSON.stringify(DB.moments));
+    
+    // 如果界面开着，就刷新
+    if(document.getElementById('view-moments').classList.contains('active')) {
+        renderMoments();
+    }
+};
+
+// ============================================================
+// 🌦️ AI 智能天气系统 (V3 - 终极防冲突版)
+// ============================================================
+
+// [功能不变] 1. 调用 AI 获取天气数据的核心函数
+async function fetchWeatherByAI(city) {
+    const iconEl = document.getElementById('weather-icon');
+    const tempEl = document.getElementById('weather-temp');
+    
+    // 显示加载动画，提升体验
+    iconEl.innerText = "⏳";
+    tempEl.innerText = "--";
+    
+    const now = new Date();
+    const timeInfo = `${now.getMonth()+1}月${now.getDate()}日 ${now.getHours()}点`;
+
+    try {
+        const prompt = `
+        基于【${city}】的地理位置和季节，结合当前时间【${timeInfo}】，推测/模拟当前天气。
+        【强制返回 JSON 格式，不要包含 Markdown】：
+        {"icon": "天气Emoji", "temp": "数字温度", "type": "天气类型", "tip": "一句简短关怀"}`;
+
+        const res = await callAI([{ role: 'system', content: prompt }]);
+        
+        // 更强的JSON清理能力，防止AI乱加东西
+        const cleanJson = res.match(/\{[\s\S]*\}/)[0] || "{}";
+        const data = JSON.parse(cleanJson);
+
+        const weatherData = { city, ...data };
+        localStorage.setItem('v50_weather', JSON.stringify(weatherData));
+        
+        iconEl.innerText = data.icon;
+        tempEl.innerText = data.temp + "°C";
+
+        // 如果你的App有全局通知，就用通知，否则用普通弹窗
+        if(window.showSystemNotify) {
+            showSystemNotify(`${city} · ${data.type}`, data.tip, data.icon);
+        } else {
+            alert(`${city} 天气：${data.type} ${data.temp}°C\n${data.tip}`);
+        }
+    } catch (e) {
+        iconEl.innerText = "❓";
+        tempEl.innerText = "Error";
+        alert("天气获取失败 (AI 没反应或返回格式错误)，请重试。");
+        console.error("AI天气解析失败:", e);
+    }
+}
+
+// [功能不变] 2. 点击触发的函数：弹出输入框
+function changeCityWeather() {
+    // 复用你代码里已有的 openCustomPrompt 弹窗函数
+    openCustomPrompt(
+        "切换城市", // 弹窗标题
+        (city) => { // 用户点“确定”后的操作
+            if (city && city.trim() !== "") {
+                fetchWeatherByAI(city.trim());
+            }
+        }, 
+        "例如：上海 / 伦敦 / 任意地点" // 输入框提示文字
+    );
+}
+
+// [功能不变] 3. 页面加载时，自动读取上次的天气记录
+function loadInitialWeather() {
+    const savedWeather = localStorage.getItem('v50_weather');
+    if (savedWeather) {
+        try {
+            const data = JSON.parse(savedWeather);
+            // 更新状态栏的显示
+            document.getElementById('weather-icon').innerText = data.icon;
+            document.getElementById('weather-temp').innerText = data.temp + "°C";
+            console.log(`🌦️ 已加载缓存天气: ${data.city}`);
+        } catch (e) {
+            console.error("天气缓存解析失败", e);
+        }
+    }
+}
+
+// [✨ 核心修复 ✨] 4. 使用现代、安全的方式挂载函数和初始化
+// 这种方式可以避免和您页面上其他脚本的 window.onload 事件打架
+document.addEventListener('DOMContentLoaded', () => {
+    // a. 将函数“暴露”给全局，这样 HTML 里的 onclick="changeCityWeather()" 才能找到它
+    window.changeCityWeather = changeCityWeather;
+    
+    // b. 当页面加载完成后，自动执行一次天气加载
+    loadInitialWeather();
+    
+    console.log("🌦️ 天气系统已准备就绪 (V3终极版)。");
+});
 </script>
 </body>
