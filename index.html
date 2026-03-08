@@ -2208,16 +2208,11 @@ body.theme-cyberpunk .modal-card { background: #16161e; color: #fff; border: 1px
     display: none !important; 
 }
 
-/* 我的气泡：使用微信绿，右上角变尖 */
+/* 我的气泡：完美跟随当前主题颜色 */
 .my-msg .bubble {
-    background: #95ec69; /* 微信绿 */
-    color: #000;         /* 微信黑字 */
-    border-top-right-radius: 2px; /* 关键：右上角尖角 */
-}
-/* 适配夜间模式下的绿色 */
-body.theme-night .my-msg .bubble {
-    background: #2ea043; 
-    color: #fff;
+    background: var(--accent-color) !important; /* 自动读取主题强调色 */
+    color: var(--accent-text) !important;       /* 自动读取主题文字色 */
+    border-top-right-radius: 2px;
 }
 
 /* 4. 输入栏微调 */
@@ -3921,22 +3916,41 @@ body.theme-night .chat-time-stamp span {
 /* === 💬 输入框换行 & 自动增高 (核心修改) === */
 .chat-input-bar textarea,
 #date-chat-stage textarea {
-    resize: none; /* 禁止用户手动拖拽大小 */
-    overflow-y: auto; /* 内容超出时显示内部滚动条 */
-    max-height: 100px; /* 最多增高到约 5 行的高度 */
+    flex: 1;
+    min-width: 0;
+    background: var(--input-bg); /* 完美适配所有内置主题底色 */
+    color: var(--text-color);    /* 完美适配所有内置主题文字 */
+    border: none;                /* 彻底干掉 3D 灰框 */
+    outline: none;
+    border-radius: 18px;         /* 现代感圆角 */
+    padding: 10px 15px;
+    font-family: inherit;
+    font-size: 15px;
+    resize: none;                /* 禁止拖拽大小 */
+    overflow-y: auto;
+    max-height: 100px;
     line-height: 1.4;
-    padding: 10px;
-    font-family: inherit; /* 继承 App 字体 */
-    font-size: 16px;
-    transition: height 0.1s; /* 高度变化时有轻微动画 */
+    transition: height 0.1s;
+    -webkit-appearance: none;    /* 抹除原生样式 */
+    appearance: none;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.03);
 }
 
-/* 垂直对齐底部，这样按钮不会随着输入框增高而飘起来 */
+/* 隐藏输入框内部的滚动条，保持清爽 */
+.chat-input-bar textarea::-webkit-scrollbar,
+#date-chat-stage textarea::-webkit-scrollbar {
+    display: none;
+}
+.chat-input-bar textarea, #date-chat-stage textarea {
+    scrollbar-width: none;
+}
+
+/* 垂直对齐底部，防止输入框增高时按钮飘起来 */
 .chat-input-bar,
-#date-chat-stage > div { /* 约会界面的输入栏 */
-    align-items: flex-end; /* 关键！*/
-    padding-bottom: 8px; /* 增加一点底部间距，更好看 */
-    min-height: 60px; /* 保证输入栏的最小高度 */
+#date-chat-stage > div { 
+    align-items: flex-end; 
+    padding-bottom: 8px; 
+    min-height: 60px; 
 }
 
 /* === 1. 📢 全局通知横幅 (仿 iOS 灵动岛风格) === */
@@ -6082,7 +6096,7 @@ body.theme-night .chat-time-stamp span {
 
             <!-- 输入框 -->
             <!-- 👇 新版：支持换行的文本域 👇 -->
-<textarea id="chat-input" rows="1" placeholder="发消息..." style="flex:1; min-width:0;"></textarea>
+<textarea id="chat-input" rows="1" placeholder="发消息..."></textarea>
             
             <!-- 发送按钮 -->
             <button class="btn-icon send-btn" onclick="sendChatMessage()">
@@ -6482,9 +6496,7 @@ body.theme-night .chat-time-stamp span {
             display: flex; align-items: center; gap: 10px; z-index: 50;">
             
             <!-- 👇 新版：支持换行的文本域 👇 -->
-<textarea id="date-chat-input" rows="1" placeholder="回应 Ta..." style="
-    flex: 1; background: #fff0f5; color: #880e4f; border: none; 
-    border-radius: 20px; padding: 10px 15px; outline: none;"></textarea>
+<textarea id="date-chat-input" rows="1" placeholder="回应 Ta..."></textarea>
             
             <button class="btn-icon send-btn" style="
                 background: #ec407a; color: white; width: 40px; height: 40px; 
