@@ -4165,6 +4165,47 @@ body.theme-night .chat-time-stamp span {
     margin-left: 25px !important; 
 }
 
+/* ===================================================
+   🍎 苹果 iOS 刘海屏 / 灵动岛 终极适配补丁
+   说明：利用 env() 安全区变量，安卓端自动为0，互不干扰
+   =================================================== */
+
+/* 1. 修复所有子页面（说明书、设置、日记等）的顶部导航栏重叠问题 */
+.header { 
+    height: auto !important; /* 取消固定高度 */
+    min-height: 52px !important; 
+    /* 核心魔法：自动加上苹果刘海的高度 */
+    padding-top: calc(env(safe-area-inset-top) + 8px) !important; 
+    padding-bottom: 8px !important;
+}
+
+/* 2. 修复首页状态栏（时间、天气、电量）重叠问题 */
+.status-bar {
+    height: auto !important;
+    min-height: 48px !important;
+    padding-top: calc(env(safe-area-inset-top) + 10px) !important;
+}
+
+/* 3. 修复聊天界面的顶栏 */
+#view-chat-detail > .header,
+#chat-normal-header {
+    padding-top: calc(env(safe-area-inset-top) + 8px) !important;
+    height: auto !important;
+}
+
+/* 4. 修复情侣空间顶部的双人头像被刘海挡住的问题 */
+.cp-avatar-group {
+    margin-top: calc(env(safe-area-inset-top) + 60px) !important;
+}
+
+/* 5. 修复多选模式的顶栏 */
+.multi-select-bar {
+    height: auto !important;
+    min-height: 52px !important;
+    padding-top: calc(env(safe-area-inset-top) + 5px) !important;
+    padding-bottom: 5px !important;
+}
+
 </style>
 </head>
 <body class="theme-day">
