@@ -2882,68 +2882,59 @@ body.theme-night .msg-context-menu .ctx-btn {
 .location-name { font-size: 14px; font-weight: bold; color: #333; }
 .location-addr { font-size: 11px; color: #999; margin-top: 2px; }
 
-/* === 🧧 红包样式 (可爱版) === */
+/* === 🧧 红包样式 (仿微信优雅版) === */
 .redpacket-bubble {
-    width: 220px; border-radius: 20px; overflow: hidden;
+    width: 220px; border-radius: 12px; overflow: hidden;
     cursor: pointer; position: relative;
-    background: linear-gradient(135deg, #fff0f5 0%, #ffe4ec 50%, #ffd6e7 100%);
-    box-shadow: 0 4px 15px rgba(255, 143, 171, 0.25);
+    background: #ff80ab; /* 默认粉色背景 */
+    box-shadow: 0 2px 8px rgba(255, 128, 171, 0.3);
     transition: transform 0.2s;
-    color: #d81b60;
-    border: 2px solid rgba(255, 182, 193, 0.5);
+    color: #fff;
 }
 .redpacket-bubble:active { transform: scale(0.97); }
 
 .rp-header {
-    padding: 18px 16px 14px;
+    padding: 15px;
     display: flex; align-items: center; gap: 12px;
-    border-bottom: 1px dashed rgba(216, 27, 96, 0.15);
 }
 .rp-gold-icon {
-    width: 42px; height: 42px;
-    background: linear-gradient(135deg, #ffb6c1 0%, #ff69b4 100%);
-    border-radius: 50%;
+    width: 36px; height: 36px;
+    background: #fff;
+    border-radius: 4px; /* 微信是圆角矩形 */
     display: flex; align-items: center; justify-content: center;
-    font-size: 20px; color: #fff;
-    box-shadow: 0 3px 10px rgba(255, 105, 180, 0.35);
+    font-size: 18px; color: #ff80ab;
+    font-weight: bold;
 }
 .rp-greeting {
-    font-size: 15px; font-weight: 600;
-    color: #c2185b;
+    font-size: 15px; 
+    color: #fff;
     flex: 1;
     line-height: 1.4;
-    font-family: 'ZCOOL KuaiLe', 'Ma Shan Zheng', sans-serif;
 }
 .rp-footer {
-    padding: 8px 16px;
-    display: flex; justify-content: space-between; align-items: center;
-    font-size: 11px; color: #e91e63; opacity: 0.5;
+    padding: 6px 15px;
+    background: #fff;
+    font-size: 11px; color: #999;
 }
-.rp-amount-tag {
-    position: absolute; top: 10px; right: 10px;
-    background: rgba(255, 105, 180, 0.15);
-    padding: 3px 10px; border-radius: 12px;
-    font-size: 11px; color: #d81b60;
-    font-weight: bold;
-    backdrop-filter: blur(4px);
+
+/* 🌟 已领取状态 (整体变淡) */
+.redpacket-bubble.rp-is-opened {
+    background: #fce4ec; /* 变成极淡的粉色 */
+    box-shadow: none;
+    border: 1px solid #f8bbd0;
 }
-.rp-opened {
-    position: absolute; inset: 0;
-    background: rgba(255, 240, 245, 0.92);
-    backdrop-filter: blur(8px);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    border-radius: 18px;
-    animation: fadeIn 0.3s;
+.redpacket-bubble.rp-is-opened .rp-gold-icon {
+    background: #f8bbd0; /* 图标变淡 */
+    color: #fff;
 }
-.rp-opened .rp-amount-big {
-    font-size: 36px; font-weight: bold; color: #e91e63;
-    font-family: 'ZCOOL KuaiLe', sans-serif;
+.redpacket-bubble.rp-is-opened .rp-greeting {
+    color: #f06292; /* 文字变淡 */
 }
-.rp-opened .rp-label { 
-    font-size: 13px; color: #f48fb1; margin-top: 5px; 
-    font-family: 'ZCOOL KuaiLe', sans-serif;
+.redpacket-bubble.rp-is-opened .rp-footer {
+    background: #fff;
+    color: #ccc;
 }
+
 
 /* 红包弹窗 (发红包界面) */
 .rp-modal-content {
@@ -4101,18 +4092,16 @@ body.theme-night .chat-time-stamp span {
     transition: 0.2s;
 }
 
-/* === 修复：发送按钮箭头居中 === */
+/* === 修复：发送按钮箭头完美视觉居中 === */
 .send-btn {
-    /* 保持原有样式，只修改对齐参数 */
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    
-    /* 核心修改：增加左边距，把箭头往右推 */
-    padding-left: 5px !important; 
-    
-    /* 确保图标不偏移 */
-    padding-right: 0 !important; 
+    display: flex !important; 
+    align-items: center !important; 
+    justify-content: center !important;
+    padding: 0 !important; /* 彻底清空导致偏移的边距 */
+}
+.send-btn svg {
+    /* 纸飞机重心在右上角，所以整体向左下微调 1px，达到完美视觉居中 */
+    transform: translate(-1px, 1px); 
 }
 
 /* 顺便优化一下自定义弹窗的按钮样式 */
@@ -4163,6 +4152,17 @@ body.theme-night .chat-time-stamp span {
 /* 保持点击时的 Q弹 反馈 */
 .custom-icon-bg:active {
     transform: scale(0.92) !important;
+}
+
+/* === 修复：聊天顶栏箭头高度与名字居中 === */
+#chat-normal-header > .btn-icon:first-child {
+    /* 让左侧返回箭头往下走一点点，对齐文字中心 */
+    transform: translateY(3px) !important; 
+}
+
+#chat-title-name {
+    /* 强行把名字往右推，抵消右侧图标带来的偏移，让它视觉居中 */
+    margin-left: 25px !important; 
 }
 
 </style>
@@ -5343,17 +5343,26 @@ body.theme-night .chat-time-stamp span {
         </div>
     </div>
     
-<!-- 说明书 (究极毒舌劝退版 V4.0) -->
+<!-- 说明书 (究极毒舌劝退版 V5.0) -->
 <div id="view-manual" class="view-overlay">
     <div class="header">
         <button class="btn-icon btn-close" onclick="closeView('view-manual')">✕</button> 
-        <span>使用（劝退）手册 V4.0</span> 
+        <span>使用（劝退）手册 V5.0</span> 
         <div>💸</div>
     </div>
     <div style="padding:20px; overflow-y:auto; line-height:1.6; color:var(--text-color); font-size:14px; padding-bottom:80px;">
         
         <div style="text-align:center; opacity:0.6; margin-bottom:15px; font-size:12px;">
-            别看了，反正你也记不住。<br>但为了防止你因为自己手贱而跑来骂我，我还是得写。
+            别看了，反正你也记不住。<br>但为了防止你因为自己手贱而跑来骂我，我还是得写。（全都是ai写的 开发者绝对无嘲讽意味。我让它写的是嘲讽我的功能）
+        </div>
+
+        <!-- 🛡️ 开发者免责叠甲区 🛡️ -->
+        <div style="background:var(--card-bg); padding:15px; border-radius:15px; margin-bottom:20px; border:2px dashed #999; box-shadow:var(--shadow);">
+            <h3 style="margin-top:0; display:flex; align-items:center; gap:5px; color:#555;">
+                <span>🛡️</span> <span>关于 UI 为什么这么丑</span>
+            </h3>
+            <p style="font-size:13px;">不要怀疑，就是因为开发者是个纯正的 <b>0 审美代码猴</b>。能把这么多花里胡哨、乱七八糟的功能塞进一个网页里，还没让你的手机当场爆炸，已经是医学奇迹了。</p>
+            <p style="font-size:13px; margin-bottom:0;">丑也没办法救不了了…非常抱歉…………反正功能也不咋地凑合着用吧</p>
         </div>
 
         <!-- 🚨 警告区 🚨 -->
@@ -5378,7 +5387,7 @@ body.theme-night .chat-time-stamp span {
             
             <ul style="padding-left:20px; margin-top:10px; font-size:13px; display:flex; flex-direction:column; gap:8px;">
                 <li><b>📔 MindLog & 手账：</b> 把流水账写得花里胡哨的自闭树洞。手账的贴纸永远贴不齐是本系统的特色，专治强迫症。</li>
-                <li><b>⚖️ 体态管理：</b> 每日羞辱模拟器。看着你那只增不减的体重曲线，骗自己明天一定运动。</li>
+                <li><b>⚖️ 体态管理：</b> 主打一个重在参与，骗自己明天一定运动。</li>
                 <li><b>🐟 电子木鱼：</b> 赛博积德。敲一下功德+1，自带作弊功能（左上角恶魔标），75%概率暴富，25%概率被扣功德还要被 AI 劈头盖脸骂一顿。</li>
                 <li><b>🌸 乖宝宝集章 & 军令状：</b> 试图用赛博小红花和打脸神器，来约束你那无可救药的拖延症。</li>
                 <li><b>🎲 命运扭蛋 & 每日一卦：</b> 专治“今天吃什么”的世纪绝症。信则有，不信就重新抽到你想吃的为止。</li>
@@ -5411,14 +5420,254 @@ body.theme-night .chat-time-stamp span {
             </ul>
         </div>
 
-        <h3 style="margin:10px 0;">🔧 卑微的开发者留言</h3>
+        <!-- 🛠️ 高端玩家专区 (折叠代码) 🛠️ -->
+        <div style="background:var(--card-bg); padding:15px; border-radius:15px; margin-bottom:20px; box-shadow:var(--shadow);">
+            <h3 style="margin-top:0; border-bottom:1px solid rgba(0,0,0,0.1); padding-bottom:10px; color:#1565c0;">🎨 自定义 专区</h3>
+            <p style="font-size:12px; opacity:0.6; color:#555;">嫌 UI 丑？自己改啊。把下面的代码发给 AI，让它帮你填好，然后塞进设置里的 CSS 输入框。粘贴前记得备份，以防数据丢失。</p>
+            
+            <!-- 1. 聊天气泡骨架 -->
+            <details style="background:rgba(0,0,0,0.05); padding:10px; border-radius:8px; margin-top:10px; cursor:pointer;">
+                <summary style="font-weight:bold; color:#1565c0; outline:none;">👉 聊天专属：究极气泡 CSS 骨架</summary>
+                <div style="margin-top:10px; font-size:11px; background:#2b2b2b; color:#a9b7c6; padding:10px; border-radius:6px; overflow-x:auto; white-space:pre; font-family:monospace;">
+/* ======================================
+   💬 终极聊天气泡 & 界面 CSS 骨架
+   说明：发给AI，让它用图床链接和颜色填满空缺。
+   注意：必须保留 !important 确保覆盖原样式！
+   ====================================== */
+
+/* --- 1. 【我】的气泡本体 (右侧) --- */
+.my-msg .bubble {
+    /* 背景 (填入图床链接，如果没有图就填颜色) */
+    background-image: url('替换为你的图床链接') !important;
+    background-size: cover !important;
+    background-color: transparent !important;
+    
+    /* 文字与排版 */
+    color: #ffffff !important; 
+    font-weight: normal !important;
+    text-shadow: none !important; /* 文字阴影/发光 */
+    
+    /* 边框与形状 */
+    border: 2px solid rgba(255,255,255,0.5) !important;
+    border-radius: 18px 4px 18px 18px !important; /* 右上角变尖 */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important; /* 气泡外阴影 */
+    
+    /* 必须保留的定位属性 */
+    position: relative !important; 
+    overflow: visible !important; 
+}
+
+/* --- 2. 【我】的气泡挂件 (图片版) --- */
+.my-msg .bubble::after {
+    content: '' !important;
+    display: block !important;
+    position: absolute !important;
+    z-index: 10 !important;
+
+    /* 挂件图片 (强烈建议用透明底 PNG 图床链接) */
+    background-image: url('替换为透明PNG挂件链接') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+
+    /* 挂件尺寸与位置 (根据图片微调) */
+    width: 40px !important;
+    height: 40px !important;
+    top: -20px !important; 
+    right: -15px !important; 
+    transform: rotate(15deg) !important; /* 旋转角度 */
+}
+
+/* --- 3. 【Ta】的气泡本体 (左侧) --- */
+.other-msg .bubble {
+    background-image: url('替换为你的图床链接') !important;
+    background-size: cover !important;
+    background-color: transparent !important;
+    
+    color: #333333 !important;
+    text-shadow: none !important;
+    
+    border: 2px dashed #ff80ab !important;
+    border-radius: 4px 18px 18px 18px !important; /* 左上角变尖 */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+    
+    position: relative !important; 
+    overflow: visible !important;
+}
+
+/* --- 4. 【Ta】的气泡挂件 (图片版) --- */
+.other-msg .bubble::before {
+    content: '' !important;
+    display: block !important;
+    position: absolute !important;
+    z-index: 10 !important;
+
+    background-image: url('替换为透明PNG挂件链接') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+
+    width: 40px !important;
+    height: 40px !important;
+    top: -20px !important; 
+    left: -15px !important; 
+    transform: rotate(-15deg) !important;
+}
+
+/* --- 5. 聊天界面其他细节 (可选) --- */
+/* 聊天时间戳 */
+.chat-time-stamp span {
+    background: rgba(0,0,0,0.1) !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+}
+/* 引用回复框 */
+.reply-quote {
+    background: rgba(255,255,255,0.2) !important;
+    border-left: 3px solid #ff6b81 !important;
+    color: #666666 !important;
+}
+/* 底部输入栏背景 */
+.chat-input-bar {
+    background: rgba(255,255,255,0.8) !important;
+    backdrop-filter: blur(15px) !important;
+    border-top: 1px solid rgba(0,0,0,0.1) !important;
+}</div>
+
+            </details>
+
+            <!-- 2. 全局主题骨架 -->
+            <details style="background:rgba(0,0,0,0.05); padding:10px; border-radius:8px; margin-top:10px; cursor:pointer;">
+                <summary style="font-weight:bold; color:#d81b60; outline:none;">👉 全局生效：究极无死角 CSS 骨架</summary>
+                <div style="margin-top:10px; font-size:11px; background:#2b2b2b; color:#a9b7c6; padding:10px; border-radius:6px; overflow-x:auto; white-space:pre; font-family:monospace;">
+/* ======================================
+   🎨 终极全局主题 CSS 骨架 (全覆盖版)
+   说明：发给AI，让它帮你填满颜色、背景图、圆角等属性。
+   注意：必须保留 !important 确保覆盖原样式！
+   ====================================== */
+
+/* --- 1. 核心色彩与背景 (基础变量) --- */
+:root {
+    --bg-color: #ffffff !important;
+    --bg-image: linear-gradient(180deg, #ffffff 0%, #f0f0f0 100%) !important;
+    --text-color: #333333 !important;
+    --accent-color: #ff6b81 !important; /* 主题强调色 */
+    --accent-text: #ffffff !important;
+    --card-bg: rgba(255, 255, 255, 0.8) !important;
+    --glass-bg: rgba(255, 255, 255, 0.6) !important;
+    --glass-border: rgba(255, 255, 255, 0.9) !important;
+    --shadow: 0 8px 20px rgba(0, 0, 0, 0.05) !important;
+    --icon-bg: rgba(255, 255, 255, 0.9) !important;
+    --icon-color: #333333 !important;
+    --input-bg: rgba(240, 240, 240, 0.8) !important;
+}
+
+/* --- 2. 顶栏与返回键 (所有页面的头部) --- */
+.header {
+    background: var(--glass-bg) !important;
+    border-bottom: 1px solid var(--glass-border) !important;
+    color: var(--text-color) !important;
+}
+/* 所有的图标按钮(包含返回键 ✕ 和 ←) */
+.btn-icon {
+    color: var(--text-color) !important;
+    /* 可以在这里加背景、边框、圆角来美化返回键 */
+    background: transparent !important; 
+}
+
+/* --- 3. 通用按钮与弹窗 --- */
+.btn-normal {
+    background: var(--accent-color) !important;
+    color: var(--accent-text) !important;
+    border-radius: 12px !important;
+    box-shadow: var(--shadow) !important;
+}
+.modal-card {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 24px !important; /* 弹窗圆角 */
+}
+.setting-input {
+    background: var(--input-bg) !important;
+    color: var(--text-color) !important;
+    border-radius: 10px !important;
+}
+
+/* --- 4. 桌面图标与底部 Dock 栏 --- */
+.icon-box {
+    background: var(--icon-bg) !important;
+    color: var(--icon-color) !important;
+    border-radius: 18px !important; /* 桌面图标圆角 */
+    border: 1px solid var(--glass-border) !important;
+}
+.dock-bar {
+    background: var(--glass-bg) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 24px !important;
+}
+.dock-icon {
+    background: var(--icon-bg) !important; /* 底部三个主按钮的背景 */
+    border-radius: 14px !important;
+}
+
+/* --- 5. 👩‍❤️‍👨 情侣空间专属 (无死角覆盖) --- */
+/* 情侣空间大背景 */
+.cp-new-bg {
+    background: linear-gradient(180deg, #ff9a9e 0%, #fecfef 60%, #fff 100%) !important;
+}
+/* 下方的白色大卡片 */
+.cp-card-container {
+    background: #ffffff !important;
+    border-radius: 30px 30px 0 0 !important;
+}
+/* 顶部双人头像的边框和阴影 */
+.cp-avatar-new {
+    border: 4px solid #ffffff !important;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3) !important;
+}
+/* 情侣空间里的 6 个 APP 图标盒子统一外框 */
+.cp-icon-box {
+    border-radius: 18px !important;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+}
+/* 单独修改情侣空间的 6 个图标颜色 (1=日记, 2=购物车, 3=真心话, 4=约电影, 5=契约, 6=外卖) */
+.cp-app-grid .cp-app-icon:nth-child(1) .cp-icon-box { background: #ec407a !important; }
+.cp-app-grid .cp-app-icon:nth-child(2) .cp-icon-box { background: #ff5000 !important; }
+.cp-app-grid .cp-app-icon:nth-child(3) .cp-icon-box { background: #ab47bc !important; }
+.cp-app-grid .cp-app-icon:nth-child(4) .cp-icon-box { background: #5c6bc0 !important; }
+.cp-app-grid .cp-app-icon:nth-child(5) .cp-icon-box { background: #ffa726 !important; }
+.cp-app-grid .cp-app-icon:nth-child(6) .cp-icon-box { background: #ef5350 !important; }
+
+/* --- 6. 微信聊天列表 --- */
+.chat-item {
+    background: var(--card-bg) !important;
+    border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+}
+.chat-name {
+    color: var(--text-color) !important;
+}</div>
+
+            </details>
+
+            <!-- 3. 实用小贴士 (新增) -->
+            <details style="background:rgba(0,0,0,0.05); padding:10px; border-radius:8px; margin-top:10px; cursor:pointer;">
+                <summary style="font-weight:bold; color:#2e7d32; outline:none;">👉 实用小贴士：隐藏底部分页小白点</summary>
+                <div style="margin-top:10px; font-size:11px; background:#2b2b2b; color:#a9b7c6; padding:10px; border-radius:6px; overflow-x:auto; white-space:pre; font-family:monospace;">
+/* === 隐藏底部分页小白点 === */
+/* 注意：这段代码只有在你选择了“自定义主题”时才会生效。
+   如果你想在所有主题下都隐藏，请删掉前面的 body.theme-custom */
+body.theme-custom .pagination-dots {
+    display: none !important;
+}</div>
+            </details>
+        </div>
+
+        <h3 style="margin:10px 0;">🔧 卑微的留言</h3>
         <div style="font-size:13px; opacity:0.9; background:rgba(0,0,0,0.05); padding:10px; border-radius:8px;">
-            <p>“没钱就多去情侣空间签到，别老去聊天框骚扰 AI。还有，<b>记得导出备份！导出备份！导出备份！</b>听懂了吗？！（整个说明书都不是人写的开发者本意没有想骂人求原谅 都怪gemini）”</p>
+            <p>“没钱就多去情侣空间签到，别老去聊天框骚扰 AI。还有，<b>记得导出备份！导出备份！导出备份！</b>听懂了吗？！”</p>
             <p style="text-align:right; margin-top:10px;">—— 你的赛博管家 留</p>
         </div>
     </div>
 </div>
-    
+
  <!-- 🏠 秘密基地 (Home App) 界面 -->
 <div id="view-home" class="view-overlay">
     <!-- 顶部导航栏 -->
@@ -14177,13 +14426,25 @@ function renderSpecialBubble(msg) {
     if (type === 'location') {
         return `<div class="location-card"><div class="location-map"><div class="map-road road-h"></div><div class="map-road road-v"></div></div><div class="location-info"><div class="location-name">${msg.content}</div><div class="location-addr">📍 已共享位置</div></div></div>`;
     }
-    // --- 红包 ---
+    // --- 红包 (优雅版) ---
     if (type === 'redpacket') {
-        const amount = (msg.extra && msg.extra.amount) || '0.00';
         const opened = msg.extra && msg.extra.opened;
-        let openedOverlay = opened ? `<div class="rp-opened"><div class="rp-amount-big">¥${amount}</div><div class="rp-label">已领取</div></div>` : '';
-        return `<div class="redpacket-bubble" onclick="openRedPacketMsg(${msg.id})"><div class="rp-amount-tag">¥${amount}</div><div class="rp-header"><div class="rp-gold-icon">¥</div><div class="rp-greeting">${msg.content}</div></div><div class="rp-footer"><span>红包</span><span>${opened?'已拆':'未拆'}</span></div>${openedOverlay}</div>`;
+        const openClass = opened ? 'rp-is-opened' : '';
+        const statusText = opened ? '已领取' : '微信红包';
+        const iconHtml = '¥';
+
+        return `
+            <div class="redpacket-bubble ${openClass}" onclick="openRedPacketMsg(${msg.id})">
+                <div class="rp-header">
+                    <div class="rp-gold-icon">${iconHtml}</div>
+                    <div class="rp-greeting">${msg.content}</div>
+                </div>
+                <div class="rp-footer">
+                    <span>${statusText}</span>
+                </div>
+            </div>`;
     }
+
     return msg.content;
 }
 
@@ -14873,8 +15134,7 @@ saveChatSettingsAndBack = async function() {
     await _origSaveChatSettingsAndBack();
 };
 
-/// 🔥 核心修改：支持图文混排 + 【时间感知】 + 【久别重逢反应】
-// === 🔥 核心修改：通用去油·反土味·说人话版 AI 逻辑 ===
+// === 🔥 核心修改：通用去油·反土味·说人话版 AI 逻辑 (含双向红包系统) ===
 triggerChatAI = async function() {
     const contact = DB.contacts.find(c => c.id == currentChatContactId);
     if (!contact) return alert("请先选择聊天对象");
@@ -14897,68 +15157,76 @@ triggerChatAI = async function() {
     scrollToBottom();
 
     try {
-        // === 🕒 增强版时间与间隔感知引擎 ===
+        // === 🕒 增强版时间、节日与纪念日感知引擎 ===
         const now = new Date();
         const timeStr = now.toLocaleString('zh-CN', { hour12: false });
         const currentHour = now.getHours();
         
         let timeContext = `【当前现实时间】: ${timeStr}\n`;
         
-        // 1. 追加时间段的强烈暗示（指导 AI 反应）
+        // 基础时间问候
         if (currentHour >= 23 || currentHour < 5) {
-            timeContext += `(⚠️提示：现在是深夜/凌晨。除非在吵架，否则请根据人设催促用户早点休息，或者表现出困意/陪伴熬夜。)\n`;
+            timeContext += `(⚠️提示：现在是深夜/凌晨。除非在吵架，否则请根据人设催促用户早点休息。)\n`;
         } else if (currentHour >= 5 && currentHour < 9) {
             timeContext += `(⚠️提示：现在是早晨。如果刚开启话题，记得道早安。)\n`;
-        } else if (currentHour >= 11 && currentHour <= 13) {
-            timeContext += `(⚠️提示：现在是饭点。可以顺口问一句有没有按时吃饭。)\n`;
         }
 
-        // 2. 计算聊天间隔 (消失了多久)
-        const thisChatHistory = DB.chatHistory.filter(m => m.chatId == currentChatContactId && !m.isTemp);
-        let timeGapDesc = "你们正在连续热聊中。";
+        // 🌟 节日判定 (可自行添加更多)
+        const month = now.getMonth() + 1;
+        const date = now.getDate();
+        let holidayStr = "";
+        if (month === 1 && date === 1) holidayStr = "元旦";
+        if (month === 2 && date === 14) holidayStr = "情人节";
+        if (month === 5 && date === 20) holidayStr = "520表白日";
+        if (month === 6 && date === 1) holidayStr = "儿童节";
+        if (month === 12 && date === 25) holidayStr = "圣诞节";
+        if (month === 12 && date === 31) holidayStr = "跨年夜";
         
-        if (thisChatHistory.length >= 2) {
-            // currentMsg 是用户刚发的消息，lastMsg 是上一条(可能是AI发的，也可能是用户之前发的)
-            const currentMsg = thisChatHistory[thisChatHistory.length - 1];
-            const lastMsg = thisChatHistory[thisChatHistory.length - 2];
-            
-            const diffMins = Math.floor((currentMsg.time - lastMsg.time) / (1000 * 60));
-            
-            if (diffMins > 60 * 24) {
-                const days = Math.floor(diffMins / (60 * 24));
-                timeGapDesc = `【🚨 强烈注意】：距离上次你们说话已经过了 ${days} 天！！用户很久没理你了！请根据人设做出反应（傲娇的可以发脾气、病娇的可以质问、温柔的可以表达思念）。`;
-            } else if (diffMins >= 60) {
-                const hours = (diffMins / 60).toFixed(1);
-                timeGapDesc = `【注意】：距离上次说话已经过了 ${hours} 小时。用户消失了一段时间才回你。可以顺口问问去干嘛了/是不是很忙。`;
-            } else if (diffMins > 10) {
-                timeGapDesc = `(距离上次回复隔了 ${diffMins} 分钟，用户稍作了停顿才回你。)`;
+        if (holidayStr) {
+            timeContext += `【🚨 强烈注意】：今天是【${holidayStr}】！请在聊天中主动祝贺，并强烈建议给用户发一个节日红包！\n`;
+        }
+
+        // 🌟 纪念日判定
+        if (DB.coupleSpace && DB.coupleSpace.startDate) {
+            const start = new Date(DB.coupleSpace.startDate + 'T00:00:00');
+            const todayMidnight = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0] + 'T00:00:00';
+            const diffDays = Math.floor((new Date(todayMidnight) - start) / (1000 * 60 * 60 * 24)) + 1;
+            if (diffDays > 0) {
+                timeContext += `(提示：今天是你和用户相爱的第 ${diffDays} 天。`;
+                if (diffDays % 100 === 0 || diffDays % 365 === 0) {
+                    timeContext += ` 这是一个极其重要的整百/整年纪念日！请重点庆祝，并主动发个大红包！`;
+                }
+                timeContext += `)\n`;
             }
         }
-        
+
+        // 聊天间隔判定
+        const thisChatHistory = DB.chatHistory.filter(m => m.chatId == currentChatContactId && !m.isTemp);
+        let timeGapDesc = "你们正在连续热聊中。";
+        if (thisChatHistory.length >= 2) {
+            const currentMsg = thisChatHistory[thisChatHistory.length - 1];
+            const lastMsg = thisChatHistory[thisChatHistory.length - 2];
+            const diffMins = Math.floor((currentMsg.time - lastMsg.time) / (1000 * 60));
+            if (diffMins > 60 * 24) timeGapDesc = `【注意】：距离上次说话已过 ${Math.floor(diffMins / (60 * 24))} 天！用户很久没理你了！`;
+            else if (diffMins >= 60) timeGapDesc = `【注意】：距离上次说话已过 ${(diffMins / 60).toFixed(1)} 小时。`;
+        }
         timeContext += timeGapDesc;
-        // ============================================
 
         // 2. 获取记忆限制
         const memoryLimit = DB.chatSettings.historyLimit || 10;
-
-        // 3. 获取最近历史
         const recentMsgs = DB.chatHistory
             .filter(m => m.chatId == currentChatContactId && !m.isTemp)
             .slice(-memoryLimit);
 
-// 4. 构建消息数组
+        // 3. 构建消息数组
         const apiMessages =[];
-
-        // 注入全息记忆
         const memoryContext = await generateCyberMemory();
         const longTermMemory = getMemoryContext(currentChatContactId);
         
-        // --- 核心修改：读取你的独立人设并喂给AI ---
         const profile = (DB.chatSettings.profiles && DB.chatSettings.profiles[currentChatContactId]) || {};
         const myName = profile.myName || DB.chatSettings.myName || '我';
         const myIdentity = profile.myIdentity || DB.chatSettings.myIdentity || '未提供具体身份';
         
-        // 核心：通用去油 System Prompt 
         apiMessages.push({
             role: 'system',
             content: `你正在进行沉浸式语C (Roleplay)。
@@ -14969,90 +15237,116 @@ triggerChatAI = async function() {
             【与你对话的用户(我)的独立设定】:
             - 称呼我的名字: ${myName}
             - 我的身份/设定: ${myIdentity}
-            (请在对话中根据这个身份对待我，记住我是谁)
             
             ${longTermMemory}
             ${memoryContext}
 
             【环境】: 微信/私聊
-            ${timeContext}  <--- (这里换成了新的时间上下文变量)
+            ${timeContext}
             
-            【最高指令 - 通用去油协议 (Anti-Cringe Protocol)】:
-            1. **严禁油腻/土味/爹味**：
-               - **绝对禁止**使用：“小傻瓜、小黏人精、乖、听话、宝、丫头、女人、玩火”“嗯？”等小说烂俗词汇。
-               - **绝对禁止**土味情话。
-               - **绝对禁止**无缘无故的宠溺（除非人设是极度温柔型，否则不要动不动就哄人）。
-               - 绝对禁止油腻化。
+            【最高指令 - 通用去油协议】:
+            1. **严禁油腻/土味/爹味**：绝对禁止使用“小傻瓜、乖、丫头、女人”等烂俗词汇。
+            2. **说“人话”**：拒绝翻译腔，语气自然生活化，符合人设。
+            3. **人设 > 礼貌**：不要为了讨好用户而崩人设。
+            4. **禁止动作描写**：只发送文字，禁止使用星号或括号描写动作。
+            5. **分段发送**：如果话比较多，请用 "|||" 符号隔开。
+            6. 遵循人物设定中的对白语言，用符合角色环境的语言方式。
             
-            2. **说“人话” (Speak Human)**：
-               - 拒绝“翻译腔”和“书面语”。说话要像真实的现代人。
-               - 语气要自然、生活化。可以使用短句、反问、吐槽、省略号。符合人物设定。
-               - 不要像个 AI 客服一样每句话都回复得很完美，可以有情绪，可以不耐烦，可以敷衍。
-               - 注意角色时代和生活地点，对白语言要符合人设。
+            【🧧 接收红包规则】:
+            - 如果历史记录中有用户发给你的【未领取】红包，你必须在回复最开头加 \`[拆开]\` 或 \`[不拆]\`。
             
-            3. **人设 > 礼貌**：
-               - **不要为了讨好用户而崩人设！**
-               - 如果人设是高冷的，就保持距离感，不要发波浪号~。
-               - 如果人设是暴躁的，就直接怼回去。
-               - 你的首要任务是**还原角色**，保证扮演角色。
-               - 人类的情绪是多面化而复杂的，你必须保证自己说的话是一个人会说的。
-            
-            4. **禁止动作描写**：
-               - 这是聊天软件！不要发送 *摸摸头*、*叹气*、*抱紧* 这种括号内容。只发送文字。
-               - 记住你与用户是异地！不会见面，不在同一个地方，只是隔着屏幕对话！不会出现实际帮助到用户的行为！不会去到用户家里，或是来到用户的城市。
-
-            5. **分段发送**：如果话比较多，请用 "|||" 符号隔开，模拟微信连发多条消息。一次可以输出1-13条消息，视情况合理自由选择。
+            【🧧 主动发红包规则 (极其重要)】:
+            - 如果今天是特殊节日、纪念日，或者用户说自己生日，你**必须**主动给用户发红包！如果用户主动讨要红包，你必须遵照人物设定与和用户的关系，决定是否发送红包。
+            - 发红包的格式：在回复中单独写一段 \`[发红包:金额:留言]\`。
+            - 示例：\`[发红包:520.00:宝贝节日快乐！]\` 或 \`[发红包:13.14:拿去买奶茶]\`。
+            - 金额请符合你的人设。系统会自动将其转化为真实的红包卡片。
             `
         });
         
-        // 遍历历史记录
         for (const msg of recentMsgs) {
             const role = msg.role === 'user' ? 'user' : 'assistant';
-            // 处理图片
             if (msg.specialType === 'image' && msg.extra && msg.extra.dbKey) {
                 const record = await db.settings.get(msg.extra.dbKey);
                 if (record && record.value) {
                     const base64 = await blobToBase64(record.value);
-                    apiMessages.push({
-                        role: role,
-                        content: [
-                            { type: "text", text: "(发送了一张图片)" },
-                            { type: "image_url", image_url: { url: base64 } }
-                        ]
-                    });
+                    apiMessages.push({ role: role, content: [ { type: "text", text: "(发送了一张图片)" }, { type: "image_url", image_url: { url: base64 } } ] });
                 } else {
                     apiMessages.push({ role: role, content: "[图片已过期]" });
                 }
+            } else if (msg.specialType === 'redpacket') {
+                const status = (msg.extra && msg.extra.opened) ? '已被领取' : '未领取(还在那里)';
+                apiMessages.push({ role: role, content: `[微信红包] 金额: ¥${msg.extra ? msg.extra.amount : '未知'}, 状态: ${status}, 留言: "${msg.content}"` });
             } else {
                 apiMessages.push({ role: role, content: msg.content });
             }
         }
 
-        // 5. 调用 API
+        // 4. 调用 API
         const res = await callAI(apiMessages);
 
-        // 6. 处理回复
+        // 5. 移除 Loading
         DB.chatHistory = DB.chatHistory.filter(m => m.id !== loadingId);
 
-        const parts = res.split('|||').map(s => s.trim()).filter(s => s);
-        if (parts.length === 0) parts.push(res);
+        // === 🧧 解析红包标记 ===
+        let finalRes = res;
+        
+        // A. 处理 AI 拆用户的红包
+        if (finalRes.includes('[拆开]')) {
+            finalRes = finalRes.replace(/\[拆开\]/g, '').trim();
+            DB.chatHistory.forEach(m => {
+                if (m.chatId == currentChatContactId && m.role === 'user' && m.specialType === 'redpacket' && m.extra && !m.extra.opened) {
+                    m.extra.opened = true;
+                }
+            });
+        } else if (finalRes.includes('[不拆]')) {
+            finalRes = finalRes.replace(/\[不拆\]/g, '').trim();
+        }
+
+        // B. 处理 AI 主动发红包
+        const rpRegex = /\[发红包:([\d.]+):(.*?)\]/g;
+        let match;
+        let aiRedPackets = [];
+        
+        while ((match = rpRegex.exec(finalRes)) !== null) {
+            let amount = parseFloat(match[1]);
+            if (isNaN(amount)) amount = 52.0; 
+            let greeting = match[2].trim() || '给你发了一个红包';
+            aiRedPackets.push({ amount: amount.toFixed(2), greeting: greeting });
+        }
+        // 把发红包的指令从文字中抹除
+        finalRes = finalRes.replace(/\[发红包:[\d.]+:.*?\]/g, '').trim();
+
+        // 6. 分段发送文字消息
+        const parts = finalRes.split('|||').map(s => s.trim()).filter(s => s);
+        if (parts.length === 0 && aiRedPackets.length === 0) parts.push("..."); // 兜底
 
         for (let i = 0; i < parts.length; i++) {
-            const txt = parts[i];
             if (i > 0) await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
-
-            const aiMsg = {
-                id: Date.now() + i,
-                chatId: currentChatContactId,
-                role: 'ai',
-                content: txt,
-                time: Date.now()
-            };
+            const aiMsg = { id: Date.now() + i, chatId: currentChatContactId, role: 'ai', content: parts[i], time: Date.now() };
             DB.chatHistory.push(aiMsg);
             saveChatHistory();
             renderChatMessages();
             scrollToBottom();
-            updateChatListPreview(contact.id, txt);
+            updateChatListPreview(contact.id, parts[i]);
+        }
+
+        // 7. 发送 AI 生成的红包消息
+        for (let i = 0; i < aiRedPackets.length; i++) {
+            await new Promise(r => setTimeout(r, 800)); // 稍微延迟一下，显得真实
+            const rpMsg = {
+                id: Date.now() + 100 + i,
+                chatId: currentChatContactId,
+                role: 'ai',
+                content: aiRedPackets[i].greeting,
+                time: Date.now(),
+                specialType: 'redpacket',
+                extra: { amount: aiRedPackets[i].amount, opened: false }
+            };
+            DB.chatHistory.push(rpMsg);
+            saveChatHistory();
+            renderChatMessages();
+            scrollToBottom();
+            updateChatListPreview(contact.id, '[红包] ' + aiRedPackets[i].greeting);
         }
 
         setTimeout(() => checkAutoSummary(currentChatContactId), 3000);
@@ -15066,7 +15360,6 @@ triggerChatAI = async function() {
         btn.style.transform = "rotate(0deg)";
     }
 };
-
 
 // 挂载到 window
 window.openMemoryPanel = openMemoryPanel;
@@ -15305,7 +15598,7 @@ function sendRedPacket() {
     $('modal-redpacket').style.display = 'none';
 }
 
-// 拆红包
+// 拆红包 (区分是我发的还是AI发的)
 function openRedPacketMsg(msgId) {
     const msg = DB.chatHistory.find(m => m.id === msgId);
     if (!msg || !msg.extra) return;
@@ -15321,7 +15614,26 @@ function openRedPacketMsg(msgId) {
     scrollToBottom();
     
     if (navigator.vibrate) navigator.vibrate([50, 30, 100]);
-    showToast(`🧧 收到 ¥${msg.extra.amount}`);
+    
+    // 判断是谁发的红包
+    if (msg.role === 'ai') {
+        // AI 发给我的！领钱！
+        const amount = parseFloat(msg.extra.amount);
+        
+        // 🌟 核心修改：将比例改为 1:1 (向下取整)
+        const diamondGain = Math.floor(amount); 
+        
+        // 增加粉钻
+        if (typeof gainDiamond === 'function') {
+            gainDiamond(diamondGain, '收到Ta的红包');
+        }
+        
+        // 提示文案也优化了一下
+        showToast(`🧧 收到 ${amount.toFixed(2)} 元！(已存入 ${diamondGain} 粉钻)`);
+    } else {
+        // 我发给 AI 的，AI 还没拆我先点开了（或者AI已经拆了但我点开看详情）
+        showToast(`🧧 这是一个 ¥${msg.extra.amount} 的红包`);
+    }
 }
 
 // === 7. 通用特殊消息发送 ===
@@ -15395,17 +15707,22 @@ function renderSpecialBubble(msg) {
             </div>`;
     }
     
-    // --- 红包 (保持不变) ---
+    // --- 红包 (优雅版) ---
     if (type === 'redpacket') {
-        const amount = (msg.extra && msg.extra.amount) || '0.00';
         const opened = msg.extra && msg.extra.opened;
-        let openedOverlay = opened ? `<div class="rp-opened"><div class="rp-amount-big">¥${amount}</div><div class="rp-label">已领取</div></div>` : '';
+        const openClass = opened ? 'rp-is-opened' : '';
+        const statusText = opened ? '已领取' : '微信红包';
+        const iconHtml = '¥';
+
         return `
-            <div class="redpacket-bubble" onclick="openRedPacketMsg(${msg.id})">
-                <div class="rp-amount-tag">¥${amount}</div>
-                <div class="rp-header"><div class="rp-gold-icon">¥</div><div class="rp-greeting">${msg.content}</div></div>
-                <div class="rp-footer"><span>红包</span><span>${opened ? '已拆开' : '未拆开'}</span></div>
-                ${openedOverlay}
+            <div class="redpacket-bubble ${openClass}" onclick="openRedPacketMsg(${msg.id})">
+                <div class="rp-header">
+                    <div class="rp-gold-icon">${iconHtml}</div>
+                    <div class="rp-greeting">${msg.content}</div>
+                </div>
+                <div class="rp-footer">
+                    <span>${statusText}</span>
+                </div>
             </div>`;
     }
     
@@ -16065,15 +16382,14 @@ function switchCartTab(tab, btn) {
     }
 }
 
+// === 1. 修复：渲染购物车列表 ===
 function renderCartList() {
     const list = $('cp-cart-list');
     list.innerHTML = '';
     
-    // 1. 如果购物车为空，显示“偷看提示”
-    if (DB.coupleSpace.cart.items.length === 0) {
-        const role = getRoleOrAlert(true); // 获取当前角色，不弹窗
+    if (!DB.coupleSpace.cart.items || DB.coupleSpace.cart.items.length === 0) {
+        const role = getRoleOrAlert(true); 
         const name = role ? role.name : 'Ta';
-        
         list.innerHTML = `
             <div class="cart-empty-state">
                 <div class="cart-empty-icon">🛒</div>
@@ -16087,7 +16403,6 @@ function renderCartList() {
         return;
     }
     
-    // 2. 如果有商品，渲染列表
     DB.coupleSpace.cart.items.forEach(item => {
         list.innerHTML += `
             <div class="taobao-item">
@@ -16097,23 +16412,21 @@ function renderCartList() {
                     <div class="taobao-ai-note">${item.note}</div>
                     <div class="taobao-bottom">
                         <div class="taobao-price">${item.price} 粉钻</div>
-                        <button class="taobao-btn" onclick="buyGift(${item.id})">帮Ta清空</button>
+                        <!-- 👇 这里加了 this 参数，用于显示加载动画 👇 -->
+                        <button class="taobao-btn" onclick="buyGift(${item.id}, this)">帮Ta清空</button>
                     </div>
                 </div>
             </div>
         `;
     });
     
-    // 添加一个清空按钮，方便测试重置
-    if (DB.coupleSpace.cart.items.length > 0) {
-        list.innerHTML += `
-            <div style="text-align:center; margin-top:20px;">
-                <button class="btn-small" style="color:#999; border:none; background:none;" onclick="clearCartItems()">[刷新购物车]</button>
-            </div>
-        `;
-    }
+    list.innerHTML += `
+        <div style="text-align:center; margin-top:20px;">
+            <button class="btn-small" style="color:#999; border:none; background:none;" onclick="clearCartItems()">[刷新购物车]</button>
+        </div>
+    `;
 }
-
+    
 // 🔥 核心：AI 生成购物车
 async function generateAiCart() {
     const role = getRoleOrAlert(); 
@@ -16190,31 +16503,56 @@ function clearCartItems() {
     }
 }
 
+// === 3. 修复：渲染已送礼物历史 ===
 function renderGiftHistory() {
     const list = $('cp-gift-history');
     list.innerHTML = '';
-    const history = DB.coupleSpace.cart.history || [];
+    
+    // 🚨 终极防御
+    if (!DB.coupleSpace.cart.history) {
+        DB.coupleSpace.cart.history = [];
+    }
+    const history = DB.coupleSpace.cart.history;
     
     if(history.length === 0) {
-        list.innerHTML = '<div style="text-align:center; opacity:0.5; margin-top:20px;">还没送过礼物呢</div>';
+        list.innerHTML = '<div style="text-align:center; opacity:0.5; margin-top:50px;">还没送过礼物呢<br>快去清空 Ta 的购物车吧</div>';
         return;
     }
 
     [...history].reverse().forEach(item => {
         list.innerHTML += `
-            <div class="taobao-item" style="opacity:0.8;">
-                <div class="taobao-img" style="background:#e8f5e9;">🎁</div>
+            <div class="taobao-item" style="opacity:0.9;">
+                <div class="taobao-img" style="background:#e8f5e9; font-size:32px;">🎁</div>
                 <div class="taobao-info" style="height:auto;">
                     <div class="taobao-title">送了: ${item.name}</div>
                     <div style="font-size:12px; color:#666; margin-top:5px;">${item.date}</div>
-                    <div style="font-size:12px; color:#2e7d32; margin-top:5px;">Ta的回应: ${item.reply}</div>
+                    <div style="font-size:13px; color:#2e7d32; margin-top:8px; font-weight:bold;">Ta的回应: ${item.reply}</div>
                 </div>
             </div>
         `;
     });
 }
 
-async function buyGift(itemId) {
+// === 补充丢失的基础获取角色函数 (极其重要，防止情侣空间其他功能崩溃) ===
+function getRoleOrAlert(silent = false) {
+    const cid = document.getElementById('couple-role-select') ? document.getElementById('couple-role-select').value : null;
+    let role = DB.contacts.find(c => c.id == cid);
+    if (!role && DB.contacts.length > 0) {
+        role = DB.contacts[0]; // 兜底，如果没有选就默认第一个
+    }
+    if (!role && !silent) {
+        alert("请先在通讯录添加并选择一个角色！");
+    }
+    return role;
+}
+
+// === 2. 修复：购买礼物与 AI 反应逻辑 ===
+async function buyGift(itemId, btnElement) {
+    // 🚨 终极防御：确保 history 数组存在，防止报错崩溃
+    if (!DB.coupleSpace.cart.history) {
+        DB.coupleSpace.cart.history = [];
+    }
+
     const itemIdx = DB.coupleSpace.cart.items.findIndex(i => i.id === itemId);
     if (itemIdx === -1) return;
     const item = DB.coupleSpace.cart.items[itemIdx];
@@ -16225,48 +16563,59 @@ async function buyGift(itemId) {
 
     if (!confirm(`确定消耗 ${item.price} 粉钻购买【${item.name}】送给Ta吗？`)) return;
 
-    // 扣款
-    DB.coupleSpace.diamond -= item.price;
-    $('cart-diamond-display').innerText = DB.coupleSpace.diamond;
+    // 🌟 增加界面 Loading 状态
+    const originalText = btnElement.innerText;
+    btnElement.innerText = "正在打包...";
+    btnElement.disabled = true;
+    btnElement.style.opacity = "0.7";
 
-    // 移除购物车
-    DB.coupleSpace.cart.items.splice(itemIdx, 1);
+    try {
+        // 扣款
+        DB.coupleSpace.diamond -= item.price;
+        if(document.getElementById('cart-diamond-display')) {
+            document.getElementById('cart-diamond-display').innerText = DB.coupleSpace.diamond;
+        }
 
-    // AI 反应
-    const role = getRoleOrAlert();
-    let reply = "谢谢！";
-    if (role) {
-        try {
-            reply = await callAI([
-                { role: 'system', content: `你现在是${role.name}。人设：${role.prompt}。用户刚刚帮你清空了购物车里的【${item.name}】。请表现出符合人设的反应。简短回复。` },
-                { role: 'user', content: `送给你！(${item.name})` }
-            ]);
-        } catch(e) {}
+        // 获取角色并生成 AI 反应
+        const role = getRoleOrAlert(true);
+        let reply = "谢谢你的礼物！我很喜欢~"; // 兜底回复
+        
+        if (role) {
+            btnElement.innerText = "等Ta拆快递...";
+            try {
+                reply = await callAI([
+                    { role: 'system', content: `你现在是${role.name}。人设：${role.prompt}。用户刚刚清空购物车，送了你一件礼物：【${item.name}】。请表现出符合人设的反应（惊喜、傲娇、感动等）。简短回复（20字以内），口语化，禁止动作描写。绝对禁止土味、霸总、油腻风格。对白语言必须符合人设。` },
+                    { role: 'user', content: `送给你！(${item.name})` }
+                ]);
+            } catch(e) {
+                console.error("AI 礼物回应失败", e);
+            }
+        }
+
+        // 移出购物车
+        DB.coupleSpace.cart.items.splice(itemIdx, 1);
+
+        // 加入历史
+        DB.coupleSpace.cart.history.push({
+            id: Date.now(),
+            name: item.name,
+            price: item.price,
+            date: new Date().toLocaleString(),
+            reply: reply
+        });
+
+        saveCpData();
+        renderCartList(); // 刷新列表
+        
+        // 弹出结果
+        alert(`🎁 礼物已送达！\n\n${role ? role.name : 'Ta'} 拆开快递后说：\n“${reply}”`);
+
+    } catch (err) {
+        alert("出错了：" + err.message);
+        btnElement.innerText = originalText;
+        btnElement.disabled = false;
+        btnElement.style.opacity = "1";
     }
-
-    // 加入历史
-    DB.coupleSpace.cart.history.push({
-        id: Date.now(),
-        name: item.name,
-        price: item.price,
-        date: new Date().toLocaleString(),
-        reply: reply
-    });
-
-    saveCpData();
-    renderCartList();
-    alert(`🎁 购买成功！\n\n${role ? role.name : 'Ta'} 说：\n“${reply}”`);
-}
-
-// 辅助函数：获取角色，可选是否弹窗
-function getRoleOrAlert(silent = false) {
-    const cid = $('couple-role-select').value;
-    const role = DB.contacts.find(c => c.id == cid);
-    if (!role && !silent) {
-        alert("请先在右上角选择一个角色！");
-        return null;
-    }
-    return role;
 }
 
 // 挂载到 window
@@ -16745,13 +17094,14 @@ function renderTicket(data) {
 // 7. 用户回应 AI 的邀请
 async function respondMovie(isAccepted) {
     const role = getRoleOrAlert();
+    if (!role) return;
     
-    // UI 变化
+    // UI 变化：隐藏按钮，显示结果区域，并提示正在加载
     $('m-action-btns').style.display = 'none';
     $('m-result-area').style.display = 'block';
-    $('m-result-text').innerText = isAccepted ? "❤️ 约会成立！" : "💔 已婉拒";
+    $('m-result-text').innerText = "Ta 正在回复...";
 
-    // 保存历史
+    // 保存历史 (提前保存状态)
     saveMovieHistory(currentMovieData, isAccepted ? 'success' : 'fail');
 
     if (isAccepted) {
@@ -16762,7 +17112,43 @@ async function respondMovie(isAccepted) {
         }
     }
 
-    // 可选：让 AI 再回一句话（为了省 Token，这里只做简单提示，或者你可以复用之前的 respondMovie 逻辑）
+    try {
+        // 构建 Prompt：告诉 AI 用户的决定
+        const reaction = isAccepted ? "答应了" : "拒绝了";
+        const systemPrompt = `
+        你现在是${role.name}。人设：${role.prompt}。
+        情境：你刚才邀请用户去看电影《${currentMovieData.title}》，用户【${reaction}】你的邀请。
+        任务：根据你的人设，对用户的决定做出真实的回应。
+        要求：
+        1. 如果用户答应了，表现出期待、开心，或者傲娇（符合人设）。
+        2. 如果用户拒绝了，表现出失落、傲娇、或者无所谓（符合人设）。
+        3. 必须非常简短（30字以内），口语化，像发微信一样。
+        4. 禁止动作描写，只输出对话。
+        5. 绝对禁止油腻、土味、霸总语录。
+        6. 对白语言必须符合角色设定。
+        `;
+
+        const userMsg = isAccepted ? "好呀，我们一起去！" : "抱歉，我今天不太想去/没时间。";
+
+        const res = await callAI([
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userMsg }
+        ]);
+
+        // 更新 UI 显示 AI 的回复
+        const prefix = isAccepted ? "❤️ 约会成立！" : "💔 约会取消...";
+        $('m-result-text').innerHTML = `
+            <div style="font-size:12px; color:#999; margin-bottom:5px; border-bottom:1px dashed #eee; padding-bottom:5px;">${prefix}</div>
+            <div style="font-weight:bold; color:#d32f2f; font-family:'Ma Shan Zheng', cursive; font-size:16px;">${res}</div>
+        `;
+
+    } catch (e) {
+        // 如果断网了，显示兜底回复
+        $('m-result-text').innerHTML = `
+            <div style="font-size:12px; color:#999; margin-bottom:5px;">${isAccepted ? "❤️ 约会成立！" : "💔 约会取消..."}</div>
+            <div style="font-weight:bold; color:#333;">${isAccepted ? "(Ta 开心地去准备了)" : "(Ta 默默收起了电影票)"}</div>
+        `;
+    }
 }
 
 // 8. 历史记录系统
