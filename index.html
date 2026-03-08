@@ -222,9 +222,8 @@
     
 /* === 修复：移动端文本框滑动穿透问题 === */
 textarea {
-    overscroll-behavior: contain !important; /* 阻止滚动事件传递给父元素 */
-    -webkit-overflow-scrolling: touch !important; /* 恢复 iOS 的顺滑滚动 */
-    touch-action: pan-y !important; /* 明确告诉浏览器这里只允许垂直滑动 */
+    overscroll-behavior: none !important; /* 彻底切断滚动链 */
+    -webkit-overflow-scrolling: touch !important; 
 }
 
     /* 通用样式 */
@@ -18772,11 +18771,39 @@ async function applyAllCustomIcons() {
     }
 }
 
-// === 修复：移动端文本框滑动带动父级页面的问题 ===
-document.addEventListener('touchmove', function(e) {
-    // 如果手指当前滑动的目标是一个 textarea 输入框
+// === 终极修复：移动端 Textarea 嵌套滚动冲突 (兼容输入法弹起) ===
+let _textareaStartY = 0;
+
+document.addEventListener('touchstart', function(e) {
     if (e.target.tagName === 'TEXTAREA') {
-        e.stopPropagation(); // 阻止滑动事件向上冒泡给弹窗
+        _textareaStartY = e.touches[0].clientY;
+    }
+}, { passive: true });
+
+document.addEventListener('touchmove', function(e) {
+    const target = e.target;
+    if (target.tagName === 'TEXTAREA') {
+        // 判断输入框里的字数是否足够产生滚动条
+        const isScrollable = target.scrollHeight > target.clientHeight;
+        if (!isScrollable) return; 
+
+        const scrollTop = target.scrollTop;
+        const scrollHeight = target.scrollHeight;
+        const clientHeight = target.clientHeight;
+        const currentY = e.touches[0].clientY;
+        const deltaY = currentY - _textareaStartY;
+
+        // 判断是否滑到了最顶部或最底部
+        const isAtTop = scrollTop <= 0 && deltaY > 0;
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1 && deltaY < 0;
+
+        if (isAtTop || isAtBottom) {
+            // 如果滑到了边界，阻止浏览器默认的“拉拽整个页面”行为
+            if (e.cancelable) e.preventDefault();
+        } else {
+            // 如果在中间正常滑动，阻止事件传递给外层的设置页面
+            e.stopPropagation();
+        }
     }
 }, { passive: false });
 
