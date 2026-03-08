@@ -229,6 +229,10 @@ textarea {
 
     /* 通用样式 */
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        /* === 让滑动条颜色跟随当前主题色 === */
+    input[type="range"] {
+        accent-color: var(--accent-color);
+    }
     body { margin: 0; padding: 0; height: 100vh; overflow: hidden; background: var(--bg-color); background-image: var(--bg-image); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--text-color); display: flex; justify-content: center; transition: background 0.5s, color 0.3s; }
     #phone-container { width: 100%; height: 100%; position: relative; overflow: hidden; display: flex; flex-direction: column; z-index: 1; }
     @media (min-width: 500px) { body { align-items: center; background: #222; } #phone-container { width: 390px; height: 844px; background: var(--bg-color); background-image: var(--bg-image); border-radius: 45px; box-shadow: 0 0 0 10px #111, 0 30px 80px rgba(0,0,0,0.6); } }
