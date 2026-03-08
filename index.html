@@ -219,6 +219,13 @@
         --input-bg: #fafafa;
         --sticky-color: #f5f5f5;
     }
+    
+/* === 修复：移动端文本框滑动穿透问题 === */
+textarea {
+    overscroll-behavior: contain !important; /* 阻止滚动事件传递给父元素 */
+    -webkit-overflow-scrolling: touch !important; /* 恢复 iOS 的顺滑滚动 */
+    touch-action: pan-y !important; /* 明确告诉浏览器这里只允许垂直滑动 */
+}
 
     /* 通用样式 */
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
@@ -4108,9 +4115,44 @@ body.theme-night .chat-time-stamp span {
     cursor: pointer;
 }
 
+/* === 自定义图标 (无缝填充·修复版) === */
+.custom-icon-bg {
+    /* 1. 移除缩放，恢复 100% 大小，消除外围空隙 */
+    transform: none !important; 
+    
+    /* 2. 核心修复：去掉透明边框，让图片直达边缘 */
+    border: none !important; 
+    
+    /* 3. 强制背景图填充到容器的最边缘 */
+    background-origin: border-box !important;
+    background-clip: border-box !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    
+    /* 4. 隐藏自带的 emoji 和文字颜色 */
+    color: transparent !important; 
+    
+    /* 5. 加上极其微弱的内阴影，让浅色图片边缘更清晰，不至于融进背景 */
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05), 
+                0 6px 15px rgba(0,0,0,0.08) !important; 
+}
+
+/* 隐藏图标内部的原生 Emoji */
+.custom-icon-bg * {
+    opacity: 0 !important; 
+}
+
+/* 保持点击时的 Q弹 反馈 */
+.custom-icon-bg:active {
+    transform: scale(0.92) !important;
+}
+
 </style>
 </head>
 <body class="theme-day">
+
+<style id="custom-global-css"></style>
 
 <div id="phone-container">
     <!-- 替换原来的 status-bar 里的内容 -->
@@ -4574,6 +4616,32 @@ body.theme-night .chat-time-stamp span {
     <div id="modal-alert" class="modal"><div class="modal-card"><h3 style="margin:0; font-size:16px;">提示</h3><div id="alert-msg" style="font-size:14px; line-height:1.5;"></div><button class="btn-normal" onclick="document.getElementById('modal-alert').style.display='none'">知道了</button></div></div>
     <div id="modal-letter-read" class="modal"><div class="modal-card" style="text-align:left;"><div style="text-align:center; font-size:24px; margin-bottom:10px;">💌</div><div id="read-content" style="font-family:'Ma Shan Zheng'; white-space:pre-wrap; font-size:18px; line-height:1.8; overflow-y:auto; flex:1;"></div><button class="btn-normal" onclick="$('modal-letter-read').style.display='none'" style="margin-top:15px; flex-shrink:0; height: 50px; flex-grow: 0;">收起</button></div></div>
     
+    <!-- === 🎨 自定义 APP 图标弹窗 === -->
+<div id="modal-app-icon" class="modal" style="z-index: 4000;">
+    <div class="modal-card">
+        <h3 id="icon-modal-title">自定义图标</h3>
+        <input type="hidden" id="icon-edit-app-id">
+        
+        <div style="font-size:12px; opacity:0.6; margin-bottom:15px;">
+            支持本地图片或网络链接 (长按应用图标可唤出此菜单)
+        </div>
+
+        <label style="display:block; text-align:left; font-size:12px; font-weight:bold; margin-bottom:5px;">方式一：本地图片</label>
+        <input type="file" id="icon-file-input" class="setting-input" accept="image/*">
+        
+        <div style="font-size:12px; opacity:0.6; margin:10px 0;">- 或 -</div>
+        
+        <label style="display:block; text-align:left; font-size:12px; font-weight:bold; margin-bottom:5px;">方式二：图片链接 (URL)</label>
+        <input id="icon-url-input" class="setting-input" placeholder="http://...">
+        
+        <div class="btn-group" style="margin-top:20px;">
+            <button class="btn-normal btn-secondary" onclick="$('modal-app-icon').style.display='none'">取消</button>
+            <button class="btn-normal" onclick="saveCustomIcon()">💾 保存</button>
+        </div>
+        <button class="btn-normal btn-danger" style="margin-top:10px;" onclick="resetCustomIcon()">🔄 恢复默认图标</button>
+    </div>
+</div>
+
             <div id="modal-photo" class="modal">
         <div class="modal-card">
             <h3>设置封面图</h3>
@@ -4589,11 +4657,36 @@ body.theme-night .chat-time-stamp span {
         </div>
     </div>
     <div id="modal-countdown" class="modal"><div class="modal-card"><h3>倒计时/纪念日</h3><input id="cd-input-text" class="setting-input" placeholder="事项名称"><input id="cd-input-date" type="date" class="setting-input"><div class="btn-group"><button class="btn-normal btn-secondary" onclick="$('modal-countdown').style.display='none'">取消</button><button class="btn-normal" onclick="saveCountdown()">保存</button></div></div></div>
-    <div id="modal-contact" class="modal"><div class="modal-card"><h3>编辑角色</h3><input type="hidden" id="c-id"><input id="c-name" class="setting-input" placeholder="名字"><textarea id="c-prompt" class="setting-input" placeholder="人设" rows="3"></textarea><div style="margin-top:15px; display:flex; align-items:center; justify-content:space-between; background:var(--input-bg); padding:10px; border-radius:10px;">
-    <span style="font-size:14px; font-weight:bold;">🌟 设为专注对象</span>
-    <input type="checkbox" id="c-focus-toggle" style="width:20px; height:20px; accent-color:var(--accent-color);">
-</div>
-<div style="font-size:10px; opacity:0.6; margin-bottom:15px; text-align:left;">* 开启后，所有功能默认选择此角色</div><div class="btn-group"><button class="btn-normal btn-secondary" onclick="$('modal-contact').style.display='none'">取消</button><button class="btn-normal" onclick="saveContact()">保存</button></div><button class="btn-normal btn-danger" style="margin-top:10px;" onclick="deleteContact()">删除角色</button></div></div>
+        <div id="modal-contact" class="modal">
+        <div class="modal-card">
+            <h3>编辑角色</h3>
+            <input type="hidden" id="c-id">
+            <input id="c-name" class="setting-input" placeholder="名字">
+            <textarea id="c-prompt" class="setting-input" placeholder="人设" rows="3"></textarea>
+            
+            <!-- ✨ 新增：专属指令绑定区 -->
+            <div style="margin-top:15px; text-align:left;">
+                <label style="font-size:12px; font-weight:bold;">专属绑定指令 (可选)</label>
+                <div style="font-size:10px; opacity:0.6; margin-bottom:5px;">勾选后，即使该指令在全局被关闭，也会对当前角色生效。</div>
+                <div id="c-bound-commands" style="max-height:120px; overflow-y:auto; background:var(--input-bg); padding:10px; border-radius:10px; display:flex; flex-direction:column; gap:8px;">
+                    <!-- JS 自动填充复选框 -->
+                </div>
+            </div>
+
+            <div style="margin-top:15px; display:flex; align-items:center; justify-content:space-between; background:var(--input-bg); padding:10px; border-radius:10px;">
+                <span style="font-size:14px; font-weight:bold;">🌟 设为专注对象</span>
+                <input type="checkbox" id="c-focus-toggle" style="width:20px; height:20px; accent-color:var(--accent-color);">
+            </div>
+            <div style="font-size:10px; opacity:0.6; margin-bottom:15px; text-align:left;">* 开启后，所有功能默认选择此角色</div>
+            
+            <div class="btn-group">
+                <button class="btn-normal btn-secondary" onclick="$('modal-contact').style.display='none'">取消</button>
+                <button class="btn-normal" onclick="saveContact()">保存</button>
+            </div>
+            <button class="btn-normal btn-danger" style="margin-top:10px;" onclick="deleteContact()">删除角色</button>
+        </div>
+    </div>
+    
     <div id="modal-period-add" class="modal"><div class="modal-card"><h3>记录经期</h3><label style="font-size:12px;display:block;text-align:left;">开始日期</label><input id="p-log-start" type="date" class="setting-input"><label style="font-size:12px;display:block;text-align:left;">结束日期 (可选)</label><input id="p-log-end" type="date" class="setting-input"><div class="btn-group"><button class="btn-normal btn-secondary" onclick="$('modal-period-add').style.display='none'">取消</button><button class="btn-normal" onclick="savePeriodLog()">保存</button></div></div></div>
     
     <!-- === ❤️ 弹窗1：心动时刻 (显示结果) === -->
@@ -5795,6 +5888,7 @@ body.theme-night .chat-time-stamp span {
 <label>主题风格</label>
 <select id="theme-select" class="setting-input" onchange="toggleTheme(this.value)">
     <optgroup label="基础模式">
+            <option value="theme-custom">🎨 自定义</option>
         <option value="theme-day">☀️ 奶油亮色 (默认)</option>
         <option value="theme-night">🌙 暗夜模式</option>
         <option value="theme-ios-light">🍎 iOS 磨砂 (白)</option>
@@ -5828,6 +5922,20 @@ body.theme-night .chat-time-stamp span {
         <option value="theme-ocean">🌊 海盐苏打</option>
     </optgroup>
 </select>
+
+<!-- 全局自定义 CSS 折叠面板 -->
+<details style="margin-top: 15px; background: var(--card-bg); border-radius: 12px; padding: 10px; border: 1px solid var(--glass-border);">
+    <summary style="font-size: 14px; font-weight: bold; cursor: pointer; outline: none; padding: 5px;">
+        🎨 全局自定义 CSS
+    </summary>
+    <div style="margin-top: 10px;">
+        <div style="font-size: 11px; opacity: 0.6; margin-bottom: 8px;">
+            在这里输入 CSS 代码，点击下方保存后全局生效。例如修改全局字体：<br>
+            <code>body, button, input { font-family: '楷体', sans-serif !important; }</code>
+        </div>
+        <textarea id="global-css-input" class="setting-input" rows="6" placeholder="输入自定义 CSS 代码..." style="font-family: monospace; font-size: 12px; line-height: 1.5;"></textarea>
+    </div>
+</details>
 
                 <button class="btn-normal" style="margin-top:15px;" onclick="saveSettings()">保存配置</button>
                 
@@ -8194,32 +8302,71 @@ function askMealAI(type) {
         btn.disabled = false;
     });
 }
+
+function applyGlobalCSS(cssText) {
+    const styleTag = document.getElementById('custom-global-css');
+    if (styleTag) {
+        styleTag.innerHTML = cssText || '';
+    }
+}
+
     function saveSettings() { 
     DB.settings.url = $('api-url').value; 
     DB.settings.key = $('api-key').value; 
     DB.settings.model = $('model-select').value; 
-    // 新增：保存温度
     DB.settings.temperature = parseFloat($('api-temp').value);
     
+    // 👇 新增：保存自定义 CSS
+    DB.settings.globalCSS = $('global-css-input').value;
+    
     localStorage.setItem('v16_set', JSON.stringify(DB.settings)); 
-    alert("配置已保存 (含温度设置) ✅"); 
+    
+    // 👇 新增：立即应用生效
+    applyGlobalCSS(DB.settings.globalCSS);
+    
+    alert("配置已保存 ✅"); 
 }
     async function callAI(msgs) { 
     if(!DB.settings.key) throw new Error("缺少 API Key"); 
 
     const temp = DB.settings.temperature !== undefined ? DB.settings.temperature : 0.7;
 
-    // === 核心修改开始：处理指令集 (区分前置/后置) ===
+    // === 核心修改开始：处理指令集 (支持角色专属绑定) ===
     if (DB.commands && DB.commands.length > 0) {
         
-        // 1. 分离前置和后置指令
-        const beforeCmds = DB.commands.filter(c => c.position !== 'after'); // 默认为前置
-        const afterCmds = DB.commands.filter(c => c.position === 'after');
+        // 1. 智能识别当前对话的角色 ID
+        let activeRoleId = null;
+        const sysMsg = msgs.find(m => m.role === 'system');
+        if (sysMsg) {
+            // 通过名字或人设反查当前角色
+            const matchedRole = DB.contacts.find(c => sysMsg.content.includes(c.name) || sysMsg.content.includes(c.prompt));
+            if (matchedRole) activeRoleId = matchedRole.id;
+        }
+        // 兜底：如果是在聊天界面，直接用当前聊天的联系人ID
+        if (!activeRoleId && typeof currentChatContactId !== 'undefined') {
+            activeRoleId = currentChatContactId;
+        }
 
-        // 2. 处理前置指令 (System Prompt)
+        // 2. 获取该角色绑定的专属指令
+        let boundCmdIds = [];
+        if (activeRoleId) {
+            const role = DB.contacts.find(c => c.id == activeRoleId);
+            if (role && role.boundCommands) boundCmdIds = role.boundCommands;
+        }
+
+        // 3. 过滤出最终生效的指令：全局开启的 OR 当前角色专属绑定的
+        const activeCommands = DB.commands.filter(c => {
+            return (c.enabled !== false) || boundCmdIds.includes(c.id);
+        });
+
+        // 4. 分离前置和后置指令
+        const beforeCmds = activeCommands.filter(c => c.position !== 'after'); 
+        const afterCmds = activeCommands.filter(c => c.position === 'after');
+
+        // 5. 处理前置指令 (System Prompt)
         if (beforeCmds.length > 0) {
             const beforeText = beforeCmds.map(cmd => `[规则: ${cmd.title}]\n${cmd.content}`).join('\n\n');
-            const injection = `\n\n=== GLOBAL SYSTEM INSTRUCTIONS ===\n${beforeText}\n=== END INSTRUCTIONS ===\n`;
+            const injection = `\n\n=== GLOBAL & ROLE INSTRUCTIONS ===\n${beforeText}\n=== END INSTRUCTIONS ===\n`;
             
             const sysIdx = msgs.findIndex(m => m.role === 'system');
             if (sysIdx !== -1) {
@@ -8229,23 +8376,19 @@ function askMealAI(type) {
             }
         }
 
-        // 3. 处理后置指令 (User Suffix - 强力约束)
+        // 6. 处理后置指令 (User Suffix - 强力约束)
         if (afterCmds.length > 0) {
             const afterText = afterCmds.map(cmd => `[强制要求: ${cmd.title}]\n${cmd.content}`).join('\n\n');
             const suffix = `\n\n=== OUTPUT CONSTRAINTS ===\n${afterText}\n`;
             
-            // 找到最后一条用户消息，追加到末尾
-            // (如果没有用户消息，就追加到最后一条消息，或者新建一条系统消息放最后)
             const lastUserIdx = msgs.findLastIndex(m => m.role === 'user');
             if (lastUserIdx !== -1) {
-                // 如果最后一条是图片消息(数组格式)，需要特殊处理
                 if (Array.isArray(msgs[lastUserIdx].content)) {
                     msgs[lastUserIdx].content.push({ type: "text", text: suffix });
                 } else {
                     msgs[lastUserIdx].content += suffix;
                 }
             } else {
-                // 兜底：如果没有用户消息，就作为 System 消息放在最后
                 msgs.push({ role: 'system', content: suffix });
             }
         }
@@ -8587,51 +8730,71 @@ function importData(input) {
 
     function delTodo(i) { DB.todos.splice(i,1); localStorage.setItem('v15_todo', JSON.stringify(DB.todos)); renderTodosWidget(); }
     function renderContacts() { $('contact-list').innerHTML = DB.contacts.map(c=>`<div style="background:var(--card-bg); padding:15px; margin-bottom:10px; border-radius:12px; display:flex; justify-content:space-between; align-items:center;"><span>${c.name}</span> <span onclick="editContact(${c.id})" style="cursor:pointer; font-size:20px;">⚙️</span></div>`).join(''); }
-    function editContact(id) { 
-    $('modal-contact').style.display='flex'; 
-    const focusId = getFocusId(); // 获取当前专注的ID
+        function editContact(id) { 
+        $('modal-contact').style.display='flex'; 
+        const focusId = getFocusId(); // 获取当前专注的ID
+        
+        let boundCmds = []; // 暂存当前角色绑定的指令ID
 
-    if(id){
-        const c=DB.contacts.find(x=>x.id==id);
-        $('c-id').value=c.id;
-        $('c-name').value=c.name;
-        $('c-prompt').value=c.prompt;
-        // 如果当前编辑的角色ID 等于 专注ID，开关打开
-        $('c-focus-toggle').checked = (c.id == focusId);
-    }else{
-        $('c-id').value='';
-        $('c-name').value='';
-        $('c-prompt').value='';
-        $('c-focus-toggle').checked = false;
-    } 
-}
-    function saveContact() { 
-    const id=$('c-id').value, n=$('c-name').value, p=$('c-prompt').value; 
-    const isFocus = $('c-focus-toggle').checked;
-    let currentId = id;
+        if(id){
+            const c=DB.contacts.find(x=>x.id==id);
+            $('c-id').value=c.id;
+            $('c-name').value=c.name;
+            $('c-prompt').value=c.prompt;
+            $('c-focus-toggle').checked = (c.id == focusId);
+            boundCmds = c.boundCommands || []; // 读取已绑定的指令
+        }else{
+            $('c-id').value='';
+            $('c-name').value='';
+            $('c-prompt').value='';
+            $('c-focus-toggle').checked = false;
+        } 
 
-    if(id){ 
-        Object.assign(DB.contacts.find(x=>x.id==id),{name:n,prompt:p}); 
-    } else { 
-        currentId = Date.now();
-        DB.contacts.push({id:currentId, name:n, prompt:p}); 
-    } 
-    
-    // === 专注逻辑 ===
-    if (isFocus) {
-        // 如果开启，覆盖旧的专注ID (只能有一个专注)
-        localStorage.setItem('v_focus_char_id', currentId);
-    } else {
-        // 如果关闭，且当前正是专注角色，则清除
-        if (getFocusId() == currentId) {
-            localStorage.removeItem('v_focus_char_id');
+        // ✨ 动态渲染指令多选框
+        const cmdContainer = $('c-bound-commands');
+        if (!DB.commands || DB.commands.length === 0) {
+            cmdContainer.innerHTML = '<div style="font-size:12px; opacity:0.5;">暂无可用指令，请先去指令集添加</div>';
+        } else {
+            cmdContainer.innerHTML = DB.commands.map(cmd => {
+                const isChecked = boundCmds.includes(cmd.id) ? 'checked' : '';
+                return `
+                <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-color);">
+                    <input type="checkbox" class="role-cmd-checkbox" value="${cmd.id}" ${isChecked} style="accent-color:var(--accent-color); width:16px; height:16px;">
+                    ${cmd.title}
+                </label>`;
+            }).join('');
         }
     }
+    
+    function saveContact() { 
+        const id=$('c-id').value, n=$('c-name').value, p=$('c-prompt').value; 
+        const isFocus = $('c-focus-toggle').checked;
+        let currentId = id;
 
-    localStorage.setItem('v15_con', JSON.stringify(DB.contacts)); 
-    renderContacts(); 
-    $('modal-contact').style.display='none'; 
-}
+        // ✨ 获取所有打勾的指令 ID
+        const checkboxes = document.querySelectorAll('.role-cmd-checkbox:checked');
+        const boundCmds = Array.from(checkboxes).map(cb => parseInt(cb.value));
+
+        if(id){ 
+            Object.assign(DB.contacts.find(x=>x.id==id), {name:n, prompt:p, boundCommands: boundCmds}); 
+        } else { 
+            currentId = Date.now();
+            DB.contacts.push({id:currentId, name:n, prompt:p, boundCommands: boundCmds}); 
+        } 
+        
+        // === 专注逻辑 ===
+        if (isFocus) {
+            localStorage.setItem('v_focus_char_id', currentId);
+        } else {
+            if (getFocusId() == currentId) {
+                localStorage.removeItem('v_focus_char_id');
+            }
+        }
+
+        localStorage.setItem('v15_con', JSON.stringify(DB.contacts)); 
+        renderContacts(); 
+        $('modal-contact').style.display='none'; 
+    }
     function deleteContact() { const id = $('c-id').value; if(id && confirm("Del?")) { DB.contacts = DB.contacts.filter(c => c.id != id); localStorage.setItem('v15_con', JSON.stringify(DB.contacts)); renderContacts(); $('modal-contact').style.display='none'; } }
     
 // ============================================================
@@ -9901,7 +10064,7 @@ function saveCommand() {
     $('modal-command-add').style.display = 'none';
 }
 
-// 3. 渲染列表 (增加编辑按钮和位置标签)
+// 3. 渲染列表 (增加开关按钮)
 function renderCommandList() {
     const list = $('command-list-container');
     if (!list) return;
@@ -9916,16 +10079,23 @@ function renderCommandList() {
         const tagColor = isAfter ? '#ff9800' : '#2196f3';
         const tagName = isAfter ? '后置' : '前置';
         
+        // 👇 判断是否启用 (兼容旧数据，如果没有 enabled 属性则默认为 true)
+        const isEnabled = cmd.enabled !== false; 
+        const cardOpacity = isEnabled ? '1' : '0.5'; // 关闭时卡片变灰半透明
+        
         return `
-        <div style="background:var(--card-bg); border:1px solid var(--glass-border); border-radius:12px; padding:15px; margin-bottom:12px; box-shadow:var(--shadow);">
+        <div style="background:var(--card-bg); border:1px solid var(--glass-border); border-radius:12px; padding:15px; margin-bottom:12px; box-shadow:var(--shadow); transition:0.3s; opacity:${cardOpacity};">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                 <div style="display:flex; align-items:center; gap:8px;">
                     <span style="font-size:10px; background:${tagColor}; color:#fff; padding:2px 6px; border-radius:4px;">${tagName}</span>
-                    <span style="font-weight:bold; color:var(--accent-color); font-size:15px;">${cmd.title}</span>
+                    <span style="font-weight:bold; color:var(--accent-color); font-size:15px; text-decoration:${isEnabled ? 'none' : 'line-through'};">${cmd.title}</span>
                 </div>
-                <div style="display:flex; gap:10px;">
-                    <button class="btn-icon" style="font-size:14px;" onclick="openCommandModal(${cmd.id})">✏️</button>
-                    <button class="btn-icon" style="color:#ff3b30; font-size:14px;" onclick="deleteCommand(${cmd.id})">🗑️</button>
+                <div style="display:flex; align-items:center; gap:5px;">
+                    <!-- ✨ 新增：开关按钮 -->
+                    <div class="toggle-switch ${isEnabled ? 'on' : ''}" style="transform: scale(0.7); transform-origin: right center;" onclick="toggleCommand(${cmd.id})"></div>
+                    
+                    <button class="btn-icon" style="font-size:14px; padding:4px;" onclick="openCommandModal(${cmd.id})">✏️</button>
+                    <button class="btn-icon" style="color:#ff3b30; font-size:14px; padding:4px;" onclick="deleteCommand(${cmd.id})">🗑️</button>
                 </div>
             </div>
             <div style="background:var(--input-bg); padding:8px; border-radius:6px; font-size:12px; opacity:0.8; max-height:60px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; margin-bottom:10px; font-family:monospace;">
@@ -9934,6 +10104,48 @@ function renderCommandList() {
             <button class="btn-normal" style="width:100%; height:36px; font-size:13px;" onclick="copyCommand(${cmd.id})">📋 复制指令</button>
         </div>
     `}).join('');
+}
+
+// ✨ 新增：切换指令的开启/关闭状态
+function toggleCommand(id) {
+    const cmd = DB.commands.find(c => c.id === id);
+    if (cmd) {
+        // 如果原本是 false 就变 true，否则变 false
+        cmd.enabled = (cmd.enabled === false) ? true : false;
+        localStorage.setItem('v31_commands', JSON.stringify(DB.commands));
+        renderCommandList(); // 刷新界面显示
+    }
+}
+
+// 顺便修改一下 saveCommand，确保新建指令时默认是开启的
+function saveCommand() {
+    const id = $('cmd-id').value; 
+    const title = $('cmd-title').value.trim();
+    const content = $('cmd-content').value.trim();
+    const position = $('cmd-position').value;
+    
+    if (!title || !content) return alert("标题和内容不能为空");
+    
+    if (id) {
+        const cmd = DB.commands.find(c => c.id == id);
+        if (cmd) {
+            cmd.title = title;
+            cmd.content = content;
+            cmd.position = position;
+        }
+    } else {
+        DB.commands.unshift({
+            id: Date.now(),
+            title: title,
+            content: content,
+            position: position,
+            enabled: true // <-- 新增：新建时默认开启
+        });
+    }
+    
+    localStorage.setItem('v31_commands', JSON.stringify(DB.commands));
+    renderCommandList();
+    $('modal-command-add').style.display = 'none';
 }
 
 // 4. 删除指令 (保持不变)
@@ -13609,6 +13821,10 @@ window.onload = async () => {
     }
     if (DB.settings.model) modelSelect.value = DB.settings.model;
 
+// 👇 新增：初始化自定义 CSS 面板的值并应用
+    if($('global-css-input')) $('global-css-input').value = DB.settings.globalCSS || '';
+    applyGlobalCSS(DB.settings.globalCSS);
+    
     $('theme-select').value = DB.settings.theme;
     const savedTemp = DB.settings.temperature !== undefined ? DB.settings.temperature : 0.7;
     $('api-temp').value = savedTemp;
@@ -13658,6 +13874,9 @@ window.onload = async () => {
 
     console.log("✅ 系统启动完成");
 
+    // === 启动自定义图标功能 ===
+    bindAppIconEdit(); 
+    await applyAllCustomIcons();
     
     // 👇👇👇 把这段新代码加在这里 👇👇👇
     // --- 绑定输入框自动增高 ---
@@ -18003,7 +18222,7 @@ async function aiPostMoment() {
 window.postNewMoment = postNewMoment;
 window.likeMoment = likeMoment;
 window.aiPostMoment = aiPostMoment;
-
+window.toggleCommand = toggleCommand;
 // ============================================================
 // 💾 朋友圈数据持久化修复补丁 (防止刷新消失)
 // ============================================================
@@ -18434,5 +18653,120 @@ function neverShowScamWarning() {
         }
     }
 }
+
+// ============================================================
+// 🎨 自定义 APP 图标功能 (长按触发)
+// ============================================================
+
+// 1. 绑定长按事件 (初始化时执行)
+function bindAppIconEdit() {
+    // 选中所有应用和 Dock 栏图标
+    const apps = document.querySelectorAll('.mix-app, .mix-app-wide, .dock-icon');
+    
+    apps.forEach((app, index) => {
+        // 给每个图标生成一个唯一的 ID 标识
+        let nameEl = app.querySelector('.app-name');
+        let appName = nameEl ? nameEl.innerText.trim() : `app_id_${index}`;
+        app.setAttribute('data-app-id', appName);
+
+        // 绑定长按事件 (手机长按 或 电脑右键 都会触发 contextmenu)
+        app.oncontextmenu = function(e) {
+            e.preventDefault(); // 阻止浏览器默认右键菜单
+            e.stopPropagation();
+            openIconSettings(appName);
+            if(navigator.vibrate) navigator.vibrate(50); // 震动反馈
+            return false;
+        };
+    });
+}
+
+// 2. 打开修改弹窗
+function openIconSettings(appId) {
+    $('icon-edit-app-id').value = appId;
+    $('icon-modal-title').innerText = `修改 [${appId}] 图标`;
+    $('icon-url-input').value = '';
+    $('icon-file-input').value = '';
+    $('modal-app-icon').style.display = 'flex';
+}
+
+// 3. 保存图标
+async function saveCustomIcon() {
+    const appId = $('icon-edit-app-id').value;
+    const urlInput = $('icon-url-input').value.trim();
+    const fileInput = $('icon-file-input');
+    const dbKey = `custom_icon_${appId}`; // 存入数据库的 Key
+
+    const btn = event.target;
+    const oldText = btn.innerText;
+    btn.innerText = "保存中...";
+    btn.disabled = true;
+
+    try {
+        if (fileInput.files && fileInput.files[0]) {
+            // 本地图片：压缩后存入 IndexedDB
+            const compressed = await compressImage(fileInput.files[0], 200, 0.8); 
+            await db.settings.put({ key: dbKey, value: compressed });
+        } else if (urlInput) {
+            // 网络链接：直接存入
+            await db.settings.put({ key: dbKey, value: urlInput });
+        } else {
+            return alert("请选择一张图片或输入网络链接！");
+        }
+        
+        await applyAllCustomIcons(); // 重新渲染桌面
+        $('modal-app-icon').style.display = 'none';
+        
+    } catch(e) {
+        alert("保存失败：" + e.message);
+    } finally {
+        btn.innerText = oldText;
+        btn.disabled = false;
+    }
+}
+
+// 4. 恢复默认图标
+async function resetCustomIcon() {
+    const appId = $('icon-edit-app-id').value;
+    if (confirm(`确定要恢复[${appId}] 的默认图标吗？`)) {
+        await db.settings.delete(`custom_icon_${appId}`);
+        
+        // 移除界面上的自定义类名和背景
+        const app = document.querySelector(`[data-app-id="${appId}"]`);
+        if (app) {
+            let target = app.classList.contains('dock-icon') ? app : app.querySelector('.icon-box') || app;
+            target.classList.remove('custom-icon-bg');
+            target.style.backgroundImage = '';
+        }
+        
+        $('modal-app-icon').style.display = 'none';
+    }
+}
+
+// 5. 加载并应用所有自定义图标 (每次启动桌面时调用)
+async function applyAllCustomIcons() {
+    const apps = document.querySelectorAll('.mix-app, .mix-app-wide, .dock-icon');
+    
+    for (let app of apps) {
+        const appId = app.getAttribute('data-app-id');
+        if (!appId) continue;
+        
+        const record = await db.settings.get(`custom_icon_${appId}`);
+        if (record && record.value) {
+            const url = (record.value instanceof Blob) ? URL.createObjectURL(record.value) : record.value;
+            
+            // 决定把背景图贴在哪里 (如果有 icon-box 贴在盒子上，没有就贴在自己身上)
+            let target = app.classList.contains('dock-icon') ? app : app.querySelector('.icon-box') || app;
+            
+            target.classList.add('custom-icon-bg');
+            target.style.backgroundImage = `url('${url}')`;
+            
+            // 如果是透明背景，加上白色底色防透
+            if(app.classList.contains('dock-icon')) {
+                target.style.backgroundColor = '#fff';
+            }
+        }
+    }
+}
+
 </script>
 </body>
